@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=MuseoModerno:opsz,wght@6..72,300..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "MuseoModerno", ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #020202;
+  --color-evergreen: #0d2818;
+  --color-forest: #04471c;
+  --color-note: #058c42;
+  --color-neon: #16db65;
+}
+
+:root {
+  color-scheme: dark;
+  --surface: #020202;
+  --surface-raised: rgb(13 40 24 / 0.72);
+  --surface-glass: rgb(13 40 24 / 0.52);
+  --text-primary: #f1fff6;
+  --text-muted: #a2b9aa;
+  --border: rgb(22 219 101 / 0.18);
+  --grid: rgb(22 219 101 / 0.055);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --surface: #f6fff8;
+  --surface-raised: rgb(230 251 237 / 0.82);
+  --surface-glass: rgb(246 255 248 / 0.7);
+  --text-primary: #0d2818;
+  --text-muted: #426450;
+  --border: rgb(5 140 66 / 0.2);
+  --grid: rgb(5 140 66 / 0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  transition: background-color 250ms ease, color 250ms ease;
+}
+
+* { box-sizing: border-box; }
+
+::selection { background: rgb(22 219 101 / 0.3); color: var(--text-primary); }
+
+.app-grid {
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glass { background: var(--surface-glass); border: 1px solid var(--border); backdrop-filter: blur(18px); }
+.surface { background: var(--surface-raised); border: 1px solid var(--border); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}

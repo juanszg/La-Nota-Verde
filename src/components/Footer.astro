@@ -1,0 +1,10 @@
+---
+import Brand from './Brand.astro';
+---
+<footer class="border-t border-[var(--border)]">
+  <div class="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+    <Brand />
+    <p class="text-xs leading-relaxed text-[var(--text-muted)]">Una plataforma en evolución para aprender, practicar y escribir música.</p>
+    <p class="text-xs text-[var(--text-muted)]">© {new Date().getFullYear()} La Nota Verde</p>
+  </div>
+</footer>

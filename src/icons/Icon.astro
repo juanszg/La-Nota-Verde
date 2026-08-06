@@ -1,0 +1,19 @@
+---
+interface Props { name: string; size?: number; stroke?: number; class?: string; }
+const { name, size = 20, stroke = 1.8, class: className = '' } = Astro.props;
+const paths: Record<string, string> = {
+  home: 'M3 10.8 12 3l9 7.8v9.7a.5.5 0 0 1-.5.5h-5.2v-6h-6.6v6H3.5a.5.5 0 0 1-.5-.5z',
+  book: 'M4.5 4.8A2.8 2.8 0 0 1 7.3 2H20v17.5H7.3a2.8 2.8 0 0 0-2.8 2.8z M4.5 4.8v17.5 M8 6h8',
+  spark: 'm12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z M19 16l.7 2.3L22 19l-2.3.7L19 22l-.7-2.3L16 19l2.3-.7z',
+  note: 'M9 18.5V5l10-2v12.5 M9 9l10-2 M5.5 21a3.5 2.5 0 1 0 0-5 3.5 2.5 0 0 0 0 5m10-3a3.5 2.5 0 1 0 0-5 3.5 2.5 0 0 0 0 5',
+  wave: 'M3 12c2.2 0 2.2-6 4.5-6S9.8 18 12 18s2.2-12 4.5-12S18.8 12 21 12',
+  pulse: 'M3 12h4l2.2-6 4.1 12 2.3-6H21',
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  close: 'm6 6 12 12M18 6 6 18',
+  arrow: 'M5 12h14m-6-6 6 6-6 6',
+  sun: 'M12 3v2m0 14v2M5.6 5.6 7 7m10 10 1.4 1.4M3 12h2m14 0h2M5.6 18.4 7 17m10-10 1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8',
+};
+---
+<svg class={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width={stroke} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d={paths[name] ?? paths.spark} />
+</svg>

@@ -1,0 +1,11 @@
+---
+interface Props { href?: string; variant?: 'primary' | 'secondary' | 'ghost'; type?: 'button' | 'submit'; class?: string; }
+const { href, variant = 'primary', type = 'button', class: className = '' } = Astro.props;
+const styles = {
+  primary: 'bg-neon text-ink shadow-[0_12px_30px_rgb(22_219_101_/_0.22)] hover:bg-[#49ed88] hover:-translate-y-0.5',
+  secondary: 'border border-[var(--border)] bg-[var(--surface-glass)] text-[var(--text-primary)] hover:border-neon/50 hover:bg-neon/10',
+  ghost: 'text-[var(--text-primary)] hover:bg-neon/10',
+};
+const shared = `inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon ${styles[variant]} ${className}`;
+---
+{href ? <a href={href} class={shared}><slot /></a> : <button type={type} class={shared}><slot /></button>}

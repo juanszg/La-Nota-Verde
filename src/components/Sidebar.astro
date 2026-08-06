@@ -1,0 +1,25 @@
+---
+import Icon from '../icons/Icon.astro';
+import { navigationItems } from '../data/navigation';
+---
+<aside id="app-sidebar" class="fixed inset-y-18 left-0 z-30 hidden w-64 flex-col border-r border-[var(--border)] bg-[color:var(--surface)]/90 p-4 backdrop-blur-xl transition-[width] duration-300 lg:flex" aria-label="Panel de navegación">
+  <nav class="grid gap-1" aria-label="Secciones de la plataforma">
+    {navigationItems.map(({ label, href, icon }) => <a href={href} class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-[var(--text-muted)] transition hover:bg-neon/10 hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-neon"><Icon name={icon} /><span>{label}</span></a>)}
+  </nav>
+  <div class="mt-auto rounded-2xl border border-neon/15 bg-neon/5 p-4">
+    <p class="sidebar-label text-xs font-semibold uppercase tracking-[0.14em] text-neon">En construcción</p>
+    <p class="sidebar-copy mt-2 text-xs leading-relaxed text-[var(--text-muted)]">Tu espacio musical irá creciendo aquí, módulo por módulo.</p>
+  </div>
+</aside>
+<script is:inline>
+  const sidebar = document.querySelector('#app-sidebar');
+  const sidebarToggle = document.querySelector('#sidebar-toggle');
+  sidebarToggle?.addEventListener('click', () => {
+    const compact = sidebar?.classList.toggle('w-64') === false;
+    sidebar?.classList.toggle('w-18', compact);
+    sidebar?.querySelectorAll('.sidebar-link').forEach((item) => item.classList.toggle('justify-center', compact));
+    sidebar?.querySelectorAll('.sidebar-link span, .sidebar-label, .sidebar-copy').forEach((item) => item.classList.toggle('hidden', compact));
+    sidebarToggle.setAttribute('aria-expanded', String(!compact));
+    sidebarToggle.setAttribute('aria-label', compact ? 'Expandir barra lateral' : 'Contraer barra lateral');
+  });
+</script>

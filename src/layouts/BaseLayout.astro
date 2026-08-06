@@ -1,0 +1,25 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Footer from '../components/Footer.astro';
+interface Props { title?: string; description?: string; }
+const { title = 'LA NOTA VERDE', description = 'Aprende, practica y escribe música en un solo lugar.' } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#020202" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a href="#contenido" class="sr-only fixed left-4 top-4 z-50 rounded-lg bg-neon px-4 py-2 text-sm font-semibold text-ink focus:not-sr-only">Saltar al contenido</a>
+    <Navbar />
+    <Sidebar />
+    <main id="contenido" class="min-h-[calc(100vh-72px)] lg:pl-64"><slot /></main>
+    <Footer />
+  </body>
+</html>

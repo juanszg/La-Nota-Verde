@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import ModulePreview from '../components/home/ModulePreview.astro';
+---
+<BaseLayout title="LA NOTA VERDE — Tu espacio musical" description="Una plataforma modular para aprender, practicar y escribir música.">
+  <Hero />
+  <ModulePreview />
+  <section id="vision" class="px-6 pb-24 pt-8 lg:px-8">
+    <div class="mx-auto max-w-7xl overflow-hidden rounded-3xl border border-neon/15 bg-gradient-to-br from-forest to-evergreen px-7 py-12 sm:px-12 sm:py-16">
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-neon">Primera fase</p>
+      <h2 class="mt-4 max-w-3xl text-3xl font-bold tracking-[-0.04em] sm:text-5xl">Un sistema sólido para una plataforma que crecerá contigo.</h2>
+      <p class="mt-5 max-w-2xl leading-7 text-white/70">Estamos construyendo la experiencia esencial antes de abrir nuevos instrumentos, lecciones y herramientas.</p>
+    </div>
+  </section>
+</BaseLayout>
