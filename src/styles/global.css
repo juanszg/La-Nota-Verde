@@ -1,8 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=MuseoModerno:opsz,wght@6..72,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-display: "MuseoModerno", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Space Mono", ui-monospace, monospace;
   --color-ink: #020202;
   --color-evergreen: #0d2818;
   --color-forest: #04471c;
@@ -17,8 +20,12 @@
   --surface-glass: rgb(13 40 24 / 0.52);
   --text-primary: #f1fff6;
   --text-muted: #a2b9aa;
+  --accent: #16db65;
   --border: rgb(22 219 101 / 0.18);
   --grid: rgb(22 219 101 / 0.055);
+  --control-surface: rgb(255 255 255 / 0.04);
+  --control-hover: rgb(22 219 101 / 0.1);
+  --track: rgb(255 255 255 / 0.1);
 }
 
 :root[data-theme='light'] {
@@ -30,6 +37,10 @@
   --text-muted: #426450;
   --border: rgb(5 140 66 / 0.2);
   --grid: rgb(5 140 66 / 0.08);
+  --accent: #067a37;
+  --control-surface: rgb(5 40 19 / 0.035);
+  --control-hover: rgb(5 140 66 / 0.08);
+  --track: rgb(5 40 19 / 0.12);
 }
 
 html { scroll-behavior: smooth; }
@@ -39,11 +50,13 @@ body {
   min-width: 320px;
   background: var(--surface);
   color: var(--text-primary);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   transition: background-color 250ms ease, color 250ms ease;
 }
 
 * { box-sizing: border-box; }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
+.page-title { font-family: "Kode Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: -0.05em; }
 
 ::selection { background: rgb(22 219 101 / 0.3); color: var(--text-primary); }
 
@@ -54,7 +67,23 @@ body {
 
 .glass { background: var(--surface-glass); border: 1px solid var(--border); backdrop-filter: blur(18px); }
 .surface { background: var(--surface-raised); border: 1px solid var(--border); }
+.control-surface { background: var(--control-surface); }
+.control-hover:hover { background: var(--control-hover); }
+.track-surface { background: var(--track); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
+
+.tool-card { position: relative; isolation: isolate; overflow: hidden; transition: transform 500ms cubic-bezier(.2,.8,.2,1), border-color 500ms, box-shadow 500ms, filter 500ms; }
+.glow-hover { transition: color 450ms, background-color 450ms, transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 500ms cubic-bezier(.2,.8,.2,1), filter 500ms, border-color 500ms; }
+.glow-hover:hover { box-shadow: 0 0 0 1px rgb(22 219 101 / .24), 0 0 24px rgb(22 219 101 / .24), 0 0 52px rgb(22 219 101 / .12); filter: saturate(1.12); }
+.tool-card::before { position: absolute; z-index: -1; inset: -60%; content: ''; background: conic-gradient(from 0deg, transparent 0 72%, rgb(22 219 101 / .3) 82%, transparent 92%); opacity: 0; transition: opacity 300ms; animation: orbit 7s linear infinite; }
+.tool-card::after { position: absolute; z-index: -2; inset: 1px; content: ''; border-radius: inherit; background: var(--surface); }
+.tool-card:hover { transform: translateY(-8px) scale(1.01); border-color: rgb(22 219 101 / .55); box-shadow: 0 0 0 1px rgb(22 219 101 / .3), 0 0 28px rgb(22 219 101 / .25), 0 24px 70px rgb(22 219 101 / .18); }
+.tool-card:hover::before { opacity: 1; }
+.app-dark-art { --accent: #16db65; --text-primary: #f1fff6; --text-muted: #a2b9aa; color: var(--text-primary); }
+.poster { --accent: #16db65; }
+.poster:hover { box-shadow: 0 0 0 1px rgb(22 219 101 / .35), 0 0 32px rgb(22 219 101 / .24), 0 28px 80px rgb(0 0 0 / .45); }
+.poster { position: relative; transition: transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 500ms, border-color 500ms; overflow: hidden; background-color: #07130d; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgb(0 0 0 / .12) 4px), radial-gradient(ellipse at 80% 15%, rgb(22 219 101 / .2), transparent 55%), linear-gradient(135deg, #10271b, #07130d 58%, #000); }
+@keyframes orbit { to { transform: rotate(360deg); } }

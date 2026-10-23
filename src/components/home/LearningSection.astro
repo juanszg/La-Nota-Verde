@@ -1,0 +1,127 @@
+---
+const musicTopics = ['El pulso y el ritmo','Notas, tonos y semitonos','Escalas mayores y menores','Intervalos y oído','Triadas y acordes','Armonía funcional','Círculo de quintas','Composición y forma'];
+const guitarTopics = ['Postura y ergonomía','Afinación y sonido limpio','Acordes abiertos','Cambios y cejillas','Rasgueo con intención','Fingerstyle','Bends, slides y vibrato','Improvisación y solos'];
+const fretNotes = [
+  { string: '6ª · Mi', notes: ['E','F','F♯','G','G♯','A','A♯','B','C','C♯','D','D♯','E'] },
+  { string: '5ª · La', notes: ['A','A♯','B','C','C♯','D','D♯','E','F','F♯','G','G♯','A'] },
+  { string: '4ª · Re', notes: ['D','D♯','E','F','F♯','G','G♯','A','A♯','B','C','C♯','D'] },
+  { string: '3ª · Sol', notes: ['G','G♯','A','A♯','B','C','C♯','D','D♯','E','F','F♯','G'] },
+  { string: '2ª · Si', notes: ['B','C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'] },
+  { string: '1ª · Mi', notes: ['E','F','F♯','G','G♯','A','A♯','B','C','C♯','D','D♯','E'] },
+];
+const intervals = [
+  ['Unísono justo','P1','0'], ['2ª menor','m2','1'], ['2ª mayor','M2','2'], ['3ª menor','m3','3'],
+  ['3ª mayor','M3','4'], ['4ª justa','P4','5'], ['4ª aumentada / 5ª disminuida','A4 / d5','6'],
+  ['5ª justa','P5','7'], ['6ª menor','m6','8'], ['6ª mayor','M6','9'], ['7ª menor','m7','10'],
+  ['7ª mayor','M7','11'], ['Octava justa','P8','12'],
+];
+---
+<section id="aprender" class="px-6 py-20 lg:px-8">
+  <div class="mx-auto max-w-7xl"><p class="text-xs font-bold uppercase tracking-[.2em] text-[var(--accent)]">Aprender · rutas de progreso</p><h2 class="mt-4 max-w-3xl text-4xl font-bold sm:text-5xl">Tu próxima gran era empieza aquí.</h2><p class="mt-4 max-w-2xl text-sm leading-7 text-[var(--text-muted)]">Dos rutas para pasar de las primeras notas a tocar con voz propia.</p>
+    <div class="mt-10 grid gap-6 lg:grid-cols-2">
+      <article id="theory-poster" class="poster glow-hover group relative min-h-[34rem] cursor-pointer rotate-[-1deg] border border-neon/30 bg-gradient-to-br from-[#10271b] via-[#07130d] to-black p-7 shadow-[0_25px_80px_rgb(0_0_0_/_0.4)] transition duration-500 hover:rotate-0 hover:shadow-[0_0_55px_rgb(34_255_128_/_0.24)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)] sm:p-10" tabindex="0" role="button" aria-haspopup="dialog" aria-controls="theory-modal" aria-label="Abrir los temas de Teoría sin miedo">
+        <div class="pointer-events-none absolute -right-9 top-12 rotate-12 text-[10rem] leading-none text-[var(--accent)]/10">♫</div><div class="relative flex items-center justify-between border-b border-neon/30 pb-4"><span class="text-[9px] font-bold uppercase tracking-[.28em] text-[var(--accent)]">La Nota Verde presenta</span><span class="rounded-full border border-neon/30 px-3 py-1 text-[9px] text-[var(--accent)]">SIDE A</span></div><p class="relative mt-8 text-xs font-bold uppercase tracking-[.35em] text-white/65">El mapa del sonido</p><h3 class="relative mt-2 -rotate-2 text-5xl font-black uppercase leading-[.88] tracking-[-.06em] text-white sm:text-7xl">Teoría<br/><span class="text-[var(--accent)]">sin miedo</span></h3><p class="relative mt-5 max-w-sm text-[10px] leading-5 text-white/65">8 paradas para entender qué pasa detrás de cada canción. <span class="text-[var(--accent)]">Clic para abrir la guía ↗</span></p>
+        <ol class="relative mt-7 grid grid-cols-2 gap-x-4 gap-y-3">{musicTopics.map((topic,i)=><li class="flex items-center gap-2 border-t border-white/10 pt-2 text-[9px] text-white/80"><span class="font-bold text-[var(--accent)]">0{i+1}</span>{topic}</li>)}</ol><div class="relative mt-8 flex items-end justify-between border-t border-neon/30 pt-4"><span class="text-[8px] uppercase tracking-[.24em] text-[var(--accent)]">Una ruta original · Vol. 01</span><span class="text-3xl font-black italic text-white/80">LN★</span></div>
+      </article>
+      <article class="poster glow-hover group relative min-h-[34rem] rotate-[1deg] border border-[#b1783d]/40 bg-gradient-to-br from-[#382012] via-[#17100c] to-black p-7 shadow-[0_25px_80px_rgb(0_0_0_/_0.4)] transition duration-500 hover:rotate-0 hover:shadow-[0_0_55px_rgb(229_165_83_/_0.2)] sm:p-10">
+        <div class="pointer-events-none absolute -right-9 top-14 rotate-[-14deg] text-[10rem] leading-none text-[#e5a553]/10">♬</div><div class="relative flex items-center justify-between border-b border-[#e5a553]/30 pb-4"><span class="text-[9px] font-bold uppercase tracking-[.28em] text-[#e5a553]">La Nota Verde presenta</span><span class="rounded-full border border-[#e5a553]/30 px-3 py-1 text-[9px] text-[#e5a553]">SIDE B</span></div><p class="relative mt-8 text-xs font-bold uppercase tracking-[.35em] text-white/65">Domina tu instrumento</p><h3 class="relative mt-2 rotate-1 text-5xl font-black uppercase leading-[.88] tracking-[-.06em] text-white sm:text-7xl">Guitarra<br/><span class="text-[#e5a553]">eléctrica</span></h3><p class="relative mt-5 max-w-sm text-[10px] leading-5 text-white/65">8 técnicas para encontrar tu sonido y salir al escenario.</p>
+        <ol class="relative mt-7 grid grid-cols-2 gap-x-4 gap-y-3">{guitarTopics.map((topic,i)=><li class="flex items-center gap-2 border-t border-white/10 pt-2 text-[9px] text-white/80"><span class="font-bold text-[#e5a553]">0{i+1}</span>{topic}</li>)}</ol><div class="relative mt-8 flex items-end justify-between border-t border-[#e5a553]/30 pt-4"><span class="text-[8px] uppercase tracking-[.24em] text-[#e5a553]">Guitar techniques · Vol. 01</span><span class="text-3xl font-black italic text-white/80">LN★</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div id="theory-modal" class="theory-backdrop fixed inset-0 z-[100] hidden items-center justify-center bg-black/80 p-3 backdrop-blur-md sm:p-6" role="presentation" aria-hidden="true">
+  <section class="theory-dialog flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-[var(--accent)]/35 bg-[#07100b] text-white shadow-[0_0_80px_rgb(34_255_128_/_0.18)]" role="dialog" aria-modal="true" aria-labelledby="theory-modal-title" tabindex="-1">
+    <header class="flex shrink-0 items-start justify-between gap-4 border-b border-white/10 bg-[#0b1710] px-5 py-5 sm:px-8">
+      <div><p class="text-[10px] font-bold uppercase tracking-[.24em] text-[var(--accent)]">La Nota Verde · Guía de estudio</p><h2 id="theory-modal-title" class="mt-2 text-2xl font-black uppercase tracking-tight sm:text-4xl">Teoría sin miedo</h2><p class="mt-1 text-xs text-white/60">Conceptos explicados con ejemplos para llevarlos directo a la guitarra.</p></div>
+      <button type="button" id="close-theory-modal" class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/20 text-xl transition hover:border-[var(--accent)] hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--accent)]" aria-label="Cerrar guía">×</button>
+    </header>
+    <div class="theory-scroll space-y-3 overflow-y-auto px-4 py-5 sm:px-8 sm:py-7">
+      <details class="theory-topic" open><summary>01 · El mapa del diapasón: notas y trastes</summary><div class="theory-copy"><p>En la afinación estándar, de la sexta cuerda a la primera, las cuerdas al aire son <strong>Mi–La–Re–Sol–Si–Mi (E–A–D–G–B–E)</strong>. Cada traste sube un semitono; en el traste 12 vuelve a aparecer la nota de la cuerda al aire, una octava más aguda.</p><p>Las notas naturales son <strong>Do, Re, Mi, Fa, Sol, La, Si</strong>. Entre Mi–Fa y Si–Do hay un semitono; entre las demás parejas naturales hay un tono. El sostenido (♯) sube un semitono y el bemol (♭) baja uno. Por ejemplo, Fa♯ y Sol♭ suenan igual en la guitarra, aunque su escritura y función musical pueden ser distintas.</p><div class="mt-4 overflow-x-auto rounded-xl border border-white/10"><table class="fretboard min-w-[780px] text-center text-xs"><thead><tr><th>Cuerda / traste</th>{Array.from({length:13},(_,i)=><th>{i===0?'Al aire':i}</th>)}</tr></thead><tbody>{fretNotes.map(row=><tr><th>{row.string}</th>{row.notes.map((note,i)=><td class:list={[i===0||i===12?'octave-note':'',note.includes('♯')?'accidental':'']}>{note}</td>)}</tr>)}</tbody></table></div><p class="text-xs text-white/55">Referencia visual: trastes 0–12. Las notas con sostenido también pueden nombrarse con bemoles equivalentes.</p></div></details>
+      <details class="theory-topic"><summary>02 · ¿Qué es un intervalo?</summary><div class="theory-copy"><p>Un <strong>intervalo</strong> es la relación de altura entre dos notas. Se identifica por su número (segunda, tercera, quinta…) y su cualidad (mayor, menor, justa, aumentada o disminuida). Para hallarlo, cuenta primero los nombres de nota incluyendo origen y destino; después confirma la distancia en semitonos.</p><p>Ejemplos: Do–Mi es una tercera mayor (4 semitonos); Do–Sol es una quinta justa (7 semitonos). La octava separa dos notas con el mismo nombre, a 12 semitonos.</p><div class="mt-4 grid gap-2 sm:grid-cols-2">{intervals.map(([name,short,semitones])=><div class="interval-chip"><span>{name} <b>({short})</b></span><strong>{semitones} st</strong></div>)}</div><p>En la guitarra, un semitono equivale a un traste en la misma cuerda. En cuerdas contiguas, recuerda que entre Sol y Si la afinación cambia el patrón visual habitual.</p></div></details>
+      <details class="theory-topic"><summary>03 · ¿Qué es un acorde? Construcción de tríadas</summary><div class="theory-copy"><p>Un <strong>acorde</strong> reúne tres o más notas que se escuchan simultáneamente o se perciben como una unidad armónica. La nota que da nombre y sensación de reposo es la <strong>fundamental</strong>. Una tríada se construye superponiendo dos terceras: fundamental, tercera y quinta.</p><div class="mt-4 overflow-x-auto"><table class="formula-table"><thead><tr><th>Tipo</th><th>Fórmula</th><th>Semitonos</th><th>Ejemplo desde Do</th></tr></thead><tbody><tr><td>Mayor</td><td>1 – 3 – 5</td><td>0 – 4 – 7</td><td>Do – Mi – Sol</td></tr><tr><td>Menor</td><td>1 – ♭3 – 5</td><td>0 – 3 – 7</td><td>Do – Mi♭ – Sol</td></tr><tr><td>Disminuido</td><td>1 – ♭3 – ♭5</td><td>0 – 3 – 6</td><td>Do – Mi♭ – Sol♭</td></tr><tr><td>Aumentado</td><td>1 – 3 – ♯5</td><td>0 – 4 – 8</td><td>Do – Mi – Sol♯</td></tr></tbody></table></div><p>La tercera define el color mayor o menor; la quinta aporta estabilidad o tensión según sea justa, disminuida o aumentada. Ejercicio: forma Re mayor (Re–Fa♯–La) y Re menor (Re–Fa–La) y escucha cómo cambia una sola nota.</p></div></details>
+      <details class="theory-topic"><summary>04 · Acordes de séptima: sumar una tercera</summary><div class="theory-copy"><p>Al añadir otra tercera sobre la tríada aparece una nota a distancia de séptima de la fundamental. Ese intervalo añade un matiz de color y, en muchos contextos, dirección armónica.</p><div class="mt-4 overflow-x-auto"><table class="formula-table"><thead><tr><th>Acorde</th><th>Fórmula</th><th>Semitonos</th><th>Ejemplo en Do</th></tr></thead><tbody><tr><td>Maj7</td><td>1 – 3 – 5 – 7</td><td>0 – 4 – 7 – 11</td><td>Do – Mi – Sol – Si</td></tr><tr><td>7 dominante</td><td>1 – 3 – 5 – ♭7</td><td>0 – 4 – 7 – 10</td><td>Do – Mi – Sol – Si♭</td></tr><tr><td>m7</td><td>1 – ♭3 – 5 – ♭7</td><td>0 – 3 – 7 – 10</td><td>Do – Mi♭ – Sol – Si♭</td></tr><tr><td>m7♭5</td><td>1 – ♭3 – ♭5 – ♭7</td><td>0 – 3 – 6 – 10</td><td>Do – Mi♭ – Sol♭ – Si♭</td></tr></tbody></table></div><p>En guitarra no siempre se tocan todas las notas en ese orden: se pueden duplicar, omitir o reorganizar notas para crear una posición cómoda. Lo importante es conservar las notas que definen el acorde, sobre todo tercera y séptima.</p></div></details>
+      <details class="theory-topic"><summary>05 · Escalas, tonalidad y función armónica</summary><div class="theory-copy"><p>Una escala ordena notas alrededor de una referencia. La escala mayor sigue el patrón de tonos y semitonos <strong>T–T–S–T–T–T–S</strong>. Al formar tríadas con cada grado de Do mayor resultan: <strong>Do, Rem, Mim, Fa, Sol, Lam y Si disminuido</strong> (I, ii, iii, IV, V, vi, vii°).</p><p>En términos sencillos, la <strong>tónica</strong> (I) funciona como reposo; la región de <strong>subdominante</strong> (por ejemplo IV) suele alejarse de ese reposo; y la <strong>dominante</strong> (V o V7) crea tensión que suele resolver hacia I. Escucha la progresión Do–Fa–Sol7–Do y describe cómo cambia la sensación en cada paso.</p></div></details>
+      <details class="theory-topic"><summary>06 · Práctica guiada: del traste al acorde</summary><div class="theory-copy"><ol class="list-decimal space-y-2 pl-5"><li>Encuentra Do en la quinta cuerda, traste 3. Sube un traste cada vez y di el nombre de cada nota en voz alta.</li><li>Desde Do, localiza Mi (tercera mayor) y Sol (quinta justa); juntas forman Do mayor.</li><li>Baja Mi a Mi♭ para convertirlo en Do menor y compara ambos sonidos.</li><li>Añade Si♭ para construir Do7. Resuelve después a Fa y escucha la dirección de la séptima.</li><li>Repite el ejercicio en otras fundamentales y nombra cada intervalo antes de tocarlo.</li></ol><p class="mt-4">Consejo: estudia despacio, canta las notas y confirma el sonido con tu instrumento. La teoría sirve para reconocer y elegir sonidos, no para reemplazar la escucha.</p></div></details>
+      <p class="px-1 pt-2 text-[10px] leading-5 text-white/45">Guía didáctica original. Temas organizados como apoyo de estudio y consulta; referencia de alcance: Enric Herrera, <em>Teoría musical y armonía moderna, Vol. 1</em>.</p>
+    </div>
+  </section>
+</div>
+
+<style>
+  .theory-backdrop { position: fixed; inset: 0; z-index: 9999; padding: clamp(.5rem, 2vw, 1.5rem); overflow: hidden; background: rgb(0 0 0 / .97); backdrop-filter: blur(8px); }
+  .theory-dialog { --accent: #63f58c; width: min(100%, 64rem); max-height: min(92vh, calc(100dvh - 1rem)); min-height: 0; animation: modal-enter .28s cubic-bezier(.2,.8,.2,1) both; }
+  .theory-scroll { min-height: 0; overscroll-behavior: contain; }
+  .theory-topic { overflow: hidden; border: 1px solid rgb(255 255 255 / .12); border-radius: .85rem; background: rgb(255 255 255 / .035); transition: border-color .25s, background .25s; }
+  .theory-topic[open] { border-color: rgb(92 255 145 / .42); background: rgb(25 65 39 / .18); }
+  .theory-topic summary { display: flex; cursor: pointer; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.15rem; font-family: 'Kode Mono', monospace; font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; transition: color .2s; }
+  .theory-topic summary:hover, .theory-topic summary:focus-visible { color: var(--accent); }
+  .theory-topic summary::after { content: '+'; color: var(--accent); font-size: 1.2rem; }
+  .theory-topic[open] summary::after { content: '−'; }
+  .theory-copy { padding: 0 1.15rem 1.2rem; color: rgb(255 255 255 / .78); font-size: .85rem; line-height: 1.75; overflow-wrap: anywhere; }
+  .theory-copy p + p { margin-top: .8rem; }
+  .theory-copy strong { color: white; }
+  .fretboard, .formula-table { width: 100%; border-collapse: collapse; }
+  .fretboard th, .fretboard td, .formula-table th, .formula-table td { border: 1px solid rgb(255 255 255 / .1); padding: .48rem .55rem; white-space: nowrap; }
+  .fretboard th, .formula-table th { background: rgb(92 255 145 / .1); color: var(--accent); font-size: .65rem; }
+  .fretboard td { color: rgb(255 255 255 / .85); }
+  .fretboard .octave-note { background: rgb(92 255 145 / .14); color: white; font-weight: 800; }
+  .fretboard .accidental { color: #a9d4ff; }
+  .formula-table { min-width: 570px; font-size: .75rem; text-align: left; }
+  .formula-table td:first-child { color: white; font-weight: 700; }
+  .interval-chip { display: flex; justify-content: space-between; gap: .5rem; border: 1px solid rgb(255 255 255 / .1); border-radius: .55rem; padding: .5rem .65rem; font-size: .75rem; }
+  .interval-chip b, .interval-chip strong { color: var(--accent); }
+  @keyframes modal-enter { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  @media (max-width: 480px) {
+    .theory-backdrop { padding: .5rem; }
+    .theory-dialog { max-height: calc(100dvh - 1rem); border-radius: 1rem; }
+    .theory-dialog header { padding: .9rem; }
+    .theory-dialog header h2 { font-size: 1.3rem; }
+    .theory-dialog header p:last-child { max-width: 15rem; font-size: .68rem; line-height: 1.5; }
+    .theory-scroll { padding: .75rem; }
+    .theory-topic summary { gap: .5rem; padding: .8rem; font-size: .68rem; line-height: 1.5; }
+    .theory-copy { padding: 0 .8rem .9rem; font-size: .78rem; line-height: 1.7; }
+  }
+  @media (prefers-reduced-motion: reduce) { .theory-dialog, .theory-topic { animation: none; transition: none; } }
+</style>
+
+<script is:inline>
+  (() => {
+    const poster = document.getElementById('theory-poster');
+    const modal = document.getElementById('theory-modal');
+    const dialog = modal?.querySelector('[role="dialog"]');
+    const closeButton = document.getElementById('close-theory-modal');
+    if (!poster || !modal || !dialog || !closeButton) return;
+    // Move the dialog out of the page's layout so sticky headers and stacking contexts cannot cover it.
+    document.body.append(modal);
+    let previousFocus = null;
+    const openModal = () => {
+      previousFocus = document.activeElement;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      dialog.focus();
+    };
+    const closeModal = () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
+    poster.addEventListener('click', openModal);
+    poster.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openModal();
+      }
+    });
+    closeButton.addEventListener('click', closeModal);
+    modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.classList.contains('hidden')) closeModal();
+    });
+  })();
+</script>

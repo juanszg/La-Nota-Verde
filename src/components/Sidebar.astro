@@ -4,11 +4,11 @@ import { navigationItems } from '../data/navigation';
 ---
 <aside id="app-sidebar" class="fixed inset-y-18 left-0 z-30 hidden w-64 flex-col border-r border-[var(--border)] bg-[color:var(--surface)]/90 p-4 backdrop-blur-xl transition-[width] duration-300 lg:flex" aria-label="Panel de navegación">
   <nav class="grid gap-1" aria-label="Secciones de la plataforma">
-    {navigationItems.map(({ label, href, icon }) => <a href={href} class="sidebar-link flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-[var(--text-muted)] transition hover:bg-neon/10 hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-neon"><Icon name={icon} /><span>{label}</span></a>)}
+    {navigationItems.map(({ label, href, icon }) => <a href={href} class="sidebar-link glow-hover flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-[var(--text-muted)] transition hover:bg-neon/10 hover:text-[var(--text-primary)] focus-visible:outline-2 focus-visible:outline-neon"><Icon name={icon} /><span>{label}</span></a>)}
   </nav>
   <div class="mt-auto rounded-2xl border border-neon/15 bg-neon/5 p-4">
-    <p class="sidebar-label text-xs font-semibold uppercase tracking-[0.14em] text-neon">En construcción</p>
-    <p class="sidebar-copy mt-2 text-xs leading-relaxed text-[var(--text-muted)]">Tu espacio musical irá creciendo aquí, módulo por módulo.</p>
+    <p class="sidebar-label text-xs font-semibold uppercase tracking-[0.14em] text-[var(--accent)]">Tu siguiente paso</p>
+    <p class="sidebar-copy mt-2 text-xs leading-relaxed text-[var(--text-muted)]">Explora las herramientas, elige una ruta y empieza a tocar.</p>
   </div>
 </aside>
 <script is:inline>

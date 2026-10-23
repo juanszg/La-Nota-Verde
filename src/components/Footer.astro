@@ -1,10 +1,9 @@
 ---
 import Brand from './Brand.astro';
 ---
-<footer class="border-t border-[var(--border)]">
-  <div class="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-    <Brand />
-    <p class="text-xs leading-relaxed text-[var(--text-muted)]">Una plataforma en evolución para aprender, practicar y escribir música.</p>
-    <p class="text-xs text-[var(--text-muted)]">© {new Date().getFullYear()} La Nota Verde</p>
+<footer class="border-t border-[var(--border)] lg:pl-64">
+  <div class="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 lg:px-8">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"><Brand /><p class="max-w-md text-xs leading-6 text-[var(--text-muted)]">Una comunidad para aprender, practicar y encontrar tu propio sonido.</p><p class="text-xs text-[var(--text-muted)]">© {new Date().getFullYear()} La Nota Verde</p></div>
+    <div class="flex flex-wrap gap-3 border-t border-[var(--border)] pt-5"><a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram de La Nota Verde" class="glow-hover rounded-full border border-[var(--border)] px-4 py-2 text-xs text-[var(--text-muted)] transition hover:border-neon hover:text-[var(--accent)]">Instagram ↗</a><a href="https://wa.me/?text=Hola%2C%20quiero%20empezar%20a%20aprender%20m%C3%BAsica%20con%20La%20Nota%20Verde" target="_blank" rel="noopener noreferrer" aria-label="Contactar La Nota Verde por WhatsApp" class="glow-hover rounded-full border border-[var(--border)] px-4 py-2 text-xs text-[var(--text-muted)] transition hover:border-neon hover:text-[var(--accent)]">WhatsApp ↗</a></div>
   </div>
 </footer>

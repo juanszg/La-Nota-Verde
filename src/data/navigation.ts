@@ -1,7 +1,8 @@
 export const navigationItems = [
   { label: 'Inicio', href: '/', icon: 'home' },
-  { label: 'Aprender', href: '#aprender', icon: 'book' },
-  { label: 'Herramientas', href: '#herramientas', icon: 'spark' },
+  { label: 'Herramientas', href: '/herramientas', icon: 'spark' },
+  { label: 'Aprender', href: '/aprender', icon: 'book' },
+  { label: 'Empezar', href: '/#empezar', icon: 'wave' },
 ];
 
 export const upcomingModules = [

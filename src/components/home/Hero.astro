@@ -8,23 +8,23 @@ import Icon from '../../icons/Icon.astro';
   <div class="absolute -right-20 top-32 -z-10 h-80 w-80 rounded-full bg-neon/12 blur-[110px]"></div>
   <div class="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_.95fr]">
     <div class="max-w-3xl">
-      <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-neon/20 bg-neon/8 px-3 py-1.5 text-xs font-semibold tracking-wide text-neon"><span class="h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_10px_#16db65]"></span> TU ESPACIO MUSICAL, EN EVOLUCIÓN</p>
-      <h1 class="text-5xl font-bold leading-[0.98] tracking-[-0.06em] text-[var(--text-primary)] sm:text-7xl lg:text-8xl">LA NOTA<br /><span class="text-neon">VERDE</span></h1>
+      <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-neon/20 bg-neon/8 px-3 py-1.5 text-xs font-semibold tracking-wide text-[var(--accent)]"><span class="h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_10px_#16db65]"></span> TU ESPACIO MUSICAL, EN EVOLUCIÓN</p>
+      <h1 class="text-5xl font-bold leading-[0.98] tracking-[-0.06em] text-[var(--text-primary)] sm:text-7xl lg:text-8xl">LA NOTA<br /><span class="text-[var(--accent)]">VERDE</span></h1>
       <p class="mt-7 max-w-xl text-base leading-8 text-[var(--text-muted)] sm:text-lg">Un nuevo lugar para aprender, practicar y escribir música. Diseñado para que tus ideas suenen claras desde la primera nota.</p>
-      <div class="mt-9 flex flex-wrap gap-3"><Button href="#ecosistema">Explorar la plataforma <Icon name="arrow" size={18} /></Button><Button href="#vision" variant="secondary">Conocer la visión</Button></div>
-      <dl class="mt-12 flex gap-8 border-t border-[var(--border)] pt-6 sm:gap-12"><div><dt class="text-2xl font-bold text-neon">01</dt><dd class="mt-1 text-xs text-[var(--text-muted)]">Plataforma modular</dd></div><div><dt class="text-2xl font-bold text-neon">∞</dt><dd class="mt-1 text-xs text-[var(--text-muted)]">Ideas por explorar</dd></div><div><dt class="text-2xl font-bold text-neon">100%</dt><dd class="mt-1 text-xs text-[var(--text-muted)]">Hecho para músicos</dd></div></dl>
+      <div class="mt-9 flex flex-wrap gap-3"><Button href="/herramientas">Explorar herramientas <Icon name="arrow" size={18} /></Button><Button href="/aprender" variant="secondary">Ver rutas de aprendizaje</Button></div>
+      <dl class="mt-12 flex gap-8 border-t border-[var(--border)] pt-6 sm:gap-12"><div><dt class="text-2xl font-bold text-[var(--accent)]">01</dt><dd class="mt-1 text-xs text-[var(--text-muted)]">Plataforma modular</dd></div></dl>
     </div>
     <div class="relative mx-auto w-full max-w-xl" aria-label="Vista previa conceptual del espacio musical">
       <div class="glass relative overflow-hidden rounded-[2rem] p-4 shadow-[0_30px_90px_rgb(0_0_0_/_0.32)]">
         <div class="flex items-center justify-between border-b border-[var(--border)] pb-4"><div class="flex gap-1.5"><span class="h-2.5 w-2.5 rounded-full bg-neon"></span><span class="h-2.5 w-2.5 rounded-full bg-forest"></span><span class="h-2.5 w-2.5 rounded-full bg-evergreen"></span></div><span class="text-[10px] uppercase tracking-[0.16em] text-[var(--text-muted)]">Session 01</span></div>
-        <div class="relative mt-4 overflow-hidden rounded-2xl bg-ink p-5 sm:p-7">
+        <div class="app-dark-art relative mt-4 overflow-hidden rounded-2xl bg-ink p-5 sm:p-7">
           <div class="absolute inset-0 opacity-60 app-grid"></div>
-          <div class="relative flex items-start justify-between"><div><p class="text-[10px] uppercase tracking-[0.18em] text-neon">Boceto musical</p><h2 class="mt-2 text-xl font-semibold">Encuentra tu pulso</h2></div><span class="grid h-10 w-10 place-items-center rounded-xl bg-neon text-ink"><Icon name="pulse" /></span></div>
-          <div class="relative mt-12 space-y-4" aria-hidden="true">{[0, 1, 2, 3, 4].map((line) => <div class="h-px bg-neon/30" style={`transform: translateX(${line % 2 ? 5 : 0}px)`}></div>)}<div class="absolute left-[18%] top-[-1.2rem] text-5xl text-neon">♪</div><div class="absolute left-[50%] top-[.4rem] text-5xl text-neon/90">♫</div><div class="absolute right-[12%] top-[-.6rem] text-4xl text-neon/75">♪</div></div>
+          <div class="relative flex items-start justify-between"><div><p class="text-[10px] uppercase tracking-[0.18em] text-[var(--accent)]">Boceto musical</p><h2 class="mt-2 text-xl font-semibold">Encuentra tu pulso</h2></div><span class="grid h-10 w-10 place-items-center rounded-xl bg-neon text-ink"><Icon name="pulse" /></span></div>
+          <div class="relative mt-12 space-y-4" aria-hidden="true">{[0, 1, 2, 3, 4].map((line) => <div class="h-px bg-neon/30" style={`transform: translateX(${line % 2 ? 5 : 0}px)`}></div>)}<div class="absolute left-[18%] top-[-1.2rem] text-5xl text-[var(--accent)]">♪</div><div class="absolute left-[50%] top-[.4rem] text-5xl text-[var(--accent)]/90">♫</div><div class="absolute right-[12%] top-[-.6rem] text-4xl text-[var(--accent)]/75">♪</div></div>
           <div class="relative mt-11 grid grid-cols-3 gap-2"><div class="h-1 rounded-full bg-neon"></div><div class="h-1 rounded-full bg-neon/25"></div><div class="h-1 rounded-full bg-neon/25"></div></div>
         </div>
       </div>
-      <div class="absolute -bottom-7 -left-5 glass hidden rounded-2xl px-4 py-3 shadow-xl sm:flex sm:items-center sm:gap-3"><span class="grid h-9 w-9 place-items-center rounded-xl bg-neon/15 text-neon"><Icon name="wave" size={18} /></span><div><p class="text-[10px] text-[var(--text-muted)]">Próximamente</p><p class="text-xs font-semibold">Tu práctica, visible</p></div></div>
+      <div class="absolute -bottom-7 -left-5 glass hidden rounded-2xl px-4 py-3 shadow-xl sm:flex sm:items-center sm:gap-3"><span class="grid h-9 w-9 place-items-center rounded-xl bg-neon/15 text-[var(--accent)]"><Icon name="wave" size={18} /></span><div><p class="text-[10px] text-[var(--text-muted)]">Próximamente</p><p class="text-xs font-semibold">Tu práctica, visible</p></div></div>
     </div>
   </div>
 </section>

@@ -13,6 +13,15 @@ const { title = 'LA NOTA VERDE', description = 'Aprende, practica y escribe mús
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#020202" />
+    <script is:inline>
+      let savedTheme;
+      try { savedTheme = localStorage.getItem('lnv-theme'); } catch {}
+      if (!savedTheme) savedTheme = document.cookie.match(/(?:^|;\s*)lnv-theme=(light|dark)(?:;|$)/)?.[1];
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        document.documentElement.dataset.theme = savedTheme;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', savedTheme === 'light' ? '#f6fff8' : '#020202');
+      }
+    </script>
     <title>{title}</title>
   </head>
   <body>

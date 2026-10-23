@@ -1,17 +1,17 @@
 ---
 import Icon from '../../icons/Icon.astro';
 ---
-<button id="theme-toggle" class="grid h-10 w-10 place-items-center rounded-xl text-[var(--text-primary)] transition hover:bg-neon/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon" type="button" aria-label="Cambiar tema">
+<button id="theme-toggle" class="grid h-10 w-10 place-items-center rounded-xl text-[var(--accent)] transition hover:bg-neon/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neon" type="button" aria-label="Cambiar tema">
   <Icon name="sun" size={19} />
 </button>
 <script is:inline>
   const button = document.querySelector('#theme-toggle');
   const root = document.documentElement;
-  const savedTheme = localStorage.getItem('lnv-theme');
-  if (savedTheme) root.dataset.theme = savedTheme;
   button?.addEventListener('click', () => {
     const nextTheme = root.dataset.theme === 'light' ? 'dark' : 'light';
     root.dataset.theme = nextTheme;
-    localStorage.setItem('lnv-theme', nextTheme);
+    try { localStorage.setItem('lnv-theme', nextTheme); } catch {}
+    document.cookie = `lnv-theme=${nextTheme}; Max-Age=31536000; Path=/; SameSite=Lax`;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', nextTheme === 'light' ? '#f6fff8' : '#020202');
   });
 </script>
