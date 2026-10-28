@@ -2,6 +2,7 @@ export const navigationItems = [
   { label: 'Inicio', href: '/', icon: 'home' },
   { label: 'Herramientas', href: '/herramientas', icon: 'spark' },
   { label: 'Aprender', href: '/aprender', icon: 'book' },
+  { label: 'Escribe', href: '/escribe', icon: 'note' },
   { label: 'Empezar', href: '/#empezar', icon: 'wave' },
 ];
 

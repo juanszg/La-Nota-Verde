@@ -3,3 +3,7 @@ dist/
 .astro/
 .npm-cache/
 .DS_Store
+
+# alphaTab copies its runtime font and soundfont here.
+public/font/
+public/soundfont/

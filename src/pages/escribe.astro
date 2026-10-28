@@ -1,0 +1,168 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Escribe música — LA NOTA VERDE" description="Escribe música con tablatura y partitura sincronizadas, practica con ejercicios y exporta tus creaciones.">
+  <div class="app-grid min-h-[20vh] px-5 pb-5 pt-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl text-center">
+      <p class="text-xs font-bold uppercase tracking-[.2em] text-[var(--accent)]">Tu cuaderno de música</p>
+      <h1 class="page-title mt-3 text-4xl font-bold sm:text-6xl">Escribe</h1>
+      <p class="mx-auto mt-4 max-w-3xl text-xs leading-6 text-[var(--text-muted)] sm:text-sm sm:leading-7">
+        Crea una frase en la guitarra y mírala convertida al mismo tiempo en tablatura y partitura. Guarda tu proyecto para continuar en otra clase.
+      </p>
+    </div>
+  </div>
+
+  <section class="px-4 pb-16 sm:px-6 lg:px-8" aria-label="Editor musical">
+    <div class="mx-auto w-full max-w-none">
+      <div class="mb-5 grid gap-3 sm:grid-cols-3">
+        <button type="button" data-practice="warmup" class="practice-load tool-card surface rounded-2xl p-4 text-left">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 01</span>
+          <strong class="mt-2 block text-sm">Calentamiento cromático</strong>
+          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Lectura progresiva por las seis cuerdas.</span>
+        </button>
+        <button type="button" data-practice="pentatonic" class="practice-load tool-card surface rounded-2xl p-4 text-left">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 02</span>
+          <strong class="mt-2 block text-sm">Pentatónica de La menor</strong>
+          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Sube y baja la forma básica en posición abierta.</span>
+        </button>
+        <button type="button" data-practice="reading" class="practice-load tool-card surface rounded-2xl p-4 text-left">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 03</span>
+          <strong class="mt-2 block text-sm">Lectura en Mi mayor</strong>
+          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Notas largas y cortas sobre la primera cuerda.</span>
+        </button>
+      </div>
+
+      <div class="grid items-start gap-5 xl:grid-cols-[minmax(22rem,.8fr)_minmax(0,1.6fr)]">
+        <section class="surface min-w-0 rounded-3xl p-4 sm:p-6" aria-labelledby="editor-heading">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-[var(--accent)]">Composición</p>
+              <h2 id="editor-heading" class="mt-2 text-xl font-bold">Nueva frase</h2>
+            </div>
+            <span class="rounded-full border border-[var(--border)] px-3 py-1 text-[9px] text-[var(--text-muted)]">4/4 · afinación estándar</span>
+          </div>
+
+          <label for="score-title" class="mt-5 block text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Nombre de la práctica</label>
+          <input id="score-title" maxlength="80" class="editor-input mt-2 w-full rounded-xl px-3 py-3 text-xs" value="Mi primera idea" />
+
+          <label for="score-tempo" class="mt-4 block text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Tempo · BPM</label>
+          <div class="mt-2 flex items-center gap-3">
+            <input id="score-tempo" class="editor-input min-w-0 flex-1 rounded-xl px-3 py-3 text-xs" type="number" min="40" max="220" value="88" />
+            <span class="text-[10px] text-[var(--text-muted)]">negras por minuto</span>
+          </div>
+
+          <div id="note-entry-controls" class="mt-6 border-t border-[var(--border)] pt-5">
+            <h3 class="text-xs font-bold">Añade o edita una nota</h3>
+            <p id="edit-hint" class="mt-1 text-[9px] leading-5 text-[var(--text-muted)]">Elige cuerda y traste; la nota se calcula automáticamente.</p>
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <label class="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Cuerda
+                <select id="note-string" class="editor-input mt-2 w-full rounded-lg px-2 py-3 text-[10px] normal-case">
+                  <option value="1">1.ª · Mi aguda (E4)</option><option value="2">2.ª · Si (B3)</option><option value="3">3.ª · Sol (G3)</option><option value="4">4.ª · Re (D3)</option><option value="5">5.ª · La (A2)</option><option value="6">6.ª · Mi grave (E2)</option>
+                </select>
+              </label>
+              <label class="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Traste
+                <select id="note-fret" class="editor-input mt-2 w-full rounded-lg px-2 py-3 text-[10px] normal-case">
+                  {Array.from({length: 25}, (_, fret) => <option value={fret}>{fret === 0 ? '0 · al aire' : fret}</option>)}
+                </select>
+              </label>
+              <label class="col-span-2 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Duración
+                <select id="note-duration" class="editor-input mt-2 w-full rounded-lg px-2 py-3 text-[10px] normal-case">
+                  <option value="4">Negra · cuarto (1/4) · 1 pulso</option><option value="8">Corchea · octavo (1/8) · ½ pulso</option><option value="2">Blanca · medio (1/2) · 2 pulsos</option><option value="16">Semicorchea · dieciseisavo (1/16) · ¼ pulso</option><option value="1">Redonda · 4 pulsos</option>
+                </select>
+              </label>
+            </div>
+            <div class="mt-3 grid grid-cols-2 gap-2">
+              <button id="add-note" type="button" class="rounded-xl bg-neon px-3 py-3 text-[10px] font-bold text-ink transition hover:bg-white">＋ Añadir nota</button>
+              <button id="add-rest" type="button" class="rounded-xl border border-[var(--border)] px-3 py-3 text-[10px] font-bold text-[var(--text-primary)] transition hover:border-neon hover:text-[var(--accent)]">＋ Añadir silencio</button>
+            </div>
+            <button id="cancel-edit" type="button" class="mt-2 hidden w-full rounded-xl border border-[var(--border)] px-3 py-2 text-[10px] font-bold text-[var(--text-muted)] transition hover:border-neon hover:text-[var(--accent)]">Cancelar edición</button>
+          </div>
+
+          <div class="mt-6 border-t border-[var(--border)] pt-5">
+            <div class="flex items-center justify-between gap-3">
+              <div><h3 class="text-xs font-bold">Secuencia por compás</h3><p class="mt-1 text-[9px] leading-4 text-[var(--text-muted)]">Cada elemento indica compás y tiempo. Pulsa Editar para cambiarlo o Quitar para eliminarlo.</p></div>
+              <span id="note-count" class="text-[9px] text-[var(--text-muted)]" aria-live="polite">0 notas</span>
+            </div>
+            <ol id="note-list" class="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1" aria-label="Notas y silencios de la práctica"></ol>
+            <p id="empty-sequence" class="rounded-xl border border-dashed border-[var(--border)] px-3 py-5 text-center text-[9px] leading-5 text-[var(--text-muted)]">Carga una práctica de ejemplo o añade tu primera nota.</p>
+          </div>
+
+          <div class="mt-4 grid grid-cols-2 gap-2">
+            <button id="play-score" type="button" class="rounded-xl border border-neon/40 px-3 py-3 text-[10px] font-bold text-[var(--accent)] transition hover:bg-neon/10">▶ Escuchar</button>
+            <button id="clear-score" type="button" class="rounded-xl border border-[var(--border)] px-3 py-3 text-[10px] font-bold text-[var(--text-muted)] transition hover:border-red-400 hover:text-red-400">Vaciar</button>
+          </div>
+          <p id="editor-status" class="mt-3 min-h-8 text-[9px] leading-5 text-[var(--text-muted)]" aria-live="polite">Tus cambios se guardan automáticamente en este navegador.</p>
+        </section>
+
+        <section class="min-w-0" aria-labelledby="preview-heading">
+          <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[.18em] text-[var(--accent)]">Vista sincronizada</p>
+              <h2 id="preview-heading" class="mt-1 text-lg font-bold">Partitura + tablatura</h2>
+            </div>
+            <button id="print-score" type="button" class="rounded-xl border border-[var(--border)] px-3 py-2 text-[9px] font-bold text-[var(--text-primary)] transition hover:border-neon hover:text-[var(--accent)]">Imprimir / Guardar PDF</button>
+          </div>
+
+          <div id="score-paper" class="score-paper rounded-2xl p-4 sm:p-7">
+            <h3 id="paper-title" class="mb-3 border-b border-black/10 pb-2 text-lg font-bold text-black">Mi primera idea</h3>
+            <div id="score-preview" class="score-preview min-h-64" aria-label="Partitura y tablatura generadas"></div>
+            <p class="mt-4 border-t border-black/10 pt-3 text-[9px] leading-5 text-black/60">La notación convencional y la tablatura describen la misma ejecución. Los números indican el traste; la línea superior de la tablatura es la primera cuerda (Mi aguda).</p>
+          </div>
+
+          <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <button id="save-project" type="button" class="rounded-xl bg-neon px-3 py-3 text-[9px] font-bold text-ink transition hover:bg-white">Guardar proyecto</button>
+            <button id="load-project" type="button" class="rounded-xl border border-[var(--border)] px-3 py-3 text-[9px] font-bold text-[var(--text-primary)] transition hover:border-neon hover:text-[var(--accent)]">Abrir archivo</button>
+            <button id="export-gp" type="button" class="rounded-xl border border-[var(--border)] px-3 py-3 text-[9px] font-bold text-[var(--text-primary)] transition hover:border-neon hover:text-[var(--accent)]">Guitar Pro · .gp</button>
+            <button id="export-musicxml" type="button" class="rounded-xl border border-[var(--border)] px-3 py-3 text-[9px] font-bold text-[var(--text-primary)] transition hover:border-neon hover:text-[var(--accent)]">MusicXML · .musicxml</button>
+            <button id="export-atex" type="button" class="rounded-xl border border-[var(--border)] px-3 py-3 text-[9px] font-bold text-[var(--text-primary)] transition hover:border-neon hover:text-[var(--accent)]">AlphaTex · .atex</button>
+            <button id="export-png" type="button" class="rounded-xl border border-[var(--border)] px-3 py-3 text-[9px] font-bold text-[var(--text-primary)] transition hover:border-neon hover:text-[var(--accent)]">Imagen · .png</button>
+          </div>
+          <input id="score-file" type="file" class="sr-only" accept=".lnv.json,.json,.gp,.gpx,.gp3,.gp4,.gp5,.gpif,.musicxml,.xml,.mxl,.atex,.alphatex,.txt" />
+          <p class="mt-3 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-3 text-[9px] leading-5 text-[var(--text-muted)]">
+            <strong class="text-[var(--text-primary)]">Formatos:</strong> puedes abrir GPX, Guitar Pro y MusicXML. Para compartir desde aquí, exporta .gp (Guitar Pro 7+) o .musicxml; el GPX de Guitar Pro 6 es un formato antiguo que se puede importar, pero no generar desde este editor.
+          </p>
+        </section>
+      </div>
+
+      <div class="mt-8 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4 sm:p-5">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+          <div><p class="text-[10px] font-bold uppercase tracking-[.18em] text-[var(--accent)]">Guarda y retoma</p><h2 class="mt-2 text-sm font-bold">Tu archivo propio, además de formatos musicales</h2></div>
+          <a href="/guitarra/diapason" class="inline-flex items-center gap-2 self-start rounded-xl border border-neon/30 px-3 py-2 text-[9px] font-bold text-[var(--accent)] transition hover:bg-neon/10">Explorar escalas en el diapasón →</a>
+        </div>
+        <p class="mt-3 max-w-4xl text-[9px] leading-5 text-[var(--text-muted)]">“Guardar proyecto” crea un archivo .lnv.json que conserva la lista editable y el tempo. También se guarda una copia local automática. MusicXML es un formato abierto para intercambiar partituras; .gp funciona con Guitar Pro 7 y versiones posteriores. PDF se obtiene con la opción de imprimir del navegador.</p>
+      </div>
+    </div>
+  </section>
+  <script>
+    import '../scripts/escribe';
+  </script>
+</BaseLayout>
+
+<style>
+  .editor-input { border: 1px solid var(--border); background: var(--control-surface); color: var(--text-primary); outline: none; transition: border-color .2s, box-shadow .2s; }
+  .editor-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .editor-input option { color: #0d2818; background-color: #f6fff8; }
+  .practice-load { cursor: pointer; transition: transform .25s, border-color .25s, box-shadow .25s; }
+  .practice-load:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 0 24px color-mix(in srgb, var(--accent) 15%, transparent); }
+  .score-paper { background: #fff; color: #111; min-height: 26rem; overflow-x: auto; }
+  .score-preview { color: #111; }
+  .score-preview :global(svg) { display: block; max-width: 100%; height: auto; }
+  .score-preview :global(.at-surface) { color: #111; }
+  .score-preview :global(.at-wrap) { overflow-x: auto; }
+  .score-preview :global(.at-content) { min-width: 100%; }
+  #note-list li { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  #note-list .sequence-actions { display: flex; flex-shrink: 0; gap: .35rem; }
+  #note-list li.is-editing { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 18%, transparent); }
+  @media print {
+    :global(body) { background: white !important; color: black !important; }
+    :global(body *) { visibility: hidden !important; }
+    :global(#score-paper), :global(#score-paper *) { visibility: visible !important; }
+    :global(#score-paper) { position: absolute !important; inset: 0 !important; width: 100% !important; min-height: 0 !important; overflow: visible !important; padding: 0 !important; border: 0 !important; box-shadow: none !important; }
+    :global(#score-preview) { overflow: visible !important; }
+    :global(#score-preview svg) { max-width: 100% !important; }
+    @page { size: letter portrait; margin: 14mm; }
+  }
+</style>
+
+

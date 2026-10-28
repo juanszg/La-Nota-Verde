@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@coderline/alphatab": "^1.8.4",
+    "@coderline/alphatab-vite": "^1.8.4",
     "@tailwindcss/vite": "^4.1.13",
     "astro": "^5.13.7",
     "tailwindcss": "^4.1.13",
