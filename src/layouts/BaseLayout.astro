@@ -13,7 +13,12 @@ const { title = 'LA NOTA VERDE', description = 'Aprende, practica y escribe mús
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#020202" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" sizes="16x16" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=4" sizes="16x16" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=1" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="La Nota Verde" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <script is:inline>
       let savedTheme;
       try { savedTheme = localStorage.getItem('lnv-theme'); } catch {}
