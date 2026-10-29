@@ -9,7 +9,11 @@ import Icon from '../../icons/Icon.astro';
   <div class="mx-auto grid max-w-7xl items-center gap-14 lg:grid-cols-[1.05fr_.95fr]">
     <div class="max-w-3xl">
       <p class="mb-6 inline-flex items-center gap-2 rounded-full border border-neon/20 bg-neon/8 px-3 py-1.5 text-xs font-semibold tracking-wide text-[var(--accent)]"><span class="h-1.5 w-1.5 rounded-full bg-neon shadow-[0_0_10px_#16db65]"></span> TU ESPACIO MUSICAL, EN EVOLUCIÓN</p>
-      <h1 class="text-5xl font-bold leading-[0.98] tracking-[-0.06em] text-[var(--text-primary)] sm:text-7xl lg:text-8xl">LA NOTA<br /><span class="text-[var(--accent)]">VERDE</span></h1>
+      <h1 class="hero-title relative text-5xl font-bold leading-[0.98] tracking-[-0.06em] text-[var(--text-primary)] sm:text-7xl lg:text-8xl" aria-label="LA NOTA VERDE">
+        <span class="hero-line" aria-hidden="true"><span class="hero-letter" style="--letter-index:0">L</span><span class="hero-letter" style="--letter-index:1">A</span> <span class="hero-letter" style="--letter-index:2">N</span><span class="hero-letter hero-letter--green" style="--letter-index:3">O</span><span class="hero-letter" style="--letter-index:4">T</span><span class="hero-letter hero-letter--green" style="--letter-index:5">A</span></span><br aria-hidden="true" />
+        <span class="hero-line" aria-hidden="true"><span class="hero-letter hero-letter--green" style="--letter-index:6">V</span><span class="hero-letter hero-letter--green-soft" style="--letter-index:7">E</span><span class="hero-letter hero-letter--green" style="--letter-index:8">R</span><span class="hero-letter hero-letter--green-soft" style="--letter-index:9">D</span><span class="hero-letter hero-letter--green" style="--letter-index:10">E</span></span>
+        <span class="hero-note" aria-hidden="true">♫</span>
+      </h1>
       <p class="mt-7 max-w-xl text-base leading-8 text-[var(--text-muted)] sm:text-lg">Un nuevo lugar para aprender, practicar y escribir música. Diseñado para que tus ideas suenen claras desde la primera nota.</p>
       <div class="mt-9 flex flex-wrap gap-3"><Button href="/herramientas">Explorar herramientas <Icon name="arrow" size={18} /></Button><Button href="/aprender" variant="secondary">Ver rutas de aprendizaje</Button></div>
       <dl class="mt-12 flex gap-8 border-t border-[var(--border)] pt-6 sm:gap-12"><div><dt class="text-2xl font-bold text-[var(--accent)]">01</dt><dd class="mt-1 text-xs text-[var(--text-muted)]">Plataforma modular</dd></div></dl>
@@ -28,3 +32,34 @@ import Icon from '../../icons/Icon.astro';
     </div>
   </div>
 </section>
+
+<script>
+  const greenTonesDark = ['#18db65', '#4bf087', '#8dffb1', '#12b957', '#3bdd8a', '#b6ffca', '#65e889'];
+  const greenTonesLight = ['#056b32', '#087f3c', '#0a9447', '#067a37', '#1b8e4e', '#126d4a', '#22964f'];
+
+  document.querySelectorAll<HTMLElement>('.hero-letter').forEach((letter) => {
+    letter.addEventListener('pointerenter', () => {
+      const tones = document.documentElement.dataset.theme === 'light' ? greenTonesLight : greenTonesDark;
+      const tone = tones[Math.floor(Math.random() * tones.length)];
+      letter.style.setProperty('--random-green', tone);
+      letter.classList.remove('hero-letter-bounce');
+      void letter.offsetWidth;
+      letter.classList.add('hero-letter-bounce');
+    });
+    letter.addEventListener('animationend', (event) => {
+      if (event.animationName === 'hero-letter-bounce') letter.classList.remove('hero-letter-bounce');
+    });
+  });
+</script>
+
+<style>
+  .hero-title { font-family: "MuseoModerno", ui-sans-serif, system-ui, sans-serif; }
+  .hero-line { display: inline-block; white-space: nowrap; }
+  .hero-letter { display: inline-block; transition: color 240ms ease, filter 240ms ease; cursor: default; }
+  .hero-letter--green { color: var(--accent); }
+  .hero-letter--green-soft { color: color-mix(in srgb, var(--accent) 76%, var(--text-primary)); }
+  .hero-letter:hover, .hero-letter-bounce { color: var(--random-green, var(--accent)) !important; filter: drop-shadow(0 0 0.2em var(--random-green, var(--accent))); animation: hero-letter-bounce 760ms cubic-bezier(.22,.72,.24,1) both; }
+  .hero-note { position: absolute; top: -.26em; right: -.62em; color: var(--accent); font-family: Arial, sans-serif; font-size: .48em; line-height: 1; filter: drop-shadow(0 0 .2em color-mix(in srgb, var(--accent) 65%, transparent)); transform: rotate(12deg); }
+  @keyframes hero-letter-bounce { 0% { transform: translate(0, 0) scale(1) rotate(0); } 24% { transform: translate(-.055em, -.12em) scale(1.055) rotate(-2deg); } 48% { transform: translate(.045em, .015em) scale(.99) rotate(1deg); } 68% { transform: translate(-.025em, -.045em) scale(1.02) rotate(-.7deg); } 84% { transform: translate(.015em, 0) scale(1) rotate(.25deg); } 100% { transform: translate(0, 0) scale(1) rotate(0); } }
+  @media (prefers-reduced-motion: reduce) { .hero-letter-bounce { animation: none; } }
+</style>

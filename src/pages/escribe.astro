@@ -3,38 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Escribe música — LA NOTA VERDE" description="Escribe música con tablatura y partitura sincronizadas, practica con ejercicios y exporta tus creaciones.">
-  <div class="app-grid min-h-[20vh] px-5 pb-5 pt-12 sm:px-6 lg:px-8">
-    <div class="mx-auto max-w-7xl text-center">
-      <p class="text-xs font-bold uppercase tracking-[.2em] text-[var(--accent)]">Tu cuaderno de música</p>
-      <h1 class="page-title mt-3 text-4xl font-bold sm:text-6xl">Escribe</h1>
-      <p class="mx-auto mt-4 max-w-3xl text-xs leading-6 text-[var(--text-muted)] sm:text-sm sm:leading-7">
-        Crea una frase en la guitarra y mírala convertida al mismo tiempo en tablatura y partitura. Guarda tu proyecto para continuar en otra clase.
-      </p>
-    </div>
-  </div>
-
   <section class="px-4 pb-16 sm:px-6 lg:px-8" aria-label="Editor musical">
     <div class="mx-auto w-full max-w-none">
-      <div class="mb-5 grid gap-3 sm:grid-cols-3">
-        <button type="button" data-practice="warmup" class="practice-load tool-card surface rounded-2xl p-4 text-left">
-          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 01</span>
-          <strong class="mt-2 block text-sm">Calentamiento cromático</strong>
-          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Lectura progresiva por las seis cuerdas.</span>
-        </button>
-        <button type="button" data-practice="pentatonic" class="practice-load tool-card surface rounded-2xl p-4 text-left">
-          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 02</span>
-          <strong class="mt-2 block text-sm">Pentatónica de La menor</strong>
-          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Sube y baja la forma básica en posición abierta.</span>
-        </button>
-        <button type="button" data-practice="reading" class="practice-load tool-card surface rounded-2xl p-4 text-left">
-          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 03</span>
-          <strong class="mt-2 block text-sm">Lectura en Mi mayor</strong>
-          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Notas largas y cortas sobre la primera cuerda.</span>
-        </button>
-      </div>
 
       <div class="grid items-start gap-5 xl:grid-cols-[minmax(22rem,.8fr)_minmax(0,1.6fr)]">
         <section class="surface min-w-0 rounded-3xl p-4 sm:p-6" aria-labelledby="editor-heading">
+        <section class="surface mb-5 rounded-3xl p-5 sm:p-7" aria-labelledby="editor-heading">
           <div class="flex items-start justify-between gap-3">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-[.18em] text-[var(--accent)]">Composición</p>
@@ -79,12 +53,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <button id="cancel-edit" type="button" class="mt-2 hidden w-full rounded-xl border border-[var(--border)] px-3 py-2 text-[10px] font-bold text-[var(--text-muted)] transition hover:border-neon hover:text-[var(--accent)]">Cancelar edición</button>
           </div>
 
+          </section>
+
           <div class="mt-6 border-t border-[var(--border)] pt-5">
             <div class="flex items-center justify-between gap-3">
-              <div><h3 class="text-xs font-bold">Secuencia por compás</h3><p class="mt-1 text-[9px] leading-4 text-[var(--text-muted)]">Cada elemento indica compás y tiempo. Pulsa Editar para cambiarlo o Quitar para eliminarlo.</p></div>
+              <div><h3 class="text-xs font-bold">Secuencia por compás</h3><p class="mt-1 text-[9px] leading-4 text-[var(--text-muted)]">Inserta en el lugar elegido, edita o elimina. Cada compás admite hasta 4 pulsos.</p></div>
               <span id="note-count" class="text-[9px] text-[var(--text-muted)]" aria-live="polite">0 notas</span>
             </div>
-            <ol id="note-list" class="mt-3 max-h-64 space-y-2 overflow-y-auto pr-1" aria-label="Notas y silencios de la práctica"></ol>
+            <ol id="note-list" class="mt-4 max-h-[34rem] space-y-3 overflow-y-auto p-1.5" aria-label="Notas y silencios de la práctica"></ol>
+            <button id="insert-at-end" type="button" class="mt-2 w-full rounded-xl border border-dashed border-[var(--border)] px-3 py-2 text-[10px] font-bold text-[var(--accent)] transition hover:bg-neon/10">＋ Insertar al final</button>
+            <p id="bar-warning" class="mt-2 hidden rounded-lg border border-amber-400/35 bg-amber-400/10 px-3 py-2 text-[10px] leading-4 text-amber-300" role="status" aria-live="polite"></p>
             <p id="empty-sequence" class="rounded-xl border border-dashed border-[var(--border)] px-3 py-5 text-center text-[9px] leading-5 text-[var(--text-muted)]">Carga una práctica de ejemplo o añade tu primera nota.</p>
           </div>
 
@@ -95,8 +73,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <p id="editor-status" class="mt-3 min-h-8 text-[9px] leading-5 text-[var(--text-muted)]" aria-live="polite">Tus cambios se guardan automáticamente en este navegador.</p>
         </section>
 
-        <section class="min-w-0" aria-labelledby="preview-heading">
-          <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <section class="score-sticky-panel min-w-0" aria-labelledby="preview-heading">
+            <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p class="text-[10px] font-bold uppercase tracking-[.18em] text-[var(--accent)]">Vista sincronizada</p>
               <h2 id="preview-heading" class="mt-1 text-lg font-bold">Partitura + tablatura</h2>
@@ -125,6 +103,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </section>
       </div>
 
+      <section class="mt-10" aria-labelledby="practice-examples-heading">
+        <h2 id="practice-examples-heading" class="mb-4 text-lg font-bold">Prácticas de ejemplo</h2>
+      <div class="mb-5 grid gap-3 sm:grid-cols-3">
+        <button type="button" data-practice="warmup" class="practice-load tool-card surface rounded-2xl p-4 text-left">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 01</span>
+          <strong class="mt-2 block text-sm">Calentamiento cromático</strong>
+          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Lectura progresiva por las seis cuerdas.</span>
+        </button>
+        <button type="button" data-practice="pentatonic" class="practice-load tool-card surface rounded-2xl p-4 text-left">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 02</span>
+          <strong class="mt-2 block text-sm">Pentatónica de La menor</strong>
+          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Sube y baja la forma básica en posición abierta.</span>
+        </button>
+        <button type="button" data-practice="reading" class="practice-load tool-card surface rounded-2xl p-4 text-left">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Práctica 03</span>
+          <strong class="mt-2 block text-sm">Lectura en Mi mayor</strong>
+          <span class="mt-1 block text-[10px] leading-5 text-[var(--text-muted)]">Notas largas y cortas sobre la primera cuerda.</span>
+        </button>
+      </div>
+      </section>
+
       <div class="mt-8 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4 sm:p-5">
         <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
           <div><p class="text-[10px] font-bold uppercase tracking-[.18em] text-[var(--accent)]">Guarda y retoma</p><h2 class="mt-2 text-sm font-bold">Tu archivo propio, además de formatos musicales</h2></div>
@@ -140,6 +139,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
+  @media (min-width: 1280px) {
+    .score-sticky-panel { position: sticky; top: 5.5rem; height: calc(100vh - 6.25rem); max-height: calc(100vh - 6.25rem); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; padding-right: .35rem; }
+  }
   .editor-input { border: 1px solid var(--border); background: var(--control-surface); color: var(--text-primary); outline: none; transition: border-color .2s, box-shadow .2s; }
   .editor-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
   .editor-input option { color: #0d2818; background-color: #f6fff8; }
@@ -154,6 +156,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   #note-list li { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
   #note-list .sequence-actions { display: flex; flex-shrink: 0; gap: .35rem; }
   #note-list li.is-editing { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 18%, transparent); }
+  #note-list li { transition: border-color .22s ease, background-color .22s ease, box-shadow .22s ease, transform .22s ease; }
+  #note-list li:hover { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--control-surface)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 24%, transparent), 0 0 20px color-mix(in srgb, var(--accent) 18%, transparent); transform: translateY(-1px); }
+  #note-list li.is-editing { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--control-surface)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 42%, transparent), 0 0 22px color-mix(in srgb, var(--accent) 20%, transparent); }
+  :global(#note-list .sequence-card) { border-color: color-mix(in srgb, var(--measure-color) 46%, transparent); background: color-mix(in srgb, var(--measure-color) 7%, var(--control-surface)); transition: border-color .2s, box-shadow .2s, transform .2s; }
+  :global(#note-list .sequence-card:hover), :global(#note-list .sequence-card.is-editing) { border-color: var(--measure-color); box-shadow: 0 0 0 1px color-mix(in srgb, var(--measure-color) 32%, transparent), 0 0 22px color-mix(in srgb, var(--measure-color) 18%, transparent); transform: translateY(-1px); }
+  #note-list .sequence-note-name { background: color-mix(in srgb, var(--measure-color) 8%, var(--control-surface)); color: var(--text-primary); }
+  #note-list .sequence-note-info { background: color-mix(in srgb, var(--measure-color) 5%, var(--control-surface)); }
+  #note-list .sequence-actions { display: flex; flex: 0 0 auto; flex-direction: row; align-items: center; gap: .5rem; }
+  #note-list .sequence-detail { font-family: "Gabarito", ui-sans-serif, system-ui, sans-serif; }
+  #note-list .sequence-note-name { font-family: "IM Fell English", Georgia, serif; font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
+  #note-list .sequence-note-info { font-family: "Aref Ruqaa", Georgia, serif; font-size: .95rem; line-height: 1.35; }
+  #note-list .measure-label { color: var(--measure-color); font-family: "Gabarito", ui-sans-serif, system-ui, sans-serif; font-size: .8rem; }
+  :global(#note-list .entry-action) { transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease, background-color .2s ease, color .2s ease; min-height: 2.4rem; min-width: 2.8rem; padding: .5rem .65rem; text-align: center; }
+  :global(#note-list .entry-action:hover) { z-index: 2; transform: scale(1.2); box-shadow: 0 0 18px color-mix(in srgb, var(--measure-color, var(--accent)) 38%, transparent); }
+  :global(#note-list .remove-entry) { color: #ff3548; border-color: rgb(255 53 72 / .48); background: rgb(255 53 72 / .1); box-shadow: 0 0 10px rgb(255 53 72 / .1); }
+  :global(#note-list .remove-entry:hover) { color: #fff; border-color: #ff3548; background: #e5243c; box-shadow: 0 0 0 1px rgb(255 53 72 / .55), 0 0 18px rgb(255 53 72 / .48); transform: scale(1.2); }
+  @media (prefers-reduced-motion: reduce) { #note-list li { transition: none; } }
   @media print {
     :global(body) { background: white !important; color: black !important; }
     :global(body *) { visibility: hidden !important; }

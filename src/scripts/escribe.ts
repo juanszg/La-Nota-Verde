@@ -24,6 +24,8 @@ const addNoteButton = document.querySelector<HTMLButtonElement>('#add-note')!;
 const addRestButton = document.querySelector<HTMLButtonElement>('#add-rest')!;
 const cancelEditButton = document.querySelector<HTMLButtonElement>('#cancel-edit')!;
 const editHint = document.querySelector<HTMLElement>('#edit-hint')!;
+const barWarning = document.querySelector<HTMLElement>('#bar-warning')!;
+const insertAtEndButton = document.querySelector<HTMLButtonElement>('#insert-at-end')!;
 const entryControls = document.querySelector<HTMLElement>('#note-entry-controls')!;
 const storageKey = 'lnv-score-editor-v1';
 
@@ -56,6 +58,7 @@ let project: Project = { format: 'la-nota-verde-score', version: 1, title: 'Mi p
 let activeScore: alphaTab.model.Score | null = null;
 let imported = false;
 let editingIndex: number | null = null;
+let insertionIndex: number | null = null;
 let audio: AudioContext | null = null;
 let renderTimer = 0;
 let playTimer = 0;
@@ -146,6 +149,15 @@ function eventPositions(events: Entry[]): { measure: number; offset: number }[] 
     return position;
   });
 }
+function measureColor(measure: number): string {
+  const hues = [142, 48, 25, 210];
+  const hue = hues[(measure - 1) % hues.length];
+  const cycle = Math.floor((measure - 1) / hues.length);
+  const light = document.documentElement.dataset.theme === 'light'
+    ? Math.max(27, 40 - cycle * 3)
+    : Math.max(43, 68 - cycle * 7);
+  return 'hsl(' + hue + ' 82% ' + light + '%)';
+}
 function positionLabel(position: { measure: number; offset: number }): string {
   const beat = Math.floor(position.offset / 4) + 1;
   const fraction = position.offset % 4;
@@ -155,15 +167,39 @@ function positionLabel(position: { measure: number; offset: number }): string {
 function syncEditControls(): void {
   const editing = editingIndex !== null && project.events[editingIndex] !== undefined;
   if (!editing) editingIndex = null;
-  addNoteButton.textContent = editing ? '✓ Guardar como nota' : '＋ Añadir nota';
-  addRestButton.textContent = editing ? '✓ Guardar como silencio' : '＋ Añadir silencio';
-  cancelEditButton.classList.toggle('hidden', !editing);
+  const inserting = !editing && insertionIndex !== null;
+  addNoteButton.textContent = editing ? '✓ Guardar como nota' : inserting ? '＋ Insertar nota' : '＋ Añadir nota';
+  addRestButton.textContent = editing ? '✓ Guardar como silencio' : inserting ? '＋ Insertar silencio' : '＋ Añadir silencio';
+  cancelEditButton.classList.toggle('hidden', !editing && !inserting);
+  insertAtEndButton.textContent = inserting && insertionIndex === project.events.length ? 'Insertando al final · cancelar para salir' : '＋ Insertar al final';
   if (editing && editingIndex !== null) {
-    const position = eventPositions(project.events)[editingIndex];
-    editHint.textContent = 'Editando ' + positionLabel(position) + '. Ajusta cuerda, traste o duración y guarda.';
+    editHint.textContent = 'Editando ' + positionLabel(eventPositions(project.events)[editingIndex]) + '. Ajusta los controles y guarda.';
+  } else if (inserting && insertionIndex !== null) {
+    const pos = insertionPosition(project.events, insertionIndex);
+    editHint.textContent = 'Insertando en ' + positionLabel(pos) + '. Elige la figura y agrega nota o silencio.';
   } else {
     editHint.textContent = 'Elige cuerda y traste; la nota se calcula automáticamente.';
   }
+}
+function insertionPosition(events: Entry[], index: number): { measure: number; offset: number } {
+  if (index < events.length) return eventPositions(events)[index];
+  if (!events.length) return { measure: 1, offset: 0 };
+  const positions = eventPositions(events);
+  const lastIndex = events.length - 1;
+  const last = positions[lastIndex];
+  const offset = last.offset + durationUnits[events[lastIndex].duration];
+  return offset >= 16 ? { measure: last.measure + 1, offset: 0 } : { measure: last.measure, offset };
+}
+function fitsMeasure(events: Entry[], measure: number, duration: Duration, omitIndex: number | null = null): boolean {
+  const positions = eventPositions(events);
+  const used = events.reduce((sum, entry, index) =>
+    index !== omitIndex && positions[index].measure === measure ? sum + durationUnits[entry.duration] : sum, 0);
+  return used + durationUnits[duration] <= 16;
+}
+function showBarWarning(message: string): void {
+  barWarning.textContent = message;
+  barWarning.classList.remove('hidden');
+  status.textContent = message;
 }
 function drawList(): void {
   list.replaceChildren();
@@ -172,52 +208,101 @@ function drawList(): void {
   const positions = eventPositions(project.events);
   project.events.forEach((event, index) => {
     const row = document.createElement('li');
-    row.className = 'rounded-lg border border-[var(--border)] bg-[var(--control-surface)] px-3 py-2' + (editingIndex === index ? ' is-editing' : '');
+    row.className = 'sequence-card rounded-2xl border bg-[var(--control-surface)] p-4 sm:p-5' + (editingIndex === index ? ' is-editing' : '');
+    row.style.setProperty('--measure-color', measureColor(positions[index].measure));
     const label = document.createElement('span');
-    label.className = 'min-w-0 flex-1 text-[9px] leading-4 text-[var(--text-primary)]';
+    label.className = 'min-w-0 flex-1 text-[10px] leading-5 text-[var(--text-primary)]';
     const location = document.createElement('strong');
-    location.className = 'block text-[var(--accent)]';
+    location.className = 'measure-label min-w-0 text-sm font-bold sm:text-base';
     location.textContent = String(index + 1).padStart(2, '0') + ' · ' + positionLabel(positions[index]);
     const detail = document.createElement('span');
-    detail.className = 'block';
-    detail.textContent = describe(event);
+    detail.className = 'sequence-detail mt-1 block';
+    const noteName = document.createElement('span');
+    noteName.className = 'sequence-note-name block rounded-lg px-3 py-2';
+    noteName.textContent = event.kind === 'rest' ? 'Silencio' : nameOf(event);
+    const noteInfo = document.createElement('span');
+    noteInfo.className = 'sequence-note-info mt-2 block rounded-lg px-3 py-2';
+    noteInfo.textContent = event.kind === 'rest' ? durationNames[event.duration] : describe(event).split(' · ').slice(1).join(' · ');
+    detail.append(noteName, noteInfo);
     label.append(location, detail);
 
     const actions = document.createElement('div');
-    actions.className = 'sequence-actions';
+    actions.className = 'sequence-actions mt-4 flex flex-row items-center gap-2 border-t border-[var(--border)] pt-3';
+    const insert = document.createElement('button');
+    insert.type = 'button';
+    insert.className = 'entry-action rounded-full border border-[var(--measure-color)]/30 bg-[var(--measure-color)]/10 px-4 py-2 text-[10px] font-bold text-[var(--measure-color)] transition hover:bg-[var(--measure-color)]/20';
+    insert.textContent = insertionIndex === index && editingIndex === null ? 'Aquí ↓' : '＋ Aquí';
+    insert.setAttribute('aria-label', 'Insertar una nota antes de ' + positionLabel(positions[index]));
+    insert.addEventListener('click', () => {
+      editingIndex = null;
+      insertionIndex = index;
+      barWarning.classList.add('hidden');
+      syncEditControls(); drawList();
+      entryControls.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      durationInput.focus({ preventScroll: true });
+    });
+
     const edit = document.createElement('button');
     edit.type = 'button';
-    edit.className = 'shrink-0 rounded-md border border-neon/30 px-2 py-1 text-[9px] font-bold text-[var(--accent)] transition hover:bg-neon/10';
+    edit.className = 'entry-action rounded-full border border-[var(--border)] px-4 py-2 text-[10px] font-bold text-[var(--text-primary)] transition hover:border-[var(--measure-color)] hover:text-[var(--measure-color)]';
     edit.textContent = editingIndex === index ? 'Editando' : 'Editar';
     edit.setAttribute('aria-label', 'Editar elemento ' + (index + 1) + ', ' + positionLabel(positions[index]));
     edit.addEventListener('click', () => {
+      insertionIndex = null;
       editingIndex = index;
       const selected = project.events[index];
       durationInput.value = String(selected.duration);
-      if (selected.kind === 'note') {
-        stringInput.value = String(selected.string);
-        fretInput.value = String(selected.fret);
-      }
+      if (selected.kind === 'note') { stringInput.value = String(selected.string); fretInput.value = String(selected.fret); }
+      barWarning.classList.add('hidden');
       render();
-      status.textContent = 'Editando ' + positionLabel(eventPositions(project.events)[index]) + '. Cambia los controles y guarda la nota o silencio.';
+      status.textContent = 'Editando ' + positionLabel(eventPositions(project.events)[index]) + '. Cambia los controles y guarda.';
       entryControls.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       durationInput.focus({ preventScroll: true });
     });
 
     const remove = document.createElement('button');
     remove.type = 'button';
-    remove.className = 'shrink-0 rounded-md px-2 py-1 text-[9px] text-[var(--text-muted)] transition hover:bg-red-500/10 hover:text-red-400';
-    remove.textContent = 'Quitar';
-    remove.setAttribute('aria-label', 'Quitar elemento ' + (index + 1) + ', ' + positionLabel(positions[index]));
+    remove.className = 'remove-entry entry-action ml-auto grid h-10 w-10 place-items-center rounded-full border transition';
+    remove.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>';
+    remove.setAttribute('aria-label', 'Eliminar elemento ' + (index + 1) + ', ' + positionLabel(positions[index]));
+    remove.title = 'Eliminar';
     remove.addEventListener('click', () => {
+      const removedAt = positionLabel(positions[index]);
       project.events.splice(index, 1);
       if (editingIndex === index) editingIndex = null;
       else if (editingIndex !== null && editingIndex > index) editingIndex -= 1;
+      if (insertionIndex !== null && index < insertionIndex) insertionIndex -= 1;
       render();
-      status.textContent = 'Elemento eliminado de ' + positionLabel(positions[index]) + '.';
+      status.textContent = 'Elemento eliminado de ' + removedAt + '.';
     });
-    actions.append(edit, remove);
-    row.append(label, actions);
+    const header = document.createElement('div');
+    header.className = 'flex items-center justify-between gap-3 border-b border-[var(--border)] pb-3';
+    const countBadge = document.createElement('span');
+    countBadge.className = 'rounded-full bg-[var(--measure-color)]/12 px-3 py-1.5 text-[10px] font-bold text-[var(--measure-color)]';
+    countBadge.textContent = (index + 1) + '/' + project.events.length;
+    header.append(location, countBadge);
+    const noteSectionLabel = document.createElement('span');
+    noteSectionLabel.className = 'mt-4 block text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]';
+    noteSectionLabel.textContent = 'Nota / indicación';
+    const infoSectionLabel = document.createElement('span');
+    infoSectionLabel.className = 'mt-3 block text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]';
+    infoSectionLabel.textContent = 'Descripción';
+    actions.append(insert, edit, remove);
+    if (positions.findIndex((position) => position.measure === positions[index].measure) === index) {
+      const clearMeasure = document.createElement('button');
+      clearMeasure.type = 'button';
+      clearMeasure.className = 'entry-action rounded-full border border-red-500/40 px-3 py-2 text-[9px] font-bold text-red-400 transition hover:bg-red-500/15';
+      clearMeasure.textContent = 'Eliminar compás';
+      clearMeasure.setAttribute('aria-label', 'Eliminar todas las notas del compás ' + positions[index].measure);
+      clearMeasure.addEventListener('click', () => {
+        const measure = positions[index].measure;
+        project.events = project.events.filter((_, eventIndex) => positions[eventIndex].measure !== measure);
+        editingIndex = null; insertionIndex = null; render();
+        status.textContent = 'Se eliminaron todas las notas del compás ' + measure + '.';
+      });
+      actions.append(clearMeasure);
+    }
+    row.append(header, noteSectionLabel, noteName, infoSectionLabel, noteInfo, actions);
     list.append(row);
   });
 }
@@ -229,6 +314,7 @@ function render(): void {
   paperTitle.textContent = project.title;
   syncEditControls();
   drawList();
+  barWarning.classList.add('hidden');
   saveLocal();
   imported = false;
   activeScore = null;
@@ -247,6 +333,7 @@ function loadPractice(id: string): void {
   const practice = practices[id];
   if (!practice) return;
   editingIndex = null;
+  insertionIndex = null;
   project = { format: 'la-nota-verde-score', version: 1, title: practice.title, tempo: practice.tempo, events: practice.events.map((event) => ({ ...event })) };
   titleInput.value = project.title;
   tempoInput.value = String(project.tempo);
@@ -255,7 +342,7 @@ function loadPractice(id: string): void {
 }
 function addEntry(kind: 'note' | 'rest'): void {
   if (editingIndex === null && project.events.length >= 256) {
-    status.textContent = 'La práctica alcanzó el límite de 256 elementos. Guarda el proyecto y continúa en otro.';
+    showBarWarning('La práctica alcanzó el límite de 256 elementos. Guarda el proyecto y continúa en otro.');
     return;
   }
   const duration = clampDuration(Number(durationInput.value));
@@ -264,10 +351,26 @@ function addEntry(kind: 'note' | 'rest'): void {
     : { kind: 'note', string: Number(stringInput.value), fret: Number(fretInput.value), duration };
   if (editingIndex !== null && project.events[editingIndex] !== undefined) {
     const position = eventPositions(project.events)[editingIndex];
+    if (!fitsMeasure(project.events, position.measure, duration, editingIndex)) {
+      showBarWarning('Este cambio excede los 4 pulsos permitidos en el compás ' + position.measure + '. Reduce la duración o mueve una nota.');
+      return;
+    }
     project.events[editingIndex] = event;
     editingIndex = null;
     render();
     status.textContent = positionLabel(position) + ' actualizado: ' + describe(event) + '.';
+    return;
+  }
+  if (insertionIndex !== null) {
+    const position = insertionPosition(project.events, insertionIndex);
+    if (!fitsMeasure(project.events, position.measure, duration)) {
+      showBarWarning('Ya se ocuparon los 4 pulsos del compás ' + position.measure + '. Reduce la duración o inserta en otro compás.');
+      return;
+    }
+    project.events.splice(insertionIndex, 0, event);
+    insertionIndex = null;
+    render();
+    status.textContent = describe(event) + ' insertada en ' + positionLabel(position) + '.';
     return;
   }
   project.events.push(event);
@@ -307,6 +410,8 @@ function importOwn(value: unknown): void {
     }
     throw new Error('El proyecto contiene un tipo de elemento inválido.');
   });
+  editingIndex = null;
+  insertionIndex = null;
   project = {
     format: 'la-nota-verde-score', version: 1,
     title: typeof source.title === 'string' ? source.title.slice(0, 80) : 'Práctica importada',
@@ -475,12 +580,22 @@ addNoteButton.addEventListener('click', () => addEntry('note'));
 addRestButton.addEventListener('click', () => addEntry('rest'));
 cancelEditButton.addEventListener('click', () => {
   editingIndex = null;
+  insertionIndex = null;
   syncEditControls();
   drawList();
   status.textContent = 'Edición cancelada. La secuencia conserva sus notas.';
 });
+insertAtEndButton.addEventListener('click', () => {
+  editingIndex = null;
+  insertionIndex = project.events.length;
+  barWarning.classList.add('hidden');
+  syncEditControls(); drawList();
+  entryControls.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  durationInput.focus({ preventScroll: true });
+});
 document.querySelector<HTMLButtonElement>('#clear-score')?.addEventListener('click', () => {
   editingIndex = null;
+  insertionIndex = null;
   project.events = [];
   render();
   status.textContent = 'La secuencia está vacía. Puedes empezar desde cero.';
