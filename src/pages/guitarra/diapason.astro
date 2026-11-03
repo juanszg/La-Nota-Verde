@@ -1,14 +1,14 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-const stringNames = ['6ª · E','5ª · A','4ª · D','3ª · G','2ª · B','1ª · E'];
-const openMidi = [40,45,50,55,59,64];
+const stringNames = ['1ª · E','2ª · B','3ª · G','4ª · D','5ª · A','6ª · E'];
+const openMidi = [64,59,55,50,45,40];
 const sharpNotes = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
 const frets = Array.from({ length: 13 }, (_, index) => index);
 const tuningButtons = [
-  { id: 'standard', label: 'Estándar', tuning: 'E · A · D · G · B · E' },
-  { id: 'drop-d', label: 'Drop D', tuning: 'D · A · D · G · B · E' },
-  { id: 'open-g', label: 'Open G', tuning: 'D · G · D · G · B · D' },
-  { id: 'dadgad', label: 'DADGAD', tuning: 'D · A · D · G · A · D' },
+  { id: 'standard', label: 'Estándar', tuning: 'E · B · G · D · A · E' },
+  { id: 'drop-d', label: 'Drop D', tuning: 'E · B · G · D · A · D' },
+  { id: 'open-g', label: 'Open G', tuning: 'D · B · G · D · G · D' },
+  { id: 'dadgad', label: 'DADGAD', tuning: 'D · A · G · D · A · D' },
 ];
 ---
 <BaseLayout title="Diapasón de guitarra — LA NOTA VERDE" description="Explora las notas, afinaciones y escalas en el diapasón interactivo de guitarra.">
@@ -16,7 +16,7 @@ const tuningButtons = [
     <a href="/aprender" class="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-bold text-[var(--text-muted)] transition hover:text-[var(--accent)] focus-visible:outline-2 focus-visible:outline-neon">← Volver a Aprender</a>
     <header class="mt-5 flex flex-col gap-5 border-b border-[var(--border)] pb-7 sm:flex-row sm:items-end sm:justify-between">
       <div><p class="text-xs font-bold uppercase tracking-[.2em] text-[var(--accent)]">Playground de guitarra · La Nota Verde</p><h1 class="page-title mt-3 text-3xl font-bold sm:text-5xl">Diapasón interactivo</h1><p class="mt-3 max-w-2xl text-xs leading-6 text-[var(--text-muted)]">Encuentra notas, explora afinaciones, estudia escalas y escucha cada traste. En cifrado internacional: E = Mi y B = Si.</p></div>
-      <div class="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-neon/10 text-xl text-[var(--accent)]">♫</span><div><p class="text-[9px] uppercase tracking-widest text-[var(--text-muted)]">Nota seleccionada</p><p id="played-note" class="mt-1 text-sm font-bold">Toca cualquier traste</p></div></div>
+      <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-neon/10 text-xl text-[var(--accent)]">♫</span><div><p class="text-[9px] uppercase tracking-widest text-[var(--text-muted)]">Nota seleccionada</p><p id="played-note" class="mt-1 text-sm font-bold">Toca cualquier traste</p></div><label for="note-tone" class="grid gap-1 text-[8px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Timbre<select id="note-tone" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-2 text-[10px] normal-case tracking-normal text-[var(--text-primary)]"><option value="default">Default</option><option value="electric">Eléctrica suave</option><option value="acoustic">Acústica</option></select></label></div>
     </header>
 
     <section class="mt-7 grid gap-5 xl:grid-cols-[minmax(0,1fr)_19rem]">
@@ -27,33 +27,42 @@ const tuningButtons = [
         </article>
 
         <article class="surface min-w-0 rounded-2xl p-4 sm:p-6">
-          <div class="mb-4 flex flex-wrap items-end justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Notas en el diapasón</p><p class="mt-1 text-[10px] text-[var(--text-muted)]">Pulsa una nota para escucharla · el traste 12 marca la octava.</p></div><p class="text-[9px] text-[var(--text-muted)]">Afinación: <strong id="tuning-caption" class="text-[var(--text-primary)]">E · A · D · G · B · E</strong></p></div>
-          <div class="fretboard-panel rounded-xl p-2 sm:p-3">
+          <div class="mb-4 flex flex-wrap items-end justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Notas en el diapasón</p><p class="mt-1 text-[10px] text-[var(--text-muted)]">Pulsa una nota para escucharla · el traste 12 marca la octava.</p></div><p class="text-[9px] text-[var(--text-muted)]">Afinación: <strong id="tuning-caption" class="text-[var(--text-primary)]">E · B · G · D · A · E</strong></p></div>
+          <div class="fretboard-panel rounded-xl p-2 sm:p-3"><button id="fretboard-fullscreen" type="button" class="fullscreen-button" aria-label="Expandir diapasón a pantalla completa" title="Pantalla completa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
+            <section id="zen-header" class="zen-header" aria-hidden="true">
+              <div class="zen-topline"><div><p class="zen-kicker">MODO ZEN · ESTUDIO DE ESCALA</p><h2 id="zen-scale-title" class="zen-scale-title">Elige una escala para comenzar</h2></div><div class="zen-zoom-control" role="group" aria-label="Escala visual del diapasón"><span>Escalado</span><div class="zen-zoom-options"><button type="button" data-zen-zoom="1.1" aria-pressed="false">10%</button><button type="button" data-zen-zoom="1.15" aria-pressed="false">15%</button><button type="button" data-zen-zoom="1.2" class="is-active" aria-pressed="true">20%</button><button type="button" data-zen-zoom="1.25" aria-pressed="false">25%</button></div></div></div>
+              <div id="zen-scale-notes" class="zen-scale-notes"><span class="zen-empty">Aplica una escala para ver sus notas e intervalos.</span></div>
+            </section>
             <div class="fretboard-scroll" tabindex="0" aria-label="Diapasón. En móvil, desliza horizontalmente para recorrer los trastes.">
               <div id="fretboard" class="fretboard">
                 <div class="fret-row fret-ruler"><span class="string-label">TRASTE</span>{frets.map((fret) => <span class:list={["fret-number", fret === 12 ? 'octave-number' : '']}>{fret}</span>)}</div>
                 <div id="fretboard-strings" class="fretboard-strings">{stringNames.map((label, stringIndex) => <div class="fret-row guitar-string" data-string-index={stringIndex} data-open-midi={openMidi[stringIndex]}><span class="string-label">{label}</span>{frets.map((fret) => { const midi = openMidi[stringIndex] + fret; return <button type="button" data-fret={fret} data-midi={midi} data-pitch={midi % 12} aria-label={`${sharpNotes[midi % 12]}, ${label}, traste ${fret}`} class:list={["fret-note", fret === 0 ? 'open-note' : '', fret === 12 ? 'octave-fret' : '']}>{sharpNotes[midi % 12]}</button>; })}</div>)}</div>
               </div>
             </div>
-            <p class="mt-3 text-center text-[9px] leading-4 text-white/55">Sexta cuerda (grave) arriba · primera cuerda (aguda) abajo</p>
+            <p class="mt-3 text-center text-[9px] leading-4 text-white/55">Primera cuerda (aguda) arriba · sexta cuerda (grave) abajo</p>
           </div>
         </article>
 
         <article class="surface rounded-2xl p-4 sm:p-6">
-          <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Resalta notas</p><p class="mt-1 text-[10px] text-[var(--text-muted)]">Elige una o varias notas para ubicarlas por todo el diapasón.</p></div><div class="flex gap-2"><button type="button" id="show-all-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Todas</button><button type="button" id="clear-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Ninguna</button></div></div>
-          <div id="note-filters" class="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-12">{sharpNotes.map((note, pitch) => <button type="button" data-pitch-filter={pitch} aria-pressed="false" class="note-filter rounded-lg border border-[var(--border)] control-surface py-2.5 text-xs font-bold transition hover:border-neon hover:text-[var(--accent)]">{note}</button>)}</div>
+          <div class="flex flex-wrap items-center justify-between gap-3"><div><div class="flex flex-wrap items-center gap-3"><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Resalta notas</p><span id="active-scale-label" class="scale-context">Escala activa: ninguna</span></div><p class="mt-1 text-[10px] text-[var(--text-muted)]">Elige tonalidad y escala aquí; las etiquetas muestran el intervalo desde la tónica.</p></div><div class="flex gap-2"><button type="button" id="show-all-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Todas</button><button type="button" id="clear-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Ninguna</button></div></div>
+          <div class="mt-4 grid gap-3 sm:grid-cols-[minmax(8rem,.7fr)_minmax(12rem,1.3fr)]">
+            <label class="grid gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Tonalidad<select id="scale-root" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs normal-case tracking-normal text-[var(--text-primary)]"><option value="0">C</option><option value="1">C♯</option><option value="2">D</option><option value="3">D♯</option><option value="4">E</option><option value="5">F</option><option value="6">F♯</option><option value="7">G</option><option value="8">G♯</option><option value="9">A</option><option value="10">A♯</option><option value="11">B</option></select></label>
+            <label class="grid gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Escala<select id="scale-type" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs normal-case tracking-normal text-[var(--text-primary)]"><option value="major">Mayor</option><option value="minor">Menor natural (eólica)</option><option value="harmonic-minor">Menor armónica</option><option value="melodic-minor">Menor melódica</option><option value="major-pentatonic">Pentatónica mayor</option><option value="minor-pentatonic">Pentatónica menor</option><option value="blues">Blues menor</option></select></label>
+          </div>
+          <button type="button" id="show-scale" class="mt-3 w-full rounded-xl bg-neon px-4 py-3 text-xs font-bold text-ink transition hover:bg-white">Aplicar escala e intervalos</button>
+          <div id="scale-degree-legend" class="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-[9px] text-[var(--text-muted)]" aria-live="polite"><span class="flex items-center gap-2"><i class="legend-dot degree-1"></i> I · Tónica</span></div>
+          <div id="note-filters" class="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-12">{sharpNotes.map((note, pitch) => <button type="button" data-pitch-filter={pitch} aria-pressed="false" class="note-filter control-surface grid min-h-14 grid-rows-[auto_auto] place-items-center gap-0.5 rounded-lg border border-[var(--border)] py-2 transition hover:border-neon hover:text-[var(--accent)]"><span class="note-filter-name text-xs font-bold">{note}</span><small class="note-filter-interval text-[8px] font-medium text-[var(--text-muted)]">—</small></button>)}</div>
         </article>
       </div>
 
       <aside class="space-y-5">
-        <article class="surface rounded-2xl p-4 sm:p-5">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Visualiza una escala</p><p class="mt-1 text-[10px] leading-5 text-[var(--text-muted)]">Resalta sus notas y reconoce su patrón en el mástil.</p>
-          <label for="scale-root" class="mt-4 block text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Tonalidad</label><select id="scale-root" class="mt-2 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs text-[var(--text-primary)]"><option value="0">C</option><option value="1">C♯</option><option value="2">D</option><option value="3">D♯</option><option value="4">E</option><option value="5">F</option><option value="6">F♯</option><option value="7">G</option><option value="8">G♯</option><option value="9">A</option><option value="10">A♯</option><option value="11">B</option></select>
-          <label for="scale-type" class="mt-4 block text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Escala</label><select id="scale-type" class="mt-2 w-full rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs text-[var(--text-primary)]"><option value="major">Mayor</option><option value="minor">Menor natural (eólica)</option><option value="harmonic-minor">Menor armónica</option><option value="melodic-minor">Menor melódica</option><option value="major-pentatonic">Pentatónica mayor</option><option value="minor-pentatonic">Pentatónica menor</option><option value="blues">Blues menor</option></select>
-          <button type="button" id="show-scale" class="mt-4 w-full rounded-xl bg-neon px-4 py-3 text-xs font-bold text-ink transition hover:bg-white">Mostrar escala</button>
-          <div class="mt-4 flex flex-wrap gap-3 text-[9px] text-[var(--text-muted)]"><span class="flex items-center gap-2"><i class="legend-dot root-dot"></i> Tónica</span><span class="flex items-center gap-2"><i class="legend-dot scale-dot"></i> Notas de escala</span></div>
-        </article>
+
         <article class="rounded-2xl border border-neon/15 bg-neon/5 p-4 sm:p-5"><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Cómo leerlo</p><ul class="mt-3 space-y-2 text-[10px] leading-5 text-[var(--text-muted)]"><li><strong class="text-[var(--text-primary)]">Cada traste</strong> sube un semitono.</li><li><strong class="text-[var(--text-primary)]">Traste 12</strong> repite la nota al aire una octava arriba.</li><li><strong class="text-[var(--text-primary)]">♯ / ♭</strong> cambia la escritura, no el sonido del traste.</li><li><strong class="text-[var(--text-primary)]">Afinaciones</strong> cambian la nota de cada cuerda al aire.</li></ul></article>
+        <article class="chord-harmony-card rounded-2xl border border-neon/20 bg-neon/5 p-4 sm:p-5">
+          <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Acordes de la escala</p><h2 id="chord-scale-title" class="mt-1 text-sm font-bold">Aplica una escala</h2><p class="mt-1 text-[9px] leading-4 text-[var(--text-muted)]">Selecciona un grado para ver su acorde en todo el diapasón.</p></div><div class="flex flex-wrap items-end gap-2"><label class="grid gap-1 text-[8px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Armonía<select id="chord-mode" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2 py-2 text-[9px] text-[var(--text-primary)]"><option value="triad">Tríadas naturales</option><option value="seventh">Con 7ma</option></select></label><button id="chord-voicing-toggle" type="button" class="voicing-toggle" aria-pressed="false" aria-label="Mostrar formas con tónica en las cuerdas sexta, quinta y cuarta" title="Mostrar las formas del acorde desde las cuerdas 6ª, 5ª y 4ª">Formas 6ª–4ª</button></div></div>
+          <div id="chord-scale-list" class="mt-4 grid grid-cols-3 gap-2" aria-live="polite"><p class="col-span-3 py-3 text-center text-[9px] text-[var(--text-muted)]">Elige una tonalidad y aplica la escala para ver sus acordes.</p></div>
+          <p id="chord-selection-hint" class="mt-3 min-h-4 text-center text-[9px] text-[var(--text-muted)]">El diapasón mostrará las notas del acorde elegido.</p>
+        </article>
         <a href="/herramientas" class="block rounded-xl border border-[var(--border)] px-4 py-3 text-center text-[10px] font-bold text-[var(--text-muted)] transition hover:border-neon hover:text-[var(--accent)]">Ir a las herramientas musicales →</a>
       </aside>
     </section>
@@ -61,7 +70,31 @@ const tuningButtons = [
 </BaseLayout>
 
 <style>
-  .fretboard-panel { --accent: #63f58c; overflow: hidden; border: 1px solid rgb(99 245 140 / .22); background: linear-gradient(145deg, #0a1b11, #07100b 65%, #0d1b12); }
+  .fretboard-panel { --accent: #63f58c; --zen-zoom:1.2; position:relative; padding-top:3.5rem; overflow: hidden; border: 1px solid rgb(99 245 140 / .22); background: linear-gradient(145deg, #0a1b11, #07100b 65%, #0d1b12); }
+  .fretboard-panel:fullscreen, .fretboard-panel.is-app-fullscreen { box-sizing:border-box; position:fixed; z-index:100; inset:0; width:100vw; max-width:none; height:100vh; height:100dvh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1rem; overflow:auto; padding:clamp(.75rem,3vw,3rem); border:0; border-radius:0; background:#07100b; }
+  .fretboard-panel:fullscreen .fretboard-scroll, .fretboard-panel.is-app-fullscreen .fretboard-scroll { width:100%; max-width:100%; }
+  .fretboard-panel:fullscreen .fretboard, .fretboard-panel.is-app-fullscreen .fretboard { margin-inline:auto; }
+  .fretboard-panel:fullscreen .fret-row, .fretboard-panel.is-app-fullscreen .fret-row { margin-inline:auto; }
+  .zen-header { display:none; }
+  .fretboard-panel:fullscreen .zen-header, .fretboard-panel.is-app-fullscreen .zen-header { display:grid; width:min(100%,1500px); gap:.9rem; margin-inline:auto; }
+  .zen-topline { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.9rem; }
+  .zen-kicker { color:#72ff9b; font-size:.62rem; font-weight:800; letter-spacing:.2em; }
+  .zen-scale-title { margin-top:.2rem; color:#f4fff7; font-size:clamp(1.15rem,2.4vw,2rem); font-weight:900; }
+  .zen-zoom-control { display:grid; gap:.35rem; color:rgb(235 255 241 / .65); font-size:.58rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; }
+  .zen-zoom-options { display:flex; flex-wrap:wrap; gap:.35rem; }
+  .zen-zoom-options button { min-width:3.1rem; border:1px solid rgb(114 255 155 / .25); border-radius:.65rem; padding:.45rem .6rem; color:#d8f5df; font-size:.65rem; letter-spacing:normal; transition:background .18s,color .18s,border-color .18s,transform .18s; }
+  .zen-zoom-options button:hover { transform:translateY(-1px); border-color:#72ff9b; }
+  .zen-zoom-options button.is-active { border-color:#72ff9b; color:#07100b; background:#72ff9b; box-shadow:0 0 16px rgb(114 255 155 / .3); }
+  .zen-scale-notes { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; }
+  .zen-scale-note { display:grid; min-width:3.4rem; gap:.15rem; justify-items:center; border:1px solid rgb(114 255 155 / .2); border-radius:.75rem; padding:.4rem .6rem; background:rgb(114 255 155 / .055); }
+  .zen-scale-note strong { color:#baffc9; font-size:.78rem; }
+  .zen-scale-note small, .zen-empty { color:rgb(235 255 241 / .62); font-size:.56rem; }
+  .fretboard-panel.is-zen-mode .fretboard { zoom:var(--zen-zoom,1.2); }
+  .scale-context { border:1px solid rgb(126 231 255 / .28); border-radius:999px; padding:.3rem .55rem; color:#a6efff; font-size:.58rem; font-weight:700; }
+  .fretboard-panel > .fullscreen-button { position:absolute; top:.7rem; left:.7rem; z-index:5; }
+  .fullscreen-button { display:grid; width:2.5rem; height:2.5rem; place-items:center; border:1px solid rgb(99 245 140 / .35); border-radius:.75rem; color:#63f58c; transition:background .2s,transform .2s,box-shadow .2s; }
+  .fullscreen-button:hover { transform:scale(1.06); background:rgb(99 245 140 / .12); box-shadow:0 0 18px rgb(99 245 140 / .25); }
+  .fullscreen-button svg { width:1.2rem; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
   .fretboard-scroll { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-color: #247844 #0a1710; }
   .fretboard { width: max-content; min-width: 100%; }
   .fret-row { display: grid; grid-template-columns: 4rem repeat(13, minmax(2.8rem, 3.25rem)); width: max-content; }
@@ -74,20 +107,46 @@ const tuningButtons = [
   .fret-note:hover, .fret-note:focus-visible { z-index: 3; color: #07100b; background: #63f58c; outline: 2px solid #63f58c; outline-offset: -2px; }
   .fret-note.open-note { border-left: 3px solid #d5dccf; }
   .fret-note.octave-fret { background: rgb(255 255 255 / .045); }
-  .fret-note.is-scale { color: #c4ffd4; background: rgb(99 245 140 / .18); }
-  .fret-note.is-root { color: #07100b; background: #e5a553; box-shadow: 0 0 16px rgb(229 165 83 / .3); }
-  .fret-note.is-filter-note { color: #07100b; background: #63f58c; }
+  .fret-note.is-scale { color:#07100b; font-weight:900; border:1px solid var(--degree-color); box-shadow:0 0 18px color-mix(in srgb,var(--degree-color) 55%,transparent); }
+  .fret-note.is-chromatic-scale { color:var(--degree-color); background:color-mix(in srgb, var(--degree-color) 17%, #07100b); border:1px solid var(--degree-color); box-shadow:0 0 12px color-mix(in srgb, var(--degree-color) 24%, transparent); }
+  .fret-note.is-scale.degree-1, :global(.degree-1) { --degree-color:#72ff9b; background-color:#72ff9b; box-shadow:0 0 16px rgb(114 255 155 / .42); }
+  .fret-note.is-scale.degree-2, :global(.degree-2) { --degree-color:#d4ff72; background-color:#d4ff72; box-shadow:0 0 16px rgb(212 255 114 / .38); }
+  .fret-note.is-scale.degree-3, :global(.degree-3) { --degree-color:#ffb36b; background-color:#ffb36b; box-shadow:0 0 16px rgb(255 179 107 / .4); }
+  .fret-note.is-scale.degree-4, :global(.degree-4) { --degree-color:#d8a6ff; background-color:#d8a6ff; box-shadow:0 0 16px rgb(216 166 255 / .42); }
+  .fret-note.is-scale.degree-5, :global(.degree-5) { --degree-color:#ff8fa3; background-color:#ff8fa3; box-shadow:0 0 16px rgb(255 143 163 / .42); }
+  .fret-note.is-scale.degree-6, :global(.degree-6) { --degree-color:#fff07a; background-color:#fff07a; box-shadow:0 0 16px rgb(255 240 122 / .4); }
+  .fret-note.is-scale.degree-7, :global(.degree-7) { --degree-color:#7ee7ff; background-color:#7ee7ff; box-shadow:0 0 16px rgb(126 231 255 / .42); }
+  .fret-note.is-root { color:#07100b; background:#72ff9b; border:1px solid #72ff9b; box-shadow:0 0 22px rgb(114 255 155 / .72); }
+  .fret-note.is-filter-note:not(.is-scale):not(.is-root):not(.is-chromatic-scale) { color: #07100b; background: #72ff9b; box-shadow:0 0 18px rgb(114 255 155 / .5); }
   .fret-note.dim-note { color: rgb(255 255 255 / .18); }
   .tuning-option:focus-visible, .note-filter:focus-visible { outline: 2px solid #63f58c; outline-offset: 2px; }
   .fretboard.is-left-handed .fret-row { direction: rtl; }
   .fretboard.is-left-handed .fret-note, .fretboard.is-left-handed .string-label { direction: ltr; }
-  .fretboard.is-left-handed .fretboard-strings { display: flex; flex-direction: column-reverse; }
   .fretboard.is-left-handed .guitar-string::after { left: 0; right: 4rem; }
   .tuning-option.is-active { border-color: #16db65; background: rgb(22 219 101 / .09); box-shadow: 0 0 18px rgb(22 219 101 / .08); }
   .note-filter.is-active { border-color: #16db65; color: #16db65; background: rgb(22 219 101 / .12); }
-  .legend-dot { display: inline-block; width: .55rem; height: .55rem; border-radius: 50%; }
-  .root-dot { background: #e5a553; }
-  .scale-dot { background: #63f58c; }
+  .voicing-toggle { min-height:2.1rem; border:1px solid rgb(114 255 155 / .3); border-radius:.65rem; padding:.4rem .55rem; color:#c8f6d3; font-size:.58rem; font-weight:800; white-space:nowrap; transition:background .18s,color .18s,border-color .18s,box-shadow .18s; }
+  .voicing-toggle:hover, .voicing-toggle.is-active { border-color:#72ff9b; color:#07100b; background:#72ff9b; box-shadow:0 0 14px rgb(114 255 155 / .32); }
+  .fret-note.is-chord-root { z-index:4; outline:2px solid var(--degree-color); outline-offset:-4px; box-shadow:0 0 20px color-mix(in srgb,var(--degree-color) 75%,transparent); }
+  :global(.chord-card) { aspect-ratio:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.15rem; border:1px solid rgb(114 255 155 / .2); border-radius:.9rem; padding:.4rem .2rem; background:rgb(8 25 15 / .8); text-align:center; transition:transform .18s,border-color .18s,background .18s,box-shadow .18s; }
+  :global(.chord-card:hover) { transform:translateY(-2px); border-color:#72ff9b; box-shadow:0 0 16px rgb(114 255 155 / .18); }
+  :global(.chord-card:focus-visible) { outline:2px solid #72ff9b; outline-offset:2px; }
+  :global(.chord-card.is-active) { border-color:var(--degree-color,#72ff9b); background:color-mix(in srgb,var(--degree-color,#72ff9b) 12%,#08190f); box-shadow:0 0 0 1px var(--degree-color,#72ff9b),0 0 24px color-mix(in srgb,var(--degree-color,#72ff9b) 62%,transparent); }
+  :global(.chord-card.tone-1) { --degree-color:#72ff9b; border-color:color-mix(in srgb,#72ff9b 24%,transparent); }
+  :global(.chord-card.tone-2) { --degree-color:#d4ff72; border-color:color-mix(in srgb,#d4ff72 24%,transparent); }
+  :global(.chord-card.tone-3) { --degree-color:#ffb36b; border-color:color-mix(in srgb,#ffb36b 24%,transparent); }
+  :global(.chord-card.tone-4) { --degree-color:#d8a6ff; border-color:color-mix(in srgb,#d8a6ff 24%,transparent); }
+  :global(.chord-card.tone-5) { --degree-color:#ff8fa3; border-color:color-mix(in srgb,#ff8fa3 24%,transparent); }
+  :global(.chord-card.tone-6) { --degree-color:#fff07a; border-color:color-mix(in srgb,#fff07a 24%,transparent); }
+  :global(.chord-card.tone-7) { --degree-color:#7ee7ff; border-color:color-mix(in srgb,#7ee7ff 24%,transparent); }
+  .fret-note.is-scale { filter:drop-shadow(0 0 8px var(--degree-color)); }
+  .fret-note.is-root { filter:drop-shadow(0 0 8px #72ff9b); }
+  :global(.chord-degree) { color:var(--degree-color,#72ff9b); font-size:.55rem; font-weight:800; }
+  :global(.chord-american) { color:#f4fff7; font-family:'Kode Mono',monospace; font-size:1.05rem; line-height:1.1; }
+  :global(.chord-spanish) { color:#c8f6d3; font-size:.65rem; font-weight:700; }
+  :global(.chord-quality) { color:rgb(235 255 241 / .58); font-size:.48rem; line-height:1.2; }
+  :global(.chord-formula) { color:#a6efff; font-size:.45rem; font-weight:700; line-height:1.1; white-space:nowrap; }
+  .legend-dot { display:inline-block; width:.55rem; height:.55rem; border-radius:50%; background:var(--degree-color, #16db65); }
   @media (max-width: 640px) { .fret-row { grid-template-columns: 3.5rem repeat(13, minmax(2.55rem, 2.8rem)); } .guitar-string::after { left: 3.5rem; } .fretboard.is-left-handed .guitar-string::after { left: 0; right: 3.5rem; } .fret-note { height: 3rem; font-size: .62rem; } }
   @media (prefers-reduced-motion: reduce) { .fret-note, .tuning-option { transition: none; } }
 </style>
@@ -97,16 +156,24 @@ const tuningButtons = [
     const sharpNotes = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
     const flatNotes = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
     const openNotes = {
-      standard: { midi: [40,45,50,55,59,64], name: 'E · A · D · G · B · E' },
-      'drop-d': { midi: [38,45,50,55,59,64], name: 'D · A · D · G · B · E' },
-      'open-g': { midi: [38,43,50,55,59,62], name: 'D · G · D · G · B · D' },
-      dadgad: { midi: [38,45,50,55,57,62], name: 'D · A · D · G · A · D' },
+      standard: { midi: [64,59,55,50,45,40], name: 'E · B · G · D · A · E' },
+      'drop-d': { midi: [64,59,55,50,45,38], name: 'E · B · G · D · A · D' },
+      'open-g': { midi: [62,59,55,50,43,38], name: 'D · B · G · D · G · D' },
+      dadgad: { midi: [62,57,55,50,45,38], name: 'D · A · G · D · A · D' },
     };
     const scaleSteps = {
       major: [0,2,4,5,7,9,11], minor: [0,2,3,5,7,8,10],
       'harmonic-minor': [0,2,3,5,7,8,11], 'melodic-minor': [0,2,3,5,7,9,11],
       'major-pentatonic': [0,2,4,7,9], 'minor-pentatonic': [0,3,5,7,10], blues: [0,3,5,6,7,10],
     };
+    const scaleDegrees = { major:[1,2,3,4,5,6,7], minor:[1,2,3,4,5,6,7], 'harmonic-minor':[1,2,3,4,5,6,7], 'melodic-minor':[1,2,3,4,5,6,7], 'major-pentatonic':[1,2,3,5,6], 'minor-pentatonic':[1,3,4,5,7], blues:[1,3,4,4,5,7] };
+    const degreeLabels = {1:'I · Tónica',2:'II · 2º grado',3:'III · 3º grado',4:'IV · 4º grado',5:'V · 5º grado',6:'VI · 6º grado',7:'VII · 7º grado'};
+    const scaleLabels = {major:'Mayor', minor:'Menor natural (eólica)', 'harmonic-minor':'Menor armónica', 'melodic-minor':'Menor melódica', 'major-pentatonic':'Pentatónica mayor', 'minor-pentatonic':'Pentatónica menor', blues:'Blues menor'};
+    const flatIntervalNames = ['1ª J','2ª m','2ª M','3ª m','3ª M','4ª J','5ª dim','5ª J','6ª m','6ª M','7ª m','7ª M'];
+    const sharpIntervalNames = ['1ª J','♯1','2ª M','♯2','3ª M','4ª J','♯4','5ª J','♯5','6ª M','♯6','7ª M'];
+    let pitchDegrees = new Map();
+    let activeScaleRoot = null;
+    let activeScaleType = null;
     const fretboard = document.querySelector('#fretboard');
     const stringRows = [...document.querySelectorAll('.guitar-string')];
     const fretNotes = [...document.querySelectorAll('.fret-note')];
@@ -117,14 +184,159 @@ const tuningButtons = [
     let highlightMode = 'all';
     let selectedPitchClasses = new Set();
     let scalePitchClasses = new Set();
+    let selectedChordPitchClasses = new Set();
+    let selectedChordRoot = null;
+    let selectedChordIndex = null;
+    let chordVoicingOnly = false;
     let audio;
 
     const currentNames = () => useFlats ? flatNotes : sharpNotes;
+    const chromaticDegreeFor = (pitch) => {
+      if (activeScaleRoot === null) return null;
+      const relativePitch = (pitch - activeScaleRoot + 12) % 12;
+      const steps = scaleSteps[activeScaleType] || scaleSteps.major;
+      const degrees = scaleDegrees[activeScaleType] || scaleDegrees.major;
+      let lower = { step: steps[steps.length - 1] - 12, degree: degrees[degrees.length - 1] };
+      let upper = { step: 12, degree: 1 };
+      steps.forEach((step, index) => {
+        if (step < relativePitch && step > lower.step) lower = { step, degree: degrees[index] };
+        if (step > relativePitch && step < upper.step) upper = { step, degree: degrees[index] };
+      });
+      return useFlats ? upper.degree : lower.degree;
+    };
+    const romanDegrees = ['I','II','III','IV','V','VI','VII'];
+    const spanishSharpNames = ['Do','Do♯','Re','Re♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
+    const spanishFlatNames = ['Do','Re♭','Re','Mi♭','Mi','Fa','Sol♭','Sol','La♭','La','Si♭','Si'];
+    const getScaleChords = () => {
+      if (activeScaleRoot === null) return [];
+      const steps = scaleSteps[activeScaleType] || scaleSteps.major;
+      if (steps.length !== 7) return [];
+      const degrees = scaleDegrees[activeScaleType] || scaleDegrees.major;
+      const toneCount = document.querySelector('#chord-mode').value === 'seventh' ? 4 : 3;
+      return steps.map((rootStep, index) => {
+        const chordOffsets = Array.from({ length: toneCount }, (_, toneIndex) => {
+          const stackedIndex = index + toneIndex * 2;
+          const octave = Math.floor(stackedIndex / steps.length);
+          const scaleIndex = stackedIndex % steps.length;
+          return steps[scaleIndex] + octave * 12 - rootStep;
+        });
+        const third = chordOffsets[1];
+        const fifth = chordOffsets[2];
+        const seventh = chordOffsets[3];
+        let triad = { suffix:'', name:'Mayor', formula:'1·3·5' };
+        if (third === 3 && fifth === 7) triad = { suffix:'m', name:'Menor', formula:'1·♭3·5' };
+        else if (third === 3 && fifth === 6) triad = { suffix:'°', name:'Disminuido', formula:'1·♭3·♭5' };
+        else if (third === 4 && fifth === 8) triad = { suffix:'+', name:'Aumentado', formula:'1·3·♯5' };
+        let seventhQuality = null;
+        if (toneCount === 4) {
+          const signature = third + '-' + fifth + '-' + seventh;
+          const seventhTypes = {
+            '4-7-11': { suffix:'maj7', name:'Mayor séptima', formula:'1·3·5·7' },
+            '4-7-10': { suffix:'7', name:'Séptima dominante', formula:'1·3·5·♭7' },
+            '3-7-10': { suffix:'m7', name:'Menor séptima', formula:'1·♭3·5·♭7' },
+            '3-7-11': { suffix:'m(maj7)', name:'Menor con séptima mayor', formula:'1·♭3·5·7' },
+            '3-6-10': { suffix:'m7♭5', name:'Semidisminuido', formula:'1·♭3·♭5·♭7' },
+            '3-6-9': { suffix:'°7', name:'Disminuido séptima', formula:'1·♭3·♭5·6' },
+            '4-8-11': { suffix:'maj7♯5', name:'Aumentado mayor séptima', formula:'1·3·♯5·7' },
+            '4-8-10': { suffix:'7♯5', name:'Aumentado séptima', formula:'1·3·♯5·♭7' },
+          };
+          seventhQuality = seventhTypes[signature] || { suffix:triad.suffix + '7', name:triad.name + ' con séptima', formula:triad.formula + '·7' };
+        }
+        const rootPitch = (activeScaleRoot + rootStep) % 12;
+        const noteNames = currentNames();
+        const spanishNames = useFlats ? spanishFlatNames : spanishSharpNames;
+        const quality = seventhQuality || triad;
+        const tonePitches = chordOffsets.map((offset) => (rootPitch + offset) % 12);
+        return {
+          index, degree:degrees[index], roman:romanDegrees[degrees[index] - 1] || String(degrees[index]),
+          rootPitch, american:noteNames[rootPitch] + quality.suffix, spanish:spanishNames[rootPitch], quality:quality.name, formula:quality.formula,
+          pitches:new Set(tonePitches), tones:tonePitches, voicingPitches:toneCount === 4 ? [tonePitches[0], tonePitches[1], tonePitches[3]] : tonePitches.slice(0,3),
+        };
+      });
+    };
+    const findChordVoicingPositions = (chord) => {
+      if (!chord) return new Set();
+      const allStrings = [5,4,3,2,1,0];
+      const noteCount = chord.tones.length;
+      const positions = new Set();
+      // Cada forma inicia con la tónica y continúa por las cuerdas agudas.
+      // La búsqueda obliga a incluir todas las notas del acorde en orden ascendente.
+      [5,4,3].forEach((anchorString) => {
+        const anchorIndex = allStrings.indexOf(anchorString);
+        const strings = allStrings.slice(anchorIndex, anchorIndex + noteCount);
+        if (strings.length !== noteCount) return;
+        const anchorOpen = Number(stringRows[anchorString].dataset.openMidi);
+        const anchorFrets = Array.from({ length:13 }, (_, fret) => fret).filter((fret) => (anchorOpen + fret) % 12 === chord.rootPitch);
+        let best = null;
+        anchorFrets.forEach((anchorFret) => {
+          const chosen = [];
+          const search = (row, score, usedPitches) => {
+            if (row === strings.length) {
+              if (chord.tones.some((pitch) => !usedPitches.has(pitch))) return;
+              if (!best || score < best.score) best = { notes:[...chosen], score };
+              return;
+            }
+            const stringIndex = strings[row];
+            const openMidi = Number(stringRows[stringIndex].dataset.openMidi);
+            const frets = row === 0
+              ? [anchorFret]
+              : Array.from({ length:13 }, (_, fret) => fret).filter((fret) => chord.pitches.has((openMidi + fret) % 12));
+            frets.forEach((fret) => {
+              const midi = openMidi + fret;
+              if (chosen.length && midi <= chosen[chosen.length - 1].midi) return;
+              const pitch = midi % 12;
+              chosen.push({ stringIndex, fret, midi });
+              const nextPitches = new Set(usedPitches);
+              nextPitches.add(pitch);
+              search(row + 1, score + fret + Math.abs(fret - anchorFret) * 0.15, nextPitches);
+              chosen.pop();
+            });
+          };
+          search(0, 0, new Set());
+        });
+        (best?.notes || []).forEach((note) => positions.add(note.stringIndex + ':' + note.fret));
+      });
+      return positions;
+    };    const selectScaleChord = (index) => {
+      const chord = getScaleChords()[index];
+      if (!chord) return;
+      selectedChordIndex = index;
+      selectedChordRoot = chord.rootPitch;
+      selectedChordPitchClasses = chord.pitches;
+      selectedPitchClasses = new Set();
+      highlightMode = 'chord';
+      document.querySelector('#chord-selection-hint').textContent = chord.american + ' · ' + chord.spanish + ' · Fórmula: ' + chord.formula + (chordVoicingOnly ? ' · tres formas completas con tónica en 6ª, 5ª y 4ª' : ' · notas resaltadas en todo el diapasón');
+      paintBoard();
+    };
+    const renderScaleChords = () => {
+      const title = document.querySelector('#chord-scale-title');
+      const list = document.querySelector('#chord-scale-list');
+      if (activeScaleRoot === null) {
+        title.textContent = 'Aplica una escala';
+        list.innerHTML = '<p class="col-span-3 py-3 text-center text-[9px] text-[var(--text-muted)]">Elige y aplica una escala para generar sus acordes.</p>';
+        document.querySelector('#chord-selection-hint').textContent = 'El diapasón mostrará las notas del acorde elegido.';
+        return;
+      }
+      title.textContent = 'Acordes de ' + currentNames()[activeScaleRoot] + ' · ' + scaleLabels[activeScaleType];
+      const scaleNotes = scaleSteps[activeScaleType] || scaleSteps.major;
+      if (scaleNotes.length !== 7) {
+        list.innerHTML = '<p class="col-span-3 py-3 text-center text-[9px] leading-5 text-[var(--text-muted)]">La armonización diatónica requiere una escala de siete notas. Elige Mayor o una escala menor.</p>';
+        document.querySelector('#chord-selection-hint').textContent = 'Las escalas pentatónicas y blues no forman una armonía diatónica de tríadas estándar.';
+        return;
+      }
+      const chords = getScaleChords();
+      list.innerHTML = chords.map((chord) => '<button type="button" class="chord-card tone-' + chord.degree + (chord.index === selectedChordIndex ? ' is-active' : '') + '" data-chord-index="' + chord.index + '" aria-pressed="' + (chord.index === selectedChordIndex) + '"><span class="chord-degree">' + chord.roman + '</span><strong class="chord-american">' + chord.american + '</strong><span class="chord-spanish">' + chord.spanish + '</span><small class="chord-quality">' + chord.quality + '</small><small class="chord-formula">' + chord.formula + '</small></button>').join('');
+      const selectedChord = selectedChordIndex === null ? null : getScaleChords()[selectedChordIndex];
+      document.querySelector('#chord-selection-hint').textContent = selectedChord ? selectedChord.american + ' · Fórmula: ' + selectedChord.formula + (chordVoicingOnly ? ' · formas completas con tónica en 6ª, 5ª y 4ª' : ' · resaltado en todo el diapasón') : 'El diapasón mostrará las notas del acorde elegido.';
+      list.querySelectorAll('[data-chord-index]').forEach((button) => button.addEventListener('click', () => selectScaleChord(Number(button.dataset.chordIndex))));
+    };
     const paintBoard = () => {
+      const activeChord = highlightMode === 'chord' && selectedChordIndex !== null ? getScaleChords()[selectedChordIndex] : null;
+      const chordVoicingPositions = chordVoicingOnly && activeChord ? findChordVoicingPositions(activeChord) : null;
       const names = currentNames();
       stringRows.forEach((row, stringIndex) => {
         const openMidi = Number(row.dataset.openMidi);
-        row.querySelector('.string-label').textContent = `${6 - stringIndex}ª · ${names[openMidi % 12]}`;
+        row.querySelector('.string-label').textContent = `${stringIndex + 1}ª · ${names[openMidi % 12]}`;
       });
       fretNotes.forEach((button) => {
         const row = button.closest('.guitar-string');
@@ -135,24 +347,56 @@ const tuningButtons = [
         button.dataset.midi = String(midi);
         button.dataset.pitch = String(pitch);
         button.textContent = name;
-        button.setAttribute('aria-label', `${name}, cuerda ${6 - Number(row.dataset.stringIndex)}, traste ${fret}`);
-        button.classList.toggle('is-scale', highlightMode === 'scale' && scalePitchClasses.has(pitch) && pitch !== Number(document.querySelector('#scale-root').value));
-        button.classList.toggle('is-root', highlightMode === 'scale' && pitch === Number(document.querySelector('#scale-root').value));
-        button.classList.toggle('is-filter-note', highlightMode === 'notes' && selectedPitchClasses.has(pitch));
-        button.classList.toggle('dim-note', highlightMode === 'none');
+        button.setAttribute('aria-label', `${name}, cuerda ${Number(row.dataset.stringIndex) + 1}, traste ${fret}`);
+        const belongsToScale = scalePitchClasses.has(pitch);
+        const selectedForFilter = highlightMode === 'notes' && selectedPitchClasses.has(pitch);
+        const voicingMatch = !chordVoicingOnly || !chordVoicingPositions || chordVoicingPositions.has(row.dataset.stringIndex + ':' + fret);
+        const selectedForChord = highlightMode === 'chord' && selectedChordPitchClasses.has(pitch) && voicingMatch;
+        const showDegree = belongsToScale && (highlightMode === 'scale' || selectedForFilter || selectedForChord);
+        const showChromatic = activeScaleRoot !== null && !belongsToScale && (highlightMode === 'scale' || selectedForFilter || selectedForChord);
+        const degree = showChromatic ? chromaticDegreeFor(pitch) : pitchDegrees.get(pitch);
+        button.classList.toggle('is-scale', showDegree && degree !== 1);
+        button.classList.toggle('is-root', showDegree && degree === 1);
+        button.classList.toggle('is-chromatic-scale', showChromatic);
+        button.classList.toggle('is-chord-root', selectedForChord && pitch === selectedChordRoot);
+        for (let scaleDegree = 1; scaleDegree <= 7; scaleDegree++) button.classList.toggle('degree-' + scaleDegree, (showDegree || showChromatic) && degree === scaleDegree);
+        button.classList.toggle('is-filter-note', selectedForFilter);
+        button.classList.toggle('dim-note', highlightMode === 'none' || (highlightMode === 'chord' && !selectedForChord));
       });
       noteFilters.forEach((button) => {
-        button.textContent = names[Number(button.dataset.pitchFilter)];
+        const pitch = Number(button.dataset.pitchFilter);
+        button.querySelector('.note-filter-name').textContent = names[pitch];
+        const interval = activeScaleRoot === null ? '—' : (useFlats ? flatIntervalNames : sharpIntervalNames)[(pitch - activeScaleRoot + 12) % 12];
+        button.querySelector('.note-filter-interval').textContent = interval;
         button.classList.toggle('is-active', highlightMode === 'notes' && selectedPitchClasses.has(Number(button.dataset.pitchFilter)));
         button.setAttribute('aria-pressed', String(highlightMode === 'notes' && selectedPitchClasses.has(Number(button.dataset.pitchFilter))));
       });
       document.querySelector('#scale-root').querySelectorAll('option').forEach((option) => { option.textContent = names[Number(option.value)]; });
+      const scaleLabel = document.querySelector('#active-scale-label');
+      scaleLabel.textContent = activeScaleRoot !== null ? 'Escala activa: ' + names[activeScaleRoot] + ' ' + scaleLabels[activeScaleType] : 'Escala activa: ninguna';
+      const zenTitle = document.querySelector('#zen-scale-title');
+      const zenNotes = document.querySelector('#zen-scale-notes');
+      if (activeScaleRoot === null) {
+        zenTitle.textContent = 'Elige una escala para comenzar';
+        zenNotes.innerHTML = '<span class="zen-empty">Aplica una escala para ver sus notas e intervalos.</span>';
+      } else {
+        zenTitle.textContent = names[activeScaleRoot] + ' · ' + scaleLabels[activeScaleType];
+        const steps = scaleSteps[activeScaleType] || scaleSteps.major;
+        const intervals = useFlats ? flatIntervalNames : sharpIntervalNames;
+        zenNotes.innerHTML = steps.map((step) => '<span class="zen-scale-note"><strong>' + names[(activeScaleRoot + step) % 12] + '</strong><small>' + intervals[step] + '</small></span>').join('');
+      }
+      const legend = document.querySelector('#scale-degree-legend');
+      if (activeScaleRoot !== null) {
+        const activeDegrees = [...new Set([...pitchDegrees.values()])].sort((a,b)=>a-b);
+        legend.innerHTML = activeDegrees.map((degree) => '<span class="flex items-center gap-2"><i class="legend-dot degree-' + degree + '"></i>' + degreeLabels[degree] + '</span>').join('');
+      } else legend.innerHTML = '<span class="flex items-center gap-2"><i class="legend-dot degree-1"></i>Selecciona una escala para ver sus grados</span>';
+      renderScaleChords();
     };
 
     document.querySelectorAll('[data-tuning]').forEach((button) => button.addEventListener('click', () => {
       const tuning = openNotes[button.dataset.tuning];
       if (!tuning) return;
-      stringRows.forEach((row, index) => { row.dataset.openMidi = String(tuning.midi[index]); });
+      stringRows.forEach((row, index) => { row.dataset.openMidi = String(tuning.midi[5 - index]); });
       tuningCaption.textContent = tuning.name;
       document.querySelectorAll('[data-tuning]').forEach((option) => {
         const active = option === button;
@@ -176,24 +420,79 @@ const tuningButtons = [
       paintBoard();
     });
 
-    const resetFilterState = () => { selectedPitchClasses = new Set(); scalePitchClasses = new Set(); };
+    const resetFilterState = () => { selectedPitchClasses = new Set(); scalePitchClasses = new Set(); pitchDegrees = new Map(); activeScaleRoot = null; activeScaleType = null; selectedChordPitchClasses = new Set(); selectedChordRoot = null; selectedChordIndex = null; };
     document.querySelector('#show-all-notes').addEventListener('click', () => { resetFilterState(); highlightMode = 'all'; paintBoard(); });
     document.querySelector('#clear-notes').addEventListener('click', () => { resetFilterState(); highlightMode = 'none'; paintBoard(); });
     noteFilters.forEach((button) => button.addEventListener('click', () => {
       const pitch = Number(button.dataset.pitchFilter);
-      if (highlightMode !== 'notes') { selectedPitchClasses = new Set(); highlightMode = 'notes'; }
+      if (highlightMode !== 'notes') { selectedPitchClasses = new Set(); selectedChordPitchClasses = new Set(); selectedChordRoot = null; selectedChordIndex = null; highlightMode = 'notes'; }
       if (selectedPitchClasses.has(pitch)) selectedPitchClasses.delete(pitch); else selectedPitchClasses.add(pitch);
       paintBoard();
     }));
+    document.querySelector('#chord-voicing-toggle').addEventListener('click', (event) => {
+      chordVoicingOnly = !chordVoicingOnly;
+      event.currentTarget.setAttribute('aria-pressed', String(chordVoicingOnly));
+      event.currentTarget.classList.toggle('is-active', chordVoicingOnly);
+      event.currentTarget.title = chordVoicingOnly ? 'Formas completas desde la tónica en las cuerdas 6ª, 5ª y 4ª' : 'Mostrar el acorde en todo el diapasón';
+      if (selectedChordIndex !== null) selectScaleChord(selectedChordIndex);
+      else paintBoard();
+    });    document.querySelector('#chord-mode').addEventListener('change', () => {
+      if (selectedChordIndex !== null && activeScaleRoot !== null) selectScaleChord(selectedChordIndex);
+      else paintBoard();
+    });
     document.querySelector('#show-scale').addEventListener('click', () => {
       const root = Number(document.querySelector('#scale-root').value);
-      const steps = scaleSteps[document.querySelector('#scale-type').value] || scaleSteps.major;
+      const scaleType = document.querySelector('#scale-type').value;
+      const steps = scaleSteps[scaleType] || scaleSteps.major;
+      const degrees = scaleDegrees[scaleType] || scaleDegrees.major;
+      pitchDegrees = new Map(steps.map((step,index) => [(root + step) % 12, degrees[index]]));
+      activeScaleRoot = root;
+      activeScaleType = scaleType;
+      selectedChordPitchClasses = new Set();
+      selectedChordRoot = null;
+      selectedChordIndex = null;
       scalePitchClasses = new Set(steps.map((step) => (root + step) % 12));
       selectedPitchClasses = new Set();
       highlightMode = 'scale';
       paintBoard();
     });
 
+    const boardPanel = document.querySelector('.fretboard-panel');
+    const fullscreenButton = document.querySelector('#fretboard-fullscreen');
+    const zenHeader = document.querySelector('#zen-header');
+    const zenZoomButtons = [...document.querySelectorAll('[data-zen-zoom]')];
+    const setZenMode = (enabled) => {
+      const fallback = enabled && document.fullscreenElement !== boardPanel;
+      boardPanel.classList.toggle('is-app-fullscreen', fallback);
+      boardPanel.classList.toggle('is-zen-mode', enabled);
+      zenHeader.setAttribute('aria-hidden', String(!enabled));
+      document.body.style.overflow = fallback ? 'hidden' : '';
+      fullscreenButton.setAttribute('aria-label', enabled ? 'Salir del Modo Zen' : 'Abrir Modo Zen a pantalla completa');
+      fullscreenButton.title = enabled ? 'Salir del Modo Zen' : 'Modo Zen';
+    };
+    fullscreenButton.addEventListener('click', async () => {
+      if (boardPanel.classList.contains('is-zen-mode') || document.fullscreenElement === boardPanel) {
+        if (document.fullscreenElement === boardPanel && document.exitFullscreen) await document.exitFullscreen().catch(() => {});
+        setZenMode(false);
+        return;
+      }
+      if (boardPanel.requestFullscreen) {
+        try { await boardPanel.requestFullscreen(); setZenMode(true); return; } catch { /* use the viewport overlay fallback */ }
+      }
+      setZenMode(true);
+    });
+    document.addEventListener('fullscreenchange', () => setZenMode(document.fullscreenElement === boardPanel));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && boardPanel.classList.contains('is-app-fullscreen')) setZenMode(false);
+    });
+    zenZoomButtons.forEach((button) => button.addEventListener('click', () => {
+      boardPanel.style.setProperty('--zen-zoom', button.dataset.zenZoom);
+      zenZoomButtons.forEach((option) => {
+        const active = option === button;
+        option.setAttribute('aria-pressed', String(active));
+        option.classList.toggle('is-active', active);
+      });
+    }));
     fretNotes.forEach((button) => button.addEventListener('click', async () => {
       if (!window.AudioContext) { playedNote.textContent = 'Audio no disponible en este navegador'; return; }
       audio ??= new AudioContext();
@@ -205,15 +504,29 @@ const tuningButtons = [
       const overtone = audio.createOscillator();
       const filter = audio.createBiquadFilter();
       const gain = audio.createGain();
-      oscillator.type = 'triangle'; overtone.type = 'sine';
+      const tonePreset = document.querySelector('#note-tone').value;
+      const isElectric = tonePreset === 'electric';
+      const isAcoustic = tonePreset === 'acoustic';
+      const duration = isAcoustic ? 0.78 : isElectric ? 0.92 : 1.05;
+      oscillator.type = isElectric ? 'sawtooth' : 'triangle';
+      overtone.type = isElectric ? 'triangle' : 'sine';
       oscillator.frequency.setValueAtTime(frequency, start);
-      overtone.frequency.setValueAtTime(frequency * 2.01, start);
-      filter.type = 'lowpass'; filter.frequency.setValueAtTime(2600, start);
+      overtone.frequency.setValueAtTime(frequency * (isAcoustic ? 2.76 : 2.01), start);
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(isAcoustic ? 5400 : isElectric ? 3900 : 2600, start);
       gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(0.16, start + 0.012);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 1.05);
-      oscillator.connect(filter); overtone.connect(filter); filter.connect(gain).connect(audio.destination);
-      oscillator.start(start); overtone.start(start); oscillator.stop(start + 1.08); overtone.stop(start + 1.08);
+      gain.gain.exponentialRampToValueAtTime(isElectric ? 0.105 : isAcoustic ? 0.17 : 0.16, start + (isAcoustic ? 0.008 : 0.012));
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+      oscillator.connect(filter); overtone.connect(filter);
+      if (isElectric) {
+        const softDrive = audio.createWaveShaper();
+        const curve = new Float32Array(256);
+        for (let index = 0; index < curve.length; index++) { const x = index * 2 / (curve.length - 1) - 1; curve[index] = Math.tanh(2.6 * x) / Math.tanh(2.6); }
+        softDrive.curve = curve; softDrive.oversample = '2x';
+        filter.connect(softDrive).connect(gain);
+      } else filter.connect(gain);
+      gain.connect(audio.destination);
+      oscillator.start(start); overtone.start(start); oscillator.stop(start + duration + 0.03); overtone.stop(start + duration + 0.03);
       playedNote.textContent = `${button.textContent} · ${frequency.toFixed(1)} Hz`;
     }));
     paintBoard();
