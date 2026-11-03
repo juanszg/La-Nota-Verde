@@ -22,9 +22,17 @@ const tuningButtons = [
     <section class="mt-7 grid gap-5 xl:grid-cols-[minmax(0,1fr)_19rem]">
       <div class="min-w-0 space-y-5">
         <article class="surface rounded-2xl p-4 sm:p-6">
-          <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Afinación</p><p class="mt-1 text-[10px] text-[var(--text-muted)]">El diapasón se actualiza con cada afinación.</p></div><div class="flex flex-wrap gap-2" aria-label="Orientación y notación"><button type="button" id="handedness-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">Mano derecha</button><button type="button" id="accidental-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">♯ Sostenidos</button></div></div>
-          <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">{tuningButtons.map((item) => <button type="button" data-tuning={item.id} aria-pressed={item.id === 'standard' ? 'true' : 'false'} class:list={["tuning-option rounded-xl border px-3 py-3 text-left transition hover:-translate-y-0.5", item.id === 'standard' ? 'is-active border-neon' : 'border-[var(--border)]']}><span class="block text-xs font-bold">{item.label}</span><span class="mt-1 block text-[8px] text-[var(--text-muted)]">{item.tuning}</span></button>)}</div>
+          <div class="flex flex-wrap items-center justify-between gap-3"><div><div class="flex flex-wrap items-center gap-3"><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Resalta notas</p><span id="active-scale-label" class="scale-context">Escala activa: ninguna</span></div><p class="mt-1 text-[10px] text-[var(--text-muted)]">Elige tonalidad y escala aquí; las etiquetas muestran el intervalo desde la tónica.</p></div><div class="flex gap-2"><button type="button" id="show-all-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Todas</button><button type="button" id="clear-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Ninguna</button></div></div>
+          <div class="mt-4 grid gap-3 sm:grid-cols-[minmax(8rem,.7fr)_minmax(12rem,1.3fr)]">
+            <label class="grid gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Tonalidad<select id="scale-root" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs normal-case tracking-normal text-[var(--text-primary)]"><option value="0">C</option><option value="1">C♯</option><option value="2">D</option><option value="3">D♯</option><option value="4">E</option><option value="5">F</option><option value="6">F♯</option><option value="7">G</option><option value="8">G♯</option><option value="9">A</option><option value="10">A♯</option><option value="11">B</option></select></label>
+            <label class="grid gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Escala<select id="scale-type" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs normal-case tracking-normal text-[var(--text-primary)]"><option value="major">Mayor</option><option value="minor">Menor natural (eólica)</option><option value="harmonic-minor">Menor armónica</option><option value="melodic-minor">Menor melódica</option><option value="major-pentatonic">Pentatónica mayor</option><option value="minor-pentatonic">Pentatónica menor</option><option value="blues">Blues menor</option></select></label>
+          </div>
+          <button type="button" id="show-scale" class="mt-3 w-full rounded-xl bg-neon px-4 py-3 text-xs font-bold text-ink transition hover:bg-white">Aplicar escala e intervalos</button>
+          <div id="scale-degree-legend" class="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-[9px] text-[var(--text-muted)]" aria-live="polite"><span class="flex items-center gap-2"><i class="legend-dot degree-1"></i> I · Tónica</span></div>
+          <div id="note-filters" class="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-12">{sharpNotes.map((note, pitch) => <button type="button" data-pitch-filter={pitch} aria-pressed="false" class="note-filter control-surface grid min-h-14 grid-rows-[auto_auto] place-items-center gap-0.5 rounded-lg border border-[var(--border)] py-2 transition hover:border-neon hover:text-[var(--accent)]"><span class="note-filter-name text-xs font-bold">{note}</span><small class="note-filter-interval text-[8px] font-medium text-[var(--text-muted)]">—</small></button>)}</div>
         </article>
+
+        
 
         <article class="surface min-w-0 rounded-2xl p-4 sm:p-6">
           <div class="mb-4 flex flex-wrap items-end justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Notas en el diapasón</p><p class="mt-1 text-[10px] text-[var(--text-muted)]">Pulsa una nota para escucharla · el traste 12 marca la octava.</p></div><p class="text-[9px] text-[var(--text-muted)]">Afinación: <strong id="tuning-caption" class="text-[var(--text-primary)]">E · B · G · D · A · E</strong></p></div>
@@ -36,22 +44,17 @@ const tuningButtons = [
             <div class="fretboard-scroll" tabindex="0" aria-label="Diapasón. En móvil, desliza horizontalmente para recorrer los trastes.">
               <div id="fretboard" class="fretboard">
                 <div class="fret-row fret-ruler"><span class="string-label">TRASTE</span>{frets.map((fret) => <span class:list={["fret-number", fret === 12 ? 'octave-number' : '']}>{fret}</span>)}</div>
-                <div id="fretboard-strings" class="fretboard-strings">{stringNames.map((label, stringIndex) => <div class="fret-row guitar-string" data-string-index={stringIndex} data-open-midi={openMidi[stringIndex]}><span class="string-label">{label}</span>{frets.map((fret) => { const midi = openMidi[stringIndex] + fret; return <button type="button" data-fret={fret} data-midi={midi} data-pitch={midi % 12} aria-label={`${sharpNotes[midi % 12]}, ${label}, traste ${fret}`} class:list={["fret-note", fret === 0 ? 'open-note' : '', fret === 12 ? 'octave-fret' : '']}>{sharpNotes[midi % 12]}</button>; })}</div>)}</div>
+                <div id="fretboard-strings" class="fretboard-strings">{stringNames.map((label, stringIndex) => <div class="fret-row guitar-string" data-string-index={stringIndex} data-open-midi={openMidi[stringIndex]}><span class="string-label">{label}</span>{frets.map((fret) => { const midi = openMidi[stringIndex] + fret; return <button type="button" data-fret={fret} data-midi={midi} data-pitch={midi % 12} aria-label={`${sharpNotes[midi % 12]}, ${label}, traste ${fret}`} class:list={["fret-note", fret === 0 ? 'open-note' : '', fret === 12 ? 'octave-fret' : '']}><span class="fret-note-name">{sharpNotes[midi % 12]}</span><small class="fret-note-interval" aria-hidden="true"></small></button>; })}</div>)}</div>
               </div>
             </div>
             <p class="mt-3 text-center text-[9px] leading-4 text-white/55">Primera cuerda (aguda) arriba · sexta cuerda (grave) abajo</p>
           </div>
         </article>
 
-        <article class="surface rounded-2xl p-4 sm:p-6">
-          <div class="flex flex-wrap items-center justify-between gap-3"><div><div class="flex flex-wrap items-center gap-3"><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Resalta notas</p><span id="active-scale-label" class="scale-context">Escala activa: ninguna</span></div><p class="mt-1 text-[10px] text-[var(--text-muted)]">Elige tonalidad y escala aquí; las etiquetas muestran el intervalo desde la tónica.</p></div><div class="flex gap-2"><button type="button" id="show-all-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Todas</button><button type="button" id="clear-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Ninguna</button></div></div>
-          <div class="mt-4 grid gap-3 sm:grid-cols-[minmax(8rem,.7fr)_minmax(12rem,1.3fr)]">
-            <label class="grid gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Tonalidad<select id="scale-root" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs normal-case tracking-normal text-[var(--text-primary)]"><option value="0">C</option><option value="1">C♯</option><option value="2">D</option><option value="3">D♯</option><option value="4">E</option><option value="5">F</option><option value="6">F♯</option><option value="7">G</option><option value="8">G♯</option><option value="9">A</option><option value="10">A♯</option><option value="11">B</option></select></label>
-            <label class="grid gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Escala<select id="scale-type" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-xs normal-case tracking-normal text-[var(--text-primary)]"><option value="major">Mayor</option><option value="minor">Menor natural (eólica)</option><option value="harmonic-minor">Menor armónica</option><option value="melodic-minor">Menor melódica</option><option value="major-pentatonic">Pentatónica mayor</option><option value="minor-pentatonic">Pentatónica menor</option><option value="blues">Blues menor</option></select></label>
-          </div>
-          <button type="button" id="show-scale" class="mt-3 w-full rounded-xl bg-neon px-4 py-3 text-xs font-bold text-ink transition hover:bg-white">Aplicar escala e intervalos</button>
-          <div id="scale-degree-legend" class="mt-4 flex flex-wrap gap-x-3 gap-y-2 text-[9px] text-[var(--text-muted)]" aria-live="polite"><span class="flex items-center gap-2"><i class="legend-dot degree-1"></i> I · Tónica</span></div>
-          <div id="note-filters" class="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-12">{sharpNotes.map((note, pitch) => <button type="button" data-pitch-filter={pitch} aria-pressed="false" class="note-filter control-surface grid min-h-14 grid-rows-[auto_auto] place-items-center gap-0.5 rounded-lg border border-[var(--border)] py-2 transition hover:border-neon hover:text-[var(--accent)]"><span class="note-filter-name text-xs font-bold">{note}</span><small class="note-filter-interval text-[8px] font-medium text-[var(--text-muted)]">—</small></button>)}</div>
+        
+              <article class="surface rounded-2xl p-4 sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Afinación</p><p class="mt-1 text-[10px] text-[var(--text-muted)]">El diapasón se actualiza con cada afinación.</p></div><div class="flex flex-wrap gap-2" aria-label="Orientación y notación"><button type="button" id="handedness-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">Mano derecha</button><button type="button" id="accidental-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">♯ Sostenidos</button></div></div>
+          <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">{tuningButtons.map((item) => <button type="button" data-tuning={item.id} aria-pressed={item.id === 'standard' ? 'true' : 'false'} class:list={["tuning-option rounded-xl border px-3 py-3 text-left transition hover:-translate-y-0.5", item.id === 'standard' ? 'is-active border-neon' : 'border-[var(--border)]']}><span class="block text-xs font-bold">{item.label}</span><span class="mt-1 block text-[8px] text-[var(--text-muted)]">{item.tuning}</span></button>)}</div>
         </article>
       </div>
 
@@ -59,9 +62,15 @@ const tuningButtons = [
 
         <article class="rounded-2xl border border-neon/15 bg-neon/5 p-4 sm:p-5"><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Cómo leerlo</p><ul class="mt-3 space-y-2 text-[10px] leading-5 text-[var(--text-muted)]"><li><strong class="text-[var(--text-primary)]">Cada traste</strong> sube un semitono.</li><li><strong class="text-[var(--text-primary)]">Traste 12</strong> repite la nota al aire una octava arriba.</li><li><strong class="text-[var(--text-primary)]">♯ / ♭</strong> cambia la escritura, no el sonido del traste.</li><li><strong class="text-[var(--text-primary)]">Afinaciones</strong> cambian la nota de cada cuerda al aire.</li></ul></article>
         <article class="chord-harmony-card rounded-2xl border border-neon/20 bg-neon/5 p-4 sm:p-5">
-          <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Acordes de la escala</p><h2 id="chord-scale-title" class="mt-1 text-sm font-bold">Aplica una escala</h2><p class="mt-1 text-[9px] leading-4 text-[var(--text-muted)]">Selecciona un grado para ver su acorde en todo el diapasón.</p></div><div class="flex flex-wrap items-end gap-2"><label class="grid gap-1 text-[8px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Armonía<select id="chord-mode" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2 py-2 text-[9px] text-[var(--text-primary)]"><option value="triad">Tríadas naturales</option><option value="seventh">Con 7ma</option></select></label><button id="chord-voicing-toggle" type="button" class="voicing-toggle" aria-pressed="false" aria-label="Mostrar formas con tónica en las cuerdas sexta, quinta y cuarta" title="Mostrar las formas del acorde desde las cuerdas 6ª, 5ª y 4ª">Formas 6ª–4ª</button></div></div>
+          <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Acordes de la escala</p><h2 id="chord-scale-title" class="mt-1 text-sm font-bold">Aplica una escala</h2><p class="mt-1 text-[9px] leading-4 text-[var(--text-muted)]">Selecciona un grado; en Formas 6ª–4ª, pasa o pulsa la tónica para aislar su digitación.</p></div><div class="flex flex-wrap items-end gap-2"><label class="grid gap-1 text-[8px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Armonía<select id="chord-mode" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2 py-2 text-[9px] text-[var(--text-primary)]"><option value="triad">Tríadas naturales</option><option value="seventh">Con 7ma</option></select></label><button id="chord-voicing-toggle" type="button" class="voicing-toggle" aria-pressed="false" aria-label="Mostrar formas con tónica en las cuerdas sexta, quinta y cuarta" title="Mostrar las formas del acorde desde las cuerdas 6ª, 5ª y 4ª">Formas 6ª–4ª</button></div></div>
           <div id="chord-scale-list" class="mt-4 grid grid-cols-3 gap-2" aria-live="polite"><p class="col-span-3 py-3 text-center text-[9px] text-[var(--text-muted)]">Elige una tonalidad y aplica la escala para ver sus acordes.</p></div>
           <p id="chord-selection-hint" class="mt-3 min-h-4 text-center text-[9px] text-[var(--text-muted)]">El diapasón mostrará las notas del acorde elegido.</p>
+        </article>
+        <article class="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4 sm:p-5">
+          <p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Ajustes del diapasón</p>
+          <label for="fret-note-size" class="mt-3 grid gap-1 text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)]">Tamaño de las notas<select id="fret-note-size" class="rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-2 text-[10px] normal-case tracking-normal text-[var(--text-primary)]"><option value="1">Normal</option><option value="1.15">Grande · 115%</option><option value="1.3">Más grande · 130%</option><option value="1.45">Máximo · 145%</option></select></label>
+          <label class="mt-3 flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-[var(--border)] px-3 py-2.5 text-[9px] font-bold text-[var(--text-primary)]"><span>Mostrar intervalos</span><input id="show-note-intervals" type="checkbox" class="accent-[#63f58c]"><span class="text-[8px] font-normal text-[var(--text-muted)]">(III)</span></label>
+          <p class="mt-2 text-[8px] leading-4 text-[var(--text-muted)]">Muestra el grado y la calidad del intervalo debajo de cada nota resaltada.</p>
         </article>
         <a href="/herramientas" class="block rounded-xl border border-[var(--border)] px-4 py-3 text-center text-[10px] font-bold text-[var(--text-muted)] transition hover:border-neon hover:text-[var(--accent)]">Ir a las herramientas musicales →</a>
       </aside>
@@ -105,17 +114,23 @@ const tuningButtons = [
   .guitar-string::after { position: absolute; z-index: 0; top: 50%; left: 4rem; right: 0; height: 1px; content: ''; background: linear-gradient(90deg, rgb(213 220 207 / .5), rgb(213 220 207 / .25)); pointer-events: none; }
   .fret-note { position: relative; z-index: 1; display: grid; height: 3.2rem; place-items: center; border-right: 1px solid rgb(255 255 255 / .16); border-bottom: 1px solid rgb(255 255 255 / .08); color: rgb(255 255 255 / .62); font-family: 'Space Mono', monospace; font-size: .67rem; font-weight: 700; transition: color .18s, background .18s, transform .18s; }
   .fret-note:hover, .fret-note:focus-visible { z-index: 3; color: #07100b; background: #63f58c; outline: 2px solid #63f58c; outline-offset: -2px; }
-  .fret-note.open-note { border-left: 3px solid #d5dccf; }
+  .fret-note.open-note { border-left: 3px solid #d5dccf; background:rgb(99 245 140 / .12); box-shadow:inset 0 0 0 1px rgb(99 245 140 / .22); }
+  .fret-note[data-fret="1"] { border-left:3px solid #72ff9b; }
   .fret-note.octave-fret { background: rgb(255 255 255 / .045); }
-  .fret-note.is-scale { color:#07100b; font-weight:900; border:1px solid var(--degree-color); box-shadow:0 0 18px color-mix(in srgb,var(--degree-color) 55%,transparent); }
-  .fret-note.is-chromatic-scale { color:var(--degree-color); background:color-mix(in srgb, var(--degree-color) 17%, #07100b); border:1px solid var(--degree-color); box-shadow:0 0 12px color-mix(in srgb, var(--degree-color) 24%, transparent); }
-  .fret-note.is-scale.degree-1, :global(.degree-1) { --degree-color:#72ff9b; background-color:#72ff9b; box-shadow:0 0 16px rgb(114 255 155 / .42); }
-  .fret-note.is-scale.degree-2, :global(.degree-2) { --degree-color:#d4ff72; background-color:#d4ff72; box-shadow:0 0 16px rgb(212 255 114 / .38); }
-  .fret-note.is-scale.degree-3, :global(.degree-3) { --degree-color:#ffb36b; background-color:#ffb36b; box-shadow:0 0 16px rgb(255 179 107 / .4); }
-  .fret-note.is-scale.degree-4, :global(.degree-4) { --degree-color:#d8a6ff; background-color:#d8a6ff; box-shadow:0 0 16px rgb(216 166 255 / .42); }
-  .fret-note.is-scale.degree-5, :global(.degree-5) { --degree-color:#ff8fa3; background-color:#ff8fa3; box-shadow:0 0 16px rgb(255 143 163 / .42); }
-  .fret-note.is-scale.degree-6, :global(.degree-6) { --degree-color:#fff07a; background-color:#fff07a; box-shadow:0 0 16px rgb(255 240 122 / .4); }
-  .fret-note.is-scale.degree-7, :global(.degree-7) { --degree-color:#7ee7ff; background-color:#7ee7ff; box-shadow:0 0 16px rgb(126 231 255 / .42); }
+  .fretboard-panel { --fret-note-scale:1; }
+  .fret-note-name { font-size:calc(.67rem * var(--fret-note-scale,1)); line-height:1; }
+  .fret-note-interval { display:none; color:rgb(7 16 11 / .72); font-size:calc(.42rem * var(--fret-note-scale,1)); font-weight:800; line-height:1; }
+  .fret-note.has-interval { align-content:center; gap:.12rem; }
+  .fret-note.has-interval .fret-note-interval { display:block; }
+  .fret-note.is-scale { color:#07100b; font-weight:900; border:1px solid var(--degree-color); box-shadow:none; }
+  .fret-note.is-chromatic-scale { color:var(--degree-color); background:color-mix(in srgb, var(--degree-color) 17%, #07100b); border:1px solid var(--degree-color); box-shadow:none; }
+  .fret-note.is-scale.degree-1, :global(.degree-1) { --degree-color:#72ff9b; background-color:#72ff9b; box-shadow:none; }
+  .fret-note.is-scale.degree-2, :global(.degree-2) { --degree-color:#d4ff72; background-color:#d4ff72; box-shadow:none; }
+  .fret-note.is-scale.degree-3, :global(.degree-3) { --degree-color:#ffb36b; background-color:#ffb36b; box-shadow:none; }
+  .fret-note.is-scale.degree-4, :global(.degree-4) { --degree-color:#d8a6ff; background-color:#d8a6ff; box-shadow:none; }
+  .fret-note.is-scale.degree-5, :global(.degree-5) { --degree-color:#ff8fa3; background-color:#ff8fa3; box-shadow:none; }
+  .fret-note.is-scale.degree-6, :global(.degree-6) { --degree-color:#fff07a; background-color:#fff07a; box-shadow:none; }
+  .fret-note.is-scale.degree-7, :global(.degree-7) { --degree-color:#7ee7ff; background-color:#7ee7ff; box-shadow:none; }
   .fret-note.is-root { color:#07100b; background:#72ff9b; border:1px solid #72ff9b; box-shadow:0 0 22px rgb(114 255 155 / .72); }
   .fret-note.is-filter-note:not(.is-scale):not(.is-root):not(.is-chromatic-scale) { color: #07100b; background: #72ff9b; box-shadow:0 0 18px rgb(114 255 155 / .5); }
   .fret-note.dim-note { color: rgb(255 255 255 / .18); }
@@ -127,7 +142,7 @@ const tuningButtons = [
   .note-filter.is-active { border-color: #16db65; color: #16db65; background: rgb(22 219 101 / .12); }
   .voicing-toggle { min-height:2.1rem; border:1px solid rgb(114 255 155 / .3); border-radius:.65rem; padding:.4rem .55rem; color:#c8f6d3; font-size:.58rem; font-weight:800; white-space:nowrap; transition:background .18s,color .18s,border-color .18s,box-shadow .18s; }
   .voicing-toggle:hover, .voicing-toggle.is-active { border-color:#72ff9b; color:#07100b; background:#72ff9b; box-shadow:0 0 14px rgb(114 255 155 / .32); }
-  .fret-note.is-chord-root { z-index:4; outline:2px solid var(--degree-color); outline-offset:-4px; box-shadow:0 0 20px color-mix(in srgb,var(--degree-color) 75%,transparent); }
+  .fret-note.is-chord-root { cursor:pointer; z-index:4; outline:2px solid var(--degree-color); outline-offset:-4px; box-shadow:0 0 20px color-mix(in srgb,var(--degree-color) 75%,transparent); }
   :global(.chord-card) { aspect-ratio:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.15rem; border:1px solid rgb(114 255 155 / .2); border-radius:.9rem; padding:.4rem .2rem; background:rgb(8 25 15 / .8); text-align:center; transition:transform .18s,border-color .18s,background .18s,box-shadow .18s; }
   :global(.chord-card:hover) { transform:translateY(-2px); border-color:#72ff9b; box-shadow:0 0 16px rgb(114 255 155 / .18); }
   :global(.chord-card:focus-visible) { outline:2px solid #72ff9b; outline-offset:2px; }
@@ -139,7 +154,6 @@ const tuningButtons = [
   :global(.chord-card.tone-5) { --degree-color:#ff8fa3; border-color:color-mix(in srgb,#ff8fa3 24%,transparent); }
   :global(.chord-card.tone-6) { --degree-color:#fff07a; border-color:color-mix(in srgb,#fff07a 24%,transparent); }
   :global(.chord-card.tone-7) { --degree-color:#7ee7ff; border-color:color-mix(in srgb,#7ee7ff 24%,transparent); }
-  .fret-note.is-scale { filter:drop-shadow(0 0 8px var(--degree-color)); }
   .fret-note.is-root { filter:drop-shadow(0 0 8px #72ff9b); }
   :global(.chord-degree) { color:var(--degree-color,#72ff9b); font-size:.55rem; font-weight:800; }
   :global(.chord-american) { color:#f4fff7; font-family:'Kode Mono',monospace; font-size:1.05rem; line-height:1.1; }
@@ -147,7 +161,7 @@ const tuningButtons = [
   :global(.chord-quality) { color:rgb(235 255 241 / .58); font-size:.48rem; line-height:1.2; }
   :global(.chord-formula) { color:#a6efff; font-size:.45rem; font-weight:700; line-height:1.1; white-space:nowrap; }
   .legend-dot { display:inline-block; width:.55rem; height:.55rem; border-radius:50%; background:var(--degree-color, #16db65); }
-  @media (max-width: 640px) { .fret-row { grid-template-columns: 3.5rem repeat(13, minmax(2.55rem, 2.8rem)); } .guitar-string::after { left: 3.5rem; } .fretboard.is-left-handed .guitar-string::after { left: 0; right: 3.5rem; } .fret-note { height: 3rem; font-size: .62rem; } }
+  @media (max-width: 640px) { .fret-note-name { font-size:calc(.62rem * var(--fret-note-scale,1)); } .fret-row { grid-template-columns: 3.5rem repeat(13, minmax(2.55rem, 2.8rem)); } .guitar-string::after { left: 3.5rem; } .fretboard.is-left-handed .guitar-string::after { left: 0; right: 3.5rem; } .fret-note { height: 3rem; font-size: .62rem; } }
   @media (prefers-reduced-motion: reduce) { .fret-note, .tuning-option { transition: none; } }
 </style>
 
@@ -171,6 +185,8 @@ const tuningButtons = [
     const scaleLabels = {major:'Mayor', minor:'Menor natural (eólica)', 'harmonic-minor':'Menor armónica', 'melodic-minor':'Menor melódica', 'major-pentatonic':'Pentatónica mayor', 'minor-pentatonic':'Pentatónica menor', blues:'Blues menor'};
     const flatIntervalNames = ['1ª J','2ª m','2ª M','3ª m','3ª M','4ª J','5ª dim','5ª J','6ª m','6ª M','7ª m','7ª M'];
     const sharpIntervalNames = ['1ª J','♯1','2ª M','♯2','3ª M','4ª J','♯4','5ª J','♯5','6ª M','♯6','7ª M'];
+    const intervalRomanFlats = ['I','♭II','II','♭III','III','IV','♭V','V','♭VI','VI','♭VII','VII'];
+    const intervalRomanSharps = ['I','♯I','II','♯II','III','IV','♯IV','V','♯V','VI','♯VI','VII'];
     let pitchDegrees = new Map();
     let activeScaleRoot = null;
     let activeScaleType = null;
@@ -188,6 +204,8 @@ const tuningButtons = [
     let selectedChordRoot = null;
     let selectedChordIndex = null;
     let chordVoicingOnly = false;
+    let selectedChordAnchor = null;
+    let hoveredChordAnchor = null;
     let audio;
 
     const currentNames = () => useFlats ? flatNotes : sharpNotes;
@@ -254,22 +272,25 @@ const tuningButtons = [
         };
       });
     };
-    const findChordVoicingPositions = (chord) => {
+    const findChordVoicingPositions = (chord, requestedAnchor = null) => {
       if (!chord) return new Set();
       const allStrings = [5,4,3,2,1,0];
       const noteCount = chord.tones.length;
       const positions = new Set();
-      // Cada forma inicia con la tónica y continúa por las cuerdas agudas.
-      // La búsqueda obliga a incluir todas las notas del acorde en orden ascendente.
-      [5,4,3].forEach((anchorString) => {
+      const anchors = requestedAnchor ? [requestedAnchor.stringIndex] : [5,4,3];
+      anchors.forEach((anchorString) => {
         const anchorIndex = allStrings.indexOf(anchorString);
+        if (anchorIndex < 0) return;
         const strings = allStrings.slice(anchorIndex, anchorIndex + noteCount);
         if (strings.length !== noteCount) return;
         const anchorOpen = Number(stringRows[anchorString].dataset.openMidi);
-        const anchorFrets = Array.from({ length:13 }, (_, fret) => fret).filter((fret) => (anchorOpen + fret) % 12 === chord.rootPitch);
-        let best = null;
+        const anchorFrets = requestedAnchor
+          ? [requestedAnchor.fret]
+          : Array.from({ length:13 }, (_, fret) => fret).filter((fret) => (anchorOpen + fret) % 12 === chord.rootPitch);
         anchorFrets.forEach((anchorFret) => {
+          if ((anchorOpen + anchorFret) % 12 !== chord.rootPitch) return;
           const chosen = [];
+          let best = null;
           const search = (row, score, usedPitches) => {
             if (row === strings.length) {
               if (chord.tones.some((pitch) => !usedPitches.has(pitch))) return;
@@ -293,19 +314,33 @@ const tuningButtons = [
             });
           };
           search(0, 0, new Set());
+          (best?.notes || []).forEach((note) => positions.add(note.stringIndex + ':' + note.fret));
+          positions.add(anchorString + ':' + anchorFret);
+          // Muestra alternativas de digitación cercanas, pero conserva una sola tónica por forma.
+          const minFret = Math.max(0, anchorFret - 1);
+          const maxFret = Math.min(12, anchorFret + 4);
+          strings.forEach((stringIndex, rowIndex) => {
+            const openMidi = Number(stringRows[stringIndex].dataset.openMidi);
+            for (let fret = minFret; fret <= maxFret; fret++) {
+              const pitch = (openMidi + fret) % 12;
+              const isAnchorRoot = rowIndex === 0 && fret === anchorFret;
+              if (chord.pitches.has(pitch) && (pitch !== chord.rootPitch || isAnchorRoot)) positions.add(stringIndex + ':' + fret);
+            }
+          });
         });
-        (best?.notes || []).forEach((note) => positions.add(note.stringIndex + ':' + note.fret));
       });
       return positions;
     };    const selectScaleChord = (index) => {
       const chord = getScaleChords()[index];
       if (!chord) return;
       selectedChordIndex = index;
+      selectedChordAnchor = null;
+      hoveredChordAnchor = null;
       selectedChordRoot = chord.rootPitch;
       selectedChordPitchClasses = chord.pitches;
       selectedPitchClasses = new Set();
       highlightMode = 'chord';
-      document.querySelector('#chord-selection-hint').textContent = chord.american + ' · ' + chord.spanish + ' · Fórmula: ' + chord.formula + (chordVoicingOnly ? ' · tres formas completas con tónica en 6ª, 5ª y 4ª' : ' · notas resaltadas en todo el diapasón');
+      document.querySelector('#chord-selection-hint').textContent = chord.american + ' · ' + chord.spanish + ' · Fórmula: ' + chord.formula + (chordVoicingOnly ? ' · tres formas completas con tónica en 6ª, 5ª y 4ª · pasa o pulsa una tónica para aislar su mapa' : ' · notas resaltadas en todo el diapasón');
       paintBoard();
     };
     const renderScaleChords = () => {
@@ -327,12 +362,13 @@ const tuningButtons = [
       const chords = getScaleChords();
       list.innerHTML = chords.map((chord) => '<button type="button" class="chord-card tone-' + chord.degree + (chord.index === selectedChordIndex ? ' is-active' : '') + '" data-chord-index="' + chord.index + '" aria-pressed="' + (chord.index === selectedChordIndex) + '"><span class="chord-degree">' + chord.roman + '</span><strong class="chord-american">' + chord.american + '</strong><span class="chord-spanish">' + chord.spanish + '</span><small class="chord-quality">' + chord.quality + '</small><small class="chord-formula">' + chord.formula + '</small></button>').join('');
       const selectedChord = selectedChordIndex === null ? null : getScaleChords()[selectedChordIndex];
-      document.querySelector('#chord-selection-hint').textContent = selectedChord ? selectedChord.american + ' · Fórmula: ' + selectedChord.formula + (chordVoicingOnly ? ' · formas completas con tónica en 6ª, 5ª y 4ª' : ' · resaltado en todo el diapasón') : 'El diapasón mostrará las notas del acorde elegido.';
+      document.querySelector('#chord-selection-hint').textContent = selectedChord ? selectedChord.american + ' · Fórmula: ' + selectedChord.formula + (chordVoicingOnly ? ' · formas completas con tónica en 6ª, 5ª y 4ª · pasa o pulsa una tónica para aislar su mapa' : ' · resaltado en todo el diapasón') : 'El diapasón mostrará las notas del acorde elegido.';
       list.querySelectorAll('[data-chord-index]').forEach((button) => button.addEventListener('click', () => selectScaleChord(Number(button.dataset.chordIndex))));
     };
     const paintBoard = () => {
       const activeChord = highlightMode === 'chord' && selectedChordIndex !== null ? getScaleChords()[selectedChordIndex] : null;
-      const chordVoicingPositions = chordVoicingOnly && activeChord ? findChordVoicingPositions(activeChord) : null;
+      const chordAnchor = hoveredChordAnchor || selectedChordAnchor;
+      const chordVoicingPositions = chordVoicingOnly && activeChord ? findChordVoicingPositions(activeChord, chordAnchor) : null;
       const names = currentNames();
       stringRows.forEach((row, stringIndex) => {
         const openMidi = Number(row.dataset.openMidi);
@@ -346,12 +382,21 @@ const tuningButtons = [
         const name = names[pitch];
         button.dataset.midi = String(midi);
         button.dataset.pitch = String(pitch);
-        button.textContent = name;
-        button.setAttribute('aria-label', `${name}, cuerda ${Number(row.dataset.stringIndex) + 1}, traste ${fret}`);
+        button.querySelector('.fret-note-name').textContent = name;
         const belongsToScale = scalePitchClasses.has(pitch);
         const selectedForFilter = highlightMode === 'notes' && selectedPitchClasses.has(pitch);
         const voicingMatch = !chordVoicingOnly || !chordVoicingPositions || chordVoicingPositions.has(row.dataset.stringIndex + ':' + fret);
         const selectedForChord = highlightMode === 'chord' && selectedChordPitchClasses.has(pitch) && voicingMatch;
+        const intervalSemitones = activeScaleRoot === null ? null : (pitch - activeScaleRoot + 12) % 12;
+        const intervalRoman = intervalSemitones === null ? "" : (useFlats ? intervalRomanFlats : intervalRomanSharps)[intervalSemitones];
+        const intervalQuality = intervalSemitones === null ? "" : (useFlats ? flatIntervalNames : sharpIntervalNames)[intervalSemitones];
+        const intervalLabel = intervalSemitones === null ? "" : intervalRoman + " · " + intervalQuality;
+        const showIntervalBadge = document.querySelector("#show-note-intervals").checked && intervalSemitones !== null && (highlightMode === "scale" || (highlightMode === "chord" && selectedForChord) || selectedForFilter);
+        const intervalElement = button.querySelector(".fret-note-interval");
+        intervalElement.textContent = showIntervalBadge ? "(" + intervalRoman + ")" : "";
+        intervalElement.title = showIntervalBadge ? intervalLabel : "";
+        button.classList.toggle("has-interval", showIntervalBadge);
+        button.setAttribute("aria-label", `${name}, cuerda ${Number(row.dataset.stringIndex) + 1}, traste ${fret}${showIntervalBadge ? ", intervalo " + intervalLabel : ""}`);
         const showDegree = belongsToScale && (highlightMode === 'scale' || selectedForFilter || selectedForChord);
         const showChromatic = activeScaleRoot !== null && !belongsToScale && (highlightMode === 'scale' || selectedForFilter || selectedForChord);
         const degree = showChromatic ? chromaticDegreeFor(pitch) : pitchDegrees.get(pitch);
@@ -395,8 +440,10 @@ const tuningButtons = [
 
     document.querySelectorAll('[data-tuning]').forEach((button) => button.addEventListener('click', () => {
       const tuning = openNotes[button.dataset.tuning];
+      selectedChordAnchor = null;
+      hoveredChordAnchor = null;
       if (!tuning) return;
-      stringRows.forEach((row, index) => { row.dataset.openMidi = String(tuning.midi[5 - index]); });
+      stringRows.forEach((row, index) => { row.dataset.openMidi = String(tuning.midi[index]); });
       tuningCaption.textContent = tuning.name;
       document.querySelectorAll('[data-tuning]').forEach((option) => {
         const active = option === button;
@@ -420,7 +467,7 @@ const tuningButtons = [
       paintBoard();
     });
 
-    const resetFilterState = () => { selectedPitchClasses = new Set(); scalePitchClasses = new Set(); pitchDegrees = new Map(); activeScaleRoot = null; activeScaleType = null; selectedChordPitchClasses = new Set(); selectedChordRoot = null; selectedChordIndex = null; };
+    const resetFilterState = () => { selectedChordAnchor = null; hoveredChordAnchor = null; selectedPitchClasses = new Set(); scalePitchClasses = new Set(); pitchDegrees = new Map(); activeScaleRoot = null; activeScaleType = null; selectedChordPitchClasses = new Set(); selectedChordRoot = null; selectedChordIndex = null; };
     document.querySelector('#show-all-notes').addEventListener('click', () => { resetFilterState(); highlightMode = 'all'; paintBoard(); });
     document.querySelector('#clear-notes').addEventListener('click', () => { resetFilterState(); highlightMode = 'none'; paintBoard(); });
     noteFilters.forEach((button) => button.addEventListener('click', () => {
@@ -451,6 +498,8 @@ const tuningButtons = [
       selectedChordPitchClasses = new Set();
       selectedChordRoot = null;
       selectedChordIndex = null;
+      selectedChordAnchor = null;
+      hoveredChordAnchor = null;
       scalePitchClasses = new Set(steps.map((step) => (root + step) % 12));
       selectedPitchClasses = new Set();
       highlightMode = 'scale';
@@ -458,6 +507,8 @@ const tuningButtons = [
     });
 
     const boardPanel = document.querySelector('.fretboard-panel');
+    document.querySelector('#fret-note-size').addEventListener('change', (event) => boardPanel.style.setProperty('--fret-note-scale', event.currentTarget.value));
+    document.querySelector('#show-note-intervals').addEventListener('change', () => paintBoard());
     const fullscreenButton = document.querySelector('#fretboard-fullscreen');
     const zenHeader = document.querySelector('#zen-header');
     const zenZoomButtons = [...document.querySelectorAll('[data-zen-zoom]')];
@@ -493,7 +544,33 @@ const tuningButtons = [
         option.classList.toggle('is-active', active);
       });
     }));
-    fretNotes.forEach((button) => button.addEventListener('click', async () => {
+    const chordAnchorFromNote = (button) => {
+      if (!chordVoicingOnly || highlightMode !== 'chord' || selectedChordIndex === null) return null;
+      const pitch = Number(button.dataset.pitch);
+      const stringIndex = Number(button.closest('.guitar-string').dataset.stringIndex);
+      if (pitch !== selectedChordRoot || stringIndex < 3) return null;
+      return { stringIndex, fret:Number(button.dataset.fret) };
+    };
+    fretNotes.forEach((button) => {
+      button.addEventListener('pointerenter', () => {
+        const anchor = chordAnchorFromNote(button);
+        if (!anchor) return;
+        hoveredChordAnchor = anchor;
+        paintBoard();
+      });
+      button.addEventListener('pointerleave', () => {
+        if (!hoveredChordAnchor) return;
+        hoveredChordAnchor = null;
+        paintBoard();
+      });
+      button.addEventListener('click', async () => {
+      const clickedAnchor = chordAnchorFromNote(button);
+      if (clickedAnchor) {
+        const sameAnchor = selectedChordAnchor && selectedChordAnchor.stringIndex === clickedAnchor.stringIndex && selectedChordAnchor.fret === clickedAnchor.fret;
+        selectedChordAnchor = sameAnchor ? null : clickedAnchor;
+        hoveredChordAnchor = null;
+        paintBoard();
+      }
       if (!window.AudioContext) { playedNote.textContent = 'Audio no disponible en este navegador'; return; }
       audio ??= new AudioContext();
       await audio.resume();
@@ -527,8 +604,9 @@ const tuningButtons = [
       } else filter.connect(gain);
       gain.connect(audio.destination);
       oscillator.start(start); overtone.start(start); oscillator.stop(start + duration + 0.03); overtone.stop(start + duration + 0.03);
-      playedNote.textContent = `${button.textContent} · ${frequency.toFixed(1)} Hz`;
-    }));
+      playedNote.textContent = `${button.querySelector('.fret-note-name').textContent} · ${frequency.toFixed(1)} Hz`;
+      });
+    });
     paintBoard();
   })();
 </script>
