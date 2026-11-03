@@ -56,6 +56,7 @@ const tuningButtons = [
           <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Afinación</p><p class="mt-1 text-[10px] text-[var(--text-muted)]">El diapasón se actualiza con cada afinación.</p></div><div class="flex flex-wrap gap-2" aria-label="Orientación y notación"><button type="button" id="handedness-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">Mano derecha</button><button type="button" id="accidental-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">♯ Sostenidos</button></div></div>
           <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">{tuningButtons.map((item) => <button type="button" data-tuning={item.id} aria-pressed={item.id === 'standard' ? 'true' : 'false'} class:list={["tuning-option rounded-xl border px-3 py-3 text-left transition hover:-translate-y-0.5", item.id === 'standard' ? 'is-active border-neon' : 'border-[var(--border)]']}><span class="block text-xs font-bold">{item.label}</span><span class="mt-1 block text-[8px] text-[var(--text-muted)]">{item.tuning}</span></button>)}</div>
         </article>
+
       </div>
 
       <aside class="space-y-5">
@@ -75,8 +76,10 @@ const tuningButtons = [
         <a href="/herramientas" class="block rounded-xl border border-[var(--border)] px-4 py-3 text-center text-[10px] font-bold text-[var(--text-muted)] transition hover:border-neon hover:text-[var(--accent)]">Ir a las herramientas musicales →</a>
       </aside>
     </section>
+<section class="greek-reference"><main class="gref-wrap"><h2>Modos griegos en el diapasón</h2><p class="gref-sub">Afinación estándar E A D G B e · trastes 0 a 15</p><div class="gref-controls"><div class="gref-modes" id="gref-modes" role="group" aria-label="Modo"></div><label>Tónica <select id="gref-root"></select></label><div class="gref-seg"><button id="gref-notes" type="button" aria-pressed="true">Notas</button><button id="gref-degrees" type="button" aria-pressed="false">Grados</button></div></div><section class="gref-info" aria-live="polite"><h3 id="gref-title"></h3><p class="gref-par" id="gref-parent"></p><div class="gref-degs" id="gref-degs"></div><p class="gref-char" id="gref-char"></p></section><div class="gref-scroll"><div class="gref-board" id="gref-board"></div></div><p class="gref-hint">El círculo con aro es la tónica. Cada color es un grado.</p></main></section>
   </main>
-</BaseLayout>
+<style is:global>.greek-reference{--bg:#08150f;--panel:#0d1f16;--line:#1f3a2c;--text:#d9ecdf;--mute:#7fa08b;--string:#9db8a6;--fret:#2c4d3b;--cell:56px;background:var(--bg);color:var(--text);font-family:'Space Mono',monospace;padding:28px 20px 48px}.greek-reference *{box-sizing:border-box;margin:0}.greek-reference .gref-wrap{max-width:1000px;margin:auto}.greek-reference h2{font-size:1.5rem}.greek-reference .gref-sub{color:var(--mute);font-size:.85rem;margin-top:4px}.greek-reference .gref-controls{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;margin:22px 0 18px}.greek-reference .gref-modes{display:flex;flex-wrap:wrap;gap:6px}.greek-reference button,.greek-reference select{font:inherit;color:var(--text);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 12px;cursor:pointer;font-size:.8rem}.greek-reference button[aria-pressed=true]{background:var(--text);color:var(--bg);font-weight:700}.greek-reference .gref-seg{display:flex}.greek-reference .gref-seg button{border-radius:0}.greek-reference .gref-seg button:first-child{border-radius:6px 0 0 6px}.greek-reference .gref-seg button:last-child{border-radius:0 6px 6px 0}.greek-reference label{color:var(--mute);font-size:.8rem;display:flex;gap:8px;align-items:center}.greek-reference .gref-info{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:18px}.greek-reference .gref-info h3{font-size:1.15rem}.greek-reference .gref-par{color:var(--mute);font-size:.82rem;margin:3px 0 14px}.greek-reference .gref-degs{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.greek-reference .gref-deg{border-top:3px solid var(--c);padding-top:8px}.greek-reference .gref-deg b{display:block;font-size:1.25rem}.greek-reference .gref-deg span{color:var(--mute);font-size:.75rem}.greek-reference .gref-char{margin-top:14px;color:var(--mute);font-size:.82rem;line-height:1.5;max-width:70ch}.greek-reference .gref-scroll{overflow-x:auto;padding-bottom:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px}.greek-reference .gref-board{display:grid;grid-template-columns:repeat(16,var(--cell));min-width:calc(var(--cell)*16);padding:12px 8px 6px}.greek-reference .gref-cell{height:44px;position:relative;display:flex;align-items:center;justify-content:center;border-right:2px solid var(--fret)}.greek-reference .gref-cell:before{content:'';position:absolute;left:0;right:0;top:50%;height:var(--t);background:var(--string);opacity:.55}.greek-reference .gref-cell.f0{border-right:5px solid var(--text)}.greek-reference .gref-cell.f0:before{left:50%}.greek-reference .gref-sl{position:absolute;left:0;color:var(--mute);font-size:.65rem}.greek-reference .gref-note{position:relative;z-index:1;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;font-weight:700;color:#06120b;background:var(--c);transition:transform .15s}.greek-reference .gref-note:hover{transform:scale(1.15)}.greek-reference .gref-note.root{box-shadow:0 0 0 3px var(--bg),0 0 0 5px var(--c)}.greek-reference .gref-note.open{width:30px;height:30px}.greek-reference .gref-num{height:26px;text-align:center;font-size:.72rem;color:var(--mute);display:flex;align-items:center;justify-content:center}.greek-reference .gref-mk{height:22px;display:flex;align-items:center;justify-content:center;gap:6px}.greek-reference .gref-mk i{width:8px;height:8px;border-radius:50%;background:var(--fret)}.greek-reference .gref-hint{color:var(--mute);font-size:.75rem;margin-top:10px}@media(max-width:640px){.greek-reference .gref-degs{grid-template-columns:repeat(4,1fr)}}
+</style></BaseLayout>
 
 <style>
   .fretboard-panel { --accent: #63f58c; --zen-zoom:1.2; position:relative; padding-top:3.5rem; overflow: hidden; border: 1px solid rgb(99 245 140 / .22); background: linear-gradient(145deg, #0a1b11, #07100b 65%, #0d1b12); }
@@ -160,7 +163,7 @@ const tuningButtons = [
   :global(.chord-spanish) { color:#c8f6d3; font-size:.65rem; font-weight:700; }
   :global(.chord-quality) { color:rgb(235 255 241 / .58); font-size:.48rem; line-height:1.2; }
   :global(.chord-formula) { color:#a6efff; font-size:.45rem; font-weight:700; line-height:1.1; white-space:nowrap; }
-  .legend-dot { display:inline-block; width:.55rem; height:.55rem; border-radius:50%; background:var(--degree-color, #16db65); }
+.greek-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem}.greek-mode-tabs,.greek-view-toggle{display:flex;flex-wrap:wrap;gap:.35rem}.greek-mode-tabs button,.greek-view-toggle button,.greek-root-control select{border:1px solid rgb(114 255 155 / .2);border-radius:.55rem;padding:.5rem .7rem;background:#08190f;color:#d9ecdf;font-size:.62rem;font-weight:700}.greek-mode-tabs button[aria-pressed="true"],.greek-view-toggle button[aria-pressed="true"]{border-color:#72ff9b;background:#72ff9b;color:#07100b}.greek-root-control{display:flex;align-items:center;gap:.5rem;color:#a8c4b1;font-size:.62rem}.greek-mode-info{margin:1rem 0;border:1px solid rgb(114 255 155 / .15);border-radius:.8rem;padding:1rem;background:#0b1c12}.greek-mode-info h3{font-size:1rem;font-weight:800}.greek-mode-info>p{margin-top:.4rem;color:#91a99a;font-size:.65rem;line-height:1.7}.greek-degree-list{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.5rem;margin-top:.8rem}.greek-degree{border-top:3px solid var(--mode-color);padding-top:.35rem}.greek-degree b{display:block;font-size:.9rem}.greek-degree small{color:#8ea695;font-size:.55rem}.greek-board-scroll{overflow-x:auto;border:1px solid rgb(114 255 155 / .15);border-radius:.8rem;background:#0b1c12;padding:.5rem}.greek-board{display:grid;grid-template-columns:repeat(16,minmax(42px,1fr));min-width:690px}.greek-board-cell{height:2.7rem;position:relative;display:grid;place-items:center;border-right:2px solid rgb(114 255 155 / .12)}.greek-board-cell::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgb(213 220 207 / .38)}.greek-board-cell.fret-zero{border-right:5px solid #d9ecdf}.greek-board-cell.fret-zero::before{left:50%}.greek-board-string-label{position:absolute;left:.25rem;z-index:2;color:#72ff9b;font-size:.55rem;font-weight:800}.greek-board-note{position:relative;z-index:1;display:grid;width:1.8rem;height:1.8rem;place-items:center;border-radius:50%;color:#07100b;background:var(--mode-color);font-size:.58rem;font-weight:900}.greek-board-note.is-root{outline:2px solid #07100b;box-shadow:0 0 0 4px var(--mode-color),0 0 14px var(--mode-color)}.greek-board-note.is-open{width:1.65rem;height:1.65rem}.greek-fret-number{height:1.5rem;display:grid;place-items:center;color:#90a997;font-size:.58rem}@media(max-width:700px){.greek-degree-list{grid-template-columns:repeat(4,1fr)}}  .legend-dot { display:inline-block; width:.55rem; height:.55rem; border-radius:50%; background:var(--degree-color, #16db65); }
   @media (max-width: 640px) { .fret-note-name { font-size:calc(.62rem * var(--fret-note-scale,1)); } .fret-row { grid-template-columns: 3.5rem repeat(13, minmax(2.55rem, 2.8rem)); } .guitar-string::after { left: 3.5rem; } .fretboard.is-left-handed .guitar-string::after { left: 0; right: 3.5rem; } .fret-note { height: 3rem; font-size: .62rem; } }
   @media (prefers-reduced-motion: reduce) { .fret-note, .tuning-option { transition: none; } }
 </style>
@@ -341,7 +344,7 @@ const tuningButtons = [
       selectedPitchClasses = new Set();
       highlightMode = 'chord';
       document.querySelector('#chord-selection-hint').textContent = chord.american + ' · ' + chord.spanish + ' · Fórmula: ' + chord.formula + (chordVoicingOnly ? ' · tres formas completas con tónica en 6ª, 5ª y 4ª · pasa o pulsa una tónica para aislar su mapa' : ' · notas resaltadas en todo el diapasón');
-      paintBoard();
+    paintBoard();
     };
     const renderScaleChords = () => {
       const title = document.querySelector('#chord-scale-title');
@@ -365,6 +368,7 @@ const tuningButtons = [
       document.querySelector('#chord-selection-hint').textContent = selectedChord ? selectedChord.american + ' · Fórmula: ' + selectedChord.formula + (chordVoicingOnly ? ' · formas completas con tónica en 6ª, 5ª y 4ª · pasa o pulsa una tónica para aislar su mapa' : ' · resaltado en todo el diapasón') : 'El diapasón mostrará las notas del acorde elegido.';
       list.querySelectorAll('[data-chord-index]').forEach((button) => button.addEventListener('click', () => selectScaleChord(Number(button.dataset.chordIndex))));
     };
+    const initGreekReference=()=>{const MODES=[{n:'Jónico',s:[0,2,4,5,7,9,11],c:'Es la escala mayor. Sonido estable y brillante; la tónica resuelve sin tensión.'},{n:'Dórico',s:[0,2,3,5,7,9,10],c:'Menor con sexta mayor. Suena jazzero y algo luminoso; típico del funk y el rock modal.'},{n:'Frigio',s:[0,1,3,5,7,8,10],c:'Menor con segunda menor. Aire español y oscuro; la 2ª♭ marca su carácter.'},{n:'Lidio',s:[0,2,4,6,7,9,11],c:'Mayor con cuarta aumentada. Sonido flotante y soñador, muy usado en cine.'},{n:'Mixolidio',s:[0,2,4,5,7,9,10],c:'Mayor con séptima menor. Bluesero y rockero; es el modo del acorde dominante.'},{n:'Eolio',s:[0,2,3,5,7,8,10],c:'Es la escala menor natural. Sonido triste y estable.'},{n:'Locrio',s:[0,1,3,5,6,8,10],c:'Menor con 2ª♭ y 5ª disminuida. El más inestable; la tónica casi no se sostiene.'}];const ROM=['I','II','III','IV','V','VI','VII'],LET=['C','D','E','F','G','A','B'],LPC=[0,2,4,5,7,9,11],ROOTS=['C','C♯','D','E♭','E','F','F♯','G','A♭','A','B♭','B'],STR=[['e',4],['B',11],['G',7],['D',2],['A',9],['E',4]],MARK={3:1,5:1,7:1,9:1,12:2,15:1},COL=['#ff6b6b','#ffa94d','#ffe066','#8ce99a','#66d9e8','#91a7ff','#da77f2'];let mode=0,root='C',degrees=false;const acc=d=>({'-2':'𝄫','-1':'♭','0':'','1':'♯','2':'𝄪'})[d]||'';const parse=r=>{let li=LET.indexOf(r[0]),a=r[1]==='♯'?1:r[1]==='♭'?-1:0;return{li,pc:(LPC[li]+a+12)%12}};const makeScale=()=>{let{li,pc}=parse(root);return MODES[mode].s.map((st,d)=>{let l=(li+d)%7,p=(pc+st)%12,diff=((p-LPC[l]+18)%12)-6,di=st-[0,2,4,5,7,9,11][d],q=[0,3,4].includes(d)?(di===0?'J':di<0?'dis':'aum'):(di===0?'M':di<0?'m':'aum');return{pc,name:LET[l]+acc(diff),deg:d,lab:(d+1)+'ª '+q}})};const draw=()=>{let sc=makeScale(),rootPc=parse(root).pc;document.querySelector('#gref-title').textContent=`Modo ${ROM[mode]} · ${MODES[mode].n} de ${root}`;document.querySelector('#gref-parent').textContent='Notas: '+sc.map(n=>n.name).join(' · ');document.querySelector('#gref-degs').innerHTML=sc.map(n=>`<div class="gref-deg" style="--c:${COL[n.deg]}"><b>${n.name}</b><span>${n.lab}</span></div>`).join('');document.querySelector('#gref-char').textContent=MODES[mode].c;let out='';STR.forEach((s,si)=>{for(let f=0;f<=15;f++){let pitchClass=(Number(s[1])+f)%12,degree=MODES[mode].s.findIndex(step=>(rootPc+step)%12===pitchClass),n=degree<0?null:sc[degree],lbl=n?(degrees?degree+1:n.name):'',t=[1,1.5,2,2.5,3,3.5][si];out+=`<div class="gref-cell ${f===0?'f0':''}" style="--t:${t}px">${f===0?`<span class="gref-sl">${s[0]}</span>`:''}${n?`<span class="gref-note ${n.deg===0?'root':''} ${f===0?'open':''}" style="--c:${COL[n.deg]}" title="${n.name} · ${n.lab}">${lbl}</span>`:''}</div>`}});out+=Array.from({length:16},(_,f)=>`<div class="gref-num">${f||''}</div>`).join('');out+=Array.from({length:16},(_,f)=>`<div class="gref-mk">${'<i></i>'.repeat(MARK[f]||0)}</div>`).join('');document.querySelector('#gref-board').innerHTML=out};const modesEl=document.querySelector('#gref-modes');MODES.forEach((m,i)=>{let b=document.createElement('button');b.textContent=ROM[i]+' '+m.n;b.setAttribute('aria-pressed',String(i===mode));b.onclick=()=>{mode=i;[...modesEl.children].forEach((x,j)=>x.setAttribute('aria-pressed',String(j===i)));draw()};modesEl.appendChild(b)});let rootEl=document.querySelector('#gref-root');ROOTS.forEach(r=>rootEl.add(new Option(r,r)));rootEl.onchange=e=>{root=e.target.value;draw()};let bn=document.querySelector('#gref-notes'),bd=document.querySelector('#gref-degrees');bn.onclick=()=>{degrees=false;bn.setAttribute('aria-pressed','true');bd.setAttribute('aria-pressed','false');draw()};bd.onclick=()=>{degrees=true;bd.setAttribute('aria-pressed','true');bn.setAttribute('aria-pressed','false');draw()};draw()};
     const paintBoard = () => {
       const activeChord = highlightMode === 'chord' && selectedChordIndex !== null ? getScaleChords()[selectedChordIndex] : null;
       const chordAnchor = hoveredChordAnchor || selectedChordAnchor;
@@ -436,6 +440,7 @@ const tuningButtons = [
         legend.innerHTML = activeDegrees.map((degree) => '<span class="flex items-center gap-2"><i class="legend-dot degree-' + degree + '"></i>' + degreeLabels[degree] + '</span>').join('');
       } else legend.innerHTML = '<span class="flex items-center gap-2"><i class="legend-dot degree-1"></i>Selecciona una escala para ver sus grados</span>';
       renderScaleChords();
+
     };
 
     document.querySelectorAll('[data-tuning]').forEach((button) => button.addEventListener('click', () => {
@@ -450,7 +455,7 @@ const tuningButtons = [
         option.classList.toggle('is-active', active);
         option.setAttribute('aria-pressed', String(active));
       });
-      paintBoard();
+    paintBoard();
     }));
 
     document.querySelector('#handedness-toggle').addEventListener('click', (event) => {
@@ -464,7 +469,7 @@ const tuningButtons = [
       useFlats = !useFlats;
       event.currentTarget.setAttribute('aria-pressed', String(useFlats));
       event.currentTarget.textContent = useFlats ? '♭ Bemoles' : '♯ Sostenidos';
-      paintBoard();
+    paintBoard();
     });
 
     const resetFilterState = () => { selectedChordAnchor = null; hoveredChordAnchor = null; selectedPitchClasses = new Set(); scalePitchClasses = new Set(); pitchDegrees = new Map(); activeScaleRoot = null; activeScaleType = null; selectedChordPitchClasses = new Set(); selectedChordRoot = null; selectedChordIndex = null; };
@@ -474,7 +479,7 @@ const tuningButtons = [
       const pitch = Number(button.dataset.pitchFilter);
       if (highlightMode !== 'notes') { selectedPitchClasses = new Set(); selectedChordPitchClasses = new Set(); selectedChordRoot = null; selectedChordIndex = null; highlightMode = 'notes'; }
       if (selectedPitchClasses.has(pitch)) selectedPitchClasses.delete(pitch); else selectedPitchClasses.add(pitch);
-      paintBoard();
+    paintBoard();
     }));
     document.querySelector('#chord-voicing-toggle').addEventListener('click', (event) => {
       chordVoicingOnly = !chordVoicingOnly;
@@ -503,7 +508,7 @@ const tuningButtons = [
       scalePitchClasses = new Set(steps.map((step) => (root + step) % 12));
       selectedPitchClasses = new Set();
       highlightMode = 'scale';
-      paintBoard();
+    paintBoard();
     });
 
     const boardPanel = document.querySelector('.fretboard-panel');
@@ -556,12 +561,12 @@ const tuningButtons = [
         const anchor = chordAnchorFromNote(button);
         if (!anchor) return;
         hoveredChordAnchor = anchor;
-        paintBoard();
+    paintBoard();
       });
       button.addEventListener('pointerleave', () => {
         if (!hoveredChordAnchor) return;
         hoveredChordAnchor = null;
-        paintBoard();
+    paintBoard();
       });
       button.addEventListener('click', async () => {
       const clickedAnchor = chordAnchorFromNote(button);
@@ -569,7 +574,7 @@ const tuningButtons = [
         const sameAnchor = selectedChordAnchor && selectedChordAnchor.stringIndex === clickedAnchor.stringIndex && selectedChordAnchor.fret === clickedAnchor.fret;
         selectedChordAnchor = sameAnchor ? null : clickedAnchor;
         hoveredChordAnchor = null;
-        paintBoard();
+    paintBoard();
       }
       if (!window.AudioContext) { playedNote.textContent = 'Audio no disponible en este navegador'; return; }
       audio ??= new AudioContext();
@@ -607,6 +612,7 @@ const tuningButtons = [
       playedNote.textContent = `${button.querySelector('.fret-note-name').textContent} · ${frequency.toFixed(1)} Hz`;
       });
     });
+    initGreekReference();
     paintBoard();
   })();
 </script>
