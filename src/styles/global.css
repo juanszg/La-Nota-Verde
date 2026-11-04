@@ -85,6 +85,10 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .tool-card::after { position: absolute; z-index: -2; inset: 1px; content: ''; border-radius: inherit; background: var(--surface); }
 .tool-card:hover { transform: translateY(-8px) scale(1.01); border-color: rgb(22 219 101 / .55); box-shadow: 0 0 0 1px rgb(22 219 101 / .3), 0 0 28px rgb(22 219 101 / .25), 0 24px 70px rgb(22 219 101 / .18); }
 .tool-card:hover::before { opacity: 1; }
+@media (hover: none) {
+  .tool-card:hover, .poster:hover, .practice-load:hover { transform: none; }
+  .tool-card:hover::before { opacity: 0; }
+}
 .app-dark-art { --accent: #16db65; --text-primary: #f1fff6; --text-muted: #a2b9aa; color: var(--text-primary); }
 .poster { --accent: #16db65; }
 .poster:hover { box-shadow: 0 0 0 1px rgb(22 219 101 / .35), 0 0 32px rgb(22 219 101 / .24), 0 28px 80px rgb(0 0 0 / .45); }

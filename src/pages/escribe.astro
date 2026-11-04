@@ -154,6 +154,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .score-preview :global(.at-wrap) { overflow-x: auto; }
   .score-preview :global(.at-content) { min-width: 100%; }
   #note-list li { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  @media (max-width: 480px) {
+    #note-list li { flex-wrap: wrap; align-items: flex-start; }
+    #note-list li > :first-child { min-width: 0; flex: 1 1 100%; }
+    #note-list .sequence-actions { width:100%; justify-content:flex-end; }
+    .score-paper { padding:.75rem; }
+    .score-sticky-panel { min-width:0; }
+  }
   #note-list .sequence-actions { display: flex; flex-shrink: 0; gap: .35rem; }
   #note-list li.is-editing { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), 0 0 18px color-mix(in srgb, var(--accent) 18%, transparent); }
   #note-list li { transition: border-color .22s ease, background-color .22s ease, box-shadow .22s ease, transform .22s ease; }
