@@ -33,17 +33,18 @@
 
 :root[data-theme='light'] {
   color-scheme: light;
-  --surface: #f6fff8;
-  --surface-raised: rgb(230 251 237 / 0.82);
-  --surface-glass: rgb(246 255 248 / 0.7);
-  --text-primary: #0d2818;
-  --text-muted: #426450;
-  --border: rgb(5 140 66 / 0.2);
-  --grid: rgb(5 140 66 / 0.08);
-  --accent: #067a37;
-  --control-surface: rgb(5 40 19 / 0.035);
-  --control-hover: rgb(5 140 66 / 0.08);
-  --track: rgb(5 40 19 / 0.12);
+  --color-neon: #52765c;
+  --surface: #f0efe9;
+  --surface-raised: rgb(226 229 219 / 0.94);
+  --surface-glass: rgb(245 244 237 / 0.92);
+  --text-primary: #1b2920;
+  --text-muted: #4b5b50;
+  --border: rgb(54 91 64 / 0.3);
+  --grid: rgb(54 91 64 / 0.1);
+  --accent: #365f43;
+  --control-surface: rgb(43 57 46 / 0.055);
+  --control-hover: rgb(54 95 67 / 0.12);
+  --track: rgb(43 57 46 / 0.17);
 }
 
 html { scroll-behavior: smooth; }
@@ -58,6 +59,7 @@ body {
 }
 
 * { box-sizing: border-box; }
+html, body { touch-action: manipulation; }
 h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .page-title { font-family: "Kode Mono", ui-monospace, monospace; text-transform: uppercase; letter-spacing: -0.05em; }
 
@@ -73,6 +75,23 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .control-surface { background: var(--control-surface); }
 .control-hover:hover { background: var(--control-hover); }
 .track-surface { background: var(--track); }
+
+.site-chrome {
+  background-color: #137547;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgb(255 255 255 / .045) .7px, transparent .9px),
+    linear-gradient(115deg, #054a29, #137547 52%, #2a9134);
+  background-size: 4px 4px, auto;
+}
+:root[data-theme='light'] .site-chrome .brand-letter { color:#fff; }
+:root[data-theme='light'] .site-chrome .brand-word-accent .brand-letter { color:#3fa34d; }
+.sidebar-socials-compact { flex-direction:column; gap:.55rem; padding:.65rem .35rem; }
+.social-link { display:grid; width:2rem; height:2rem; place-items:center; border:1px solid rgb(255 255 255 / .28); border-radius:999px; color:white; transition:background-color .2s,transform .2s; }
+.sidebar-socials-compact .social-link { width:2rem; height:2rem; }
+.social-link:hover { transform:translateY(-2px); background:rgb(255 255 255 / .16); }
+.social-link svg { width:1.15rem; height:1.15rem; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+.social-link .social-fill { fill:currentColor; stroke:none; }
+.social-link .social-solid { fill:currentColor; stroke:none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
@@ -93,4 +112,20 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .poster { --accent: #16db65; }
 .poster:hover { box-shadow: 0 0 0 1px rgb(22 219 101 / .35), 0 0 32px rgb(22 219 101 / .24), 0 28px 80px rgb(0 0 0 / .45); }
 .poster { position: relative; transition: transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 500ms, border-color 500ms; overflow: hidden; background-color: #07130d; background-image: repeating-linear-gradient(0deg, transparent 0 3px, rgb(0 0 0 / .12) 4px), radial-gradient(ellipse at 80% 15%, rgb(22 219 101 / .2), transparent 55%), linear-gradient(135deg, #10271b, #07130d 58%, #000); }
+
+:root[data-theme='light'] .glow-hover:hover {
+  box-shadow: 0 0 0 1px rgb(54 95 67 / .24), 0 8px 22px rgb(43 57 46 / .12);
+  filter: none;
+}
+
+:root[data-theme='light'] .tool-card:hover {
+  border-color: rgb(54 95 67 / .48);
+  box-shadow: 0 0 0 1px rgb(54 95 67 / .18), 0 16px 38px rgb(43 57 46 / .14);
+}
+
+:root[data-theme='light'] .tool-card::before { background: conic-gradient(from 0deg, transparent 0 72%, rgb(82 118 92 / .2) 82%, transparent 92%); }
+
+:root[data-theme='light'] .poster:hover { box-shadow: 0 8px 26px rgb(43 57 46 / .2); }
+
+:root[data-theme='light'] ::selection { background: rgb(82 118 92 / .28); }
 @keyframes orbit { to { transform: rotate(360deg); } }

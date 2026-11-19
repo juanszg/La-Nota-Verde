@@ -5,6 +5,7 @@ type Entry = { kind: 'note'; string: number; fret: number; duration: Duration } 
 type Project = { format: 'la-nota-verde-score'; version: 1; title: string; tempo: number; events: Entry[] };
 const stringMidi: Record<number, number> = { 1: 64, 2: 59, 3: 55, 4: 50, 5: 45, 6: 40 };
 const noteNames = ['Do', 'Do♯', 'Re', 'Re♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Si'];
+const stringNames: Record<number, string> = { 1:'1.ª Mi', 2:'2.ª Si', 3:'3.ª Sol', 4:'4.ª Re', 5:'5.ª La', 6:'6.ª Mi' };
 const durationNames: Record<Duration, string> = { 1: 'redonda', 2: 'blanca', 4: 'negra', 8: 'corchea', 16: 'semicorchea' };
 const durationUnits: Record<Duration, number> = { 1: 16, 2: 8, 4: 4, 8: 2, 16: 1 };
 const titleInput = document.querySelector<HTMLInputElement>('#score-title')!;
@@ -134,8 +135,7 @@ function saveLocal(): void {
 }
 function describe(event: Entry): string {
   if (event.kind === 'rest') return durationNames[event.duration] + ' · silencio';
-  const strings: Record<number, string> = { 1:'1.ª Mi',2:'2.ª Si',3:'3.ª Sol',4:'4.ª Re',5:'5.ª La',6:'6.ª Mi' };
-  return nameOf(event) + ' · ' + strings[event.string] + ' traste ' + event.fret + ' · ' + durationNames[event.duration];
+  return nameOf(event) + ' · ' + stringNames[event.string] + ' traste ' + event.fret + ' · ' + durationNames[event.duration];
 }
 function eventPositions(events: Entry[]): { measure: number; offset: number }[] {
   let measure = 1;
@@ -221,8 +221,9 @@ function drawList(): void {
     noteName.className = 'sequence-note-name block rounded-lg px-3 py-2';
     noteName.textContent = event.kind === 'rest' ? 'Silencio' : nameOf(event);
     const noteInfo = document.createElement('span');
-    noteInfo.className = 'sequence-note-info mt-2 block rounded-lg px-3 py-2';
-    noteInfo.textContent = event.kind === 'rest' ? durationNames[event.duration] : describe(event).split(' · ').slice(1).join(' · ');
+    noteInfo.className = 'sequence-note-info mt-2 hidden rounded-lg px-3 py-2';
+    noteInfo.id = 'sequence-description-' + index;
+    noteInfo.textContent = event.kind === 'rest' ? durationNames[event.duration] : stringNames[event.string] + ' - traste ' + event.fret + ' - ' + durationNames[event.duration];
     detail.append(noteName, noteInfo);
     label.append(location, detail);
 
@@ -244,7 +245,7 @@ function drawList(): void {
 
     const edit = document.createElement('button');
     edit.type = 'button';
-    edit.className = 'entry-action rounded-full border border-[var(--border)] px-4 py-2 text-[10px] font-bold text-[var(--text-primary)] transition hover:border-[var(--measure-color)] hover:text-[var(--measure-color)]';
+    edit.className = 'entry-action rounded-full border border-blue-400/60 bg-blue-500/15 px-4 py-2 text-[10px] font-bold text-blue-300 transition hover:border-blue-300 hover:bg-blue-500/25 hover:text-blue-100';
     edit.textContent = editingIndex === index ? 'Editando' : 'Editar';
     edit.setAttribute('aria-label', 'Editar elemento ' + (index + 1) + ', ' + positionLabel(positions[index]));
     edit.addEventListener('click', () => {
@@ -281,12 +282,26 @@ function drawList(): void {
     countBadge.className = 'rounded-full bg-[var(--measure-color)]/12 px-3 py-1.5 text-[10px] font-bold text-[var(--measure-color)]';
     countBadge.textContent = (index + 1) + '/' + project.events.length;
     header.append(location, countBadge);
-    const noteSectionLabel = document.createElement('span');
-    noteSectionLabel.className = 'mt-4 block text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]';
-    noteSectionLabel.textContent = 'Nota / indicación';
-    const infoSectionLabel = document.createElement('span');
-    infoSectionLabel.className = 'mt-3 block text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]';
-    infoSectionLabel.textContent = 'Descripción';
+    const noteSectionLabel = document.createElement('div');
+    noteSectionLabel.className = 'mt-4 flex items-center justify-between';
+    const descriptionLabel = document.createElement('span');
+    descriptionLabel.className = 'text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]';
+    descriptionLabel.textContent = 'Nota / indicación';
+    const descriptionToggle = document.createElement('button');
+    descriptionToggle.type = 'button';
+    descriptionToggle.className = 'description-toggle grid h-8 w-8 place-items-center rounded-full border border-[var(--border)] text-[var(--accent)] transition hover:bg-[var(--control-hover)]';
+    descriptionToggle.setAttribute('aria-label', 'Mostrar descripción de la nota');
+    descriptionToggle.setAttribute('aria-expanded', 'false');
+    descriptionToggle.setAttribute('aria-controls', noteInfo.id);
+    descriptionToggle.innerHTML = '<svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+    descriptionToggle.addEventListener('click', () => {
+      const expanded = descriptionToggle.getAttribute('aria-expanded') === 'true';
+      descriptionToggle.setAttribute('aria-expanded', String(!expanded));
+      descriptionToggle.setAttribute('aria-label', expanded ? 'Mostrar descripción de la nota' : 'Ocultar descripción de la nota');
+      noteInfo.classList.toggle('hidden', expanded);
+      descriptionToggle.classList.toggle('is-expanded', !expanded);
+    });
+    noteSectionLabel.append(descriptionLabel, descriptionToggle);
     actions.append(insert, edit, remove);
     if (positions.findIndex((position) => position.measure === positions[index].measure) === index) {
       const clearMeasure = document.createElement('button');
@@ -302,7 +317,7 @@ function drawList(): void {
       });
       actions.append(clearMeasure);
     }
-    row.append(header, noteSectionLabel, noteName, infoSectionLabel, noteInfo, actions);
+    row.append(header, noteSectionLabel, noteName, noteInfo, actions);
     list.append(row);
   });
 }

@@ -174,11 +174,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   #note-list .sequence-detail { font-family: "Gabarito", ui-sans-serif, system-ui, sans-serif; }
   #note-list .sequence-note-name { font-family: "IM Fell English", Georgia, serif; font-size: 1.3rem; font-weight: 700; line-height: 1.2; }
   #note-list .sequence-note-info { font-family: "Aref Ruqaa", Georgia, serif; font-size: .95rem; line-height: 1.35; }
+  #note-list .sequence-note-info { font-size: .825rem; }
+  #note-list .description-toggle svg { transition: transform .2s ease; }
+  #note-list .description-toggle.is-expanded svg { transform: rotate(180deg); }
   #note-list .measure-label { color: var(--measure-color); font-family: "Gabarito", ui-sans-serif, system-ui, sans-serif; font-size: .8rem; }
   :global(#note-list .entry-action) { transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease, background-color .2s ease, color .2s ease; min-height: 2.4rem; min-width: 2.8rem; padding: .5rem .65rem; text-align: center; }
   :global(#note-list .entry-action:hover) { z-index: 2; transform: scale(1.2); box-shadow: 0 0 18px color-mix(in srgb, var(--measure-color, var(--accent)) 38%, transparent); }
   :global(#note-list .remove-entry) { color: #ff3548; border-color: rgb(255 53 72 / .48); background: rgb(255 53 72 / .1); box-shadow: 0 0 10px rgb(255 53 72 / .1); }
   :global(#note-list .remove-entry:hover) { color: #fff; border-color: #ff3548; background: #e5243c; box-shadow: 0 0 0 1px rgb(255 53 72 / .55), 0 0 18px rgb(255 53 72 / .48); transform: scale(1.2); }
+  :global(:root[data-theme='light'] #note-list .sequence-card) { border-color: color-mix(in srgb, var(--measure-color) 70%, #53685a); background: color-mix(in srgb, var(--measure-color) 12%, #dce7de); }
+  :global(:root[data-theme='light'] #note-list .sequence-note-name) { background: color-mix(in srgb, var(--measure-color) 10%, #f4f7f3); color: #14271b; }
+  :global(:root[data-theme='light'] #note-list .sequence-note-info) { background: color-mix(in srgb, var(--measure-color) 16%, #d1ded4); color: #1b3022; }
+  :global(:root[data-theme='light'] #note-list .measure-label) { color: color-mix(in srgb, var(--measure-color) 72%, #14271b); }
+  :global(:root[data-theme='light'] #note-list .entry-action:not(.remove-entry)) { color: #253e80; border-color: #6682d0; background: #e2eaff; }
+  :global(:root[data-theme='light'] #note-list .entry-action:not(.remove-entry):hover) { color: #fff; border-color: #3158bd; background: #4169cf; }
   @media (prefers-reduced-motion: reduce) { #note-list li { transition: none; } }
   @media print {
     :global(body) { background: white !important; color: black !important; }

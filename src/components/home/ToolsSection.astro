@@ -175,10 +175,12 @@ const chordColor = (name: string): string => {
   .chord-root-label { color:var(--text-muted); font-size:.8rem; }
   .chord-fret-cell { width:1.875rem; height:2.2rem; flex:0 0 1.875rem; font-size:.78rem; }
   @media(max-width:640px){.chord-cheatsheet-card:hover{transform:scale(1.04)}}
-  @media(hover:none){.chord-cheatsheet-card:hover{transform:none;box-shadow:none}}
+  .chord-cheatsheet-card.is-selected { z-index:5; transform:scale(1.12); border-color:var(--chord-color,#2a9134); box-shadow:0 0 0 1px var(--chord-color,#2a9134),0 10px 28px color-mix(in srgb,var(--chord-color,#2a9134) 34%,transparent); background:#10251a; }
+  @media(hover:none){.chord-cheatsheet-card:hover{transform:none;box-shadow:none}.chord-cheatsheet-card.is-selected{transform:scale(1.04);border-color:var(--chord-color,#2a9134);box-shadow:0 0 0 1px var(--chord-color,#2a9134),0 8px 20px color-mix(in srgb,var(--chord-color,#2a9134) 34%,transparent)}}
   :root[data-theme='light'] .chord-cheatsheet-card { background:#fafffb; border-color:color-mix(in srgb,var(--chord-color,#087a3b) 38%,#fff); box-shadow:0 5px 18px rgb(10 62 31 / .08); }
   :root[data-theme='light'] .chord-cheatsheet-card b { color:color-mix(in srgb,var(--chord-color,#087a3b) 72%,#092c18); }
   :root[data-theme='light'] .chord-cheatsheet-card:hover { background:#fff; border-color:color-mix(in srgb,var(--chord-color,#087a3b) 72%,#092c18); box-shadow:0 0 0 1px color-mix(in srgb,var(--chord-color,#087a3b) 55%,#092c18),0 12px 30px rgb(10 62 31 / .18); }
+  :root[data-theme='light'] .chord-cheatsheet-card.is-selected { background:#fff; border-color:color-mix(in srgb,var(--chord-color,#2a9134) 72%,#092c18); box-shadow:0 0 0 1px color-mix(in srgb,var(--chord-color,#2a9134) 55%,#092c18),0 12px 30px rgb(10 62 31 / .18); }
   :root[data-theme='light'] .chord-root-label { color:#355b45; }
   :root[data-theme='light'] .chord-fret-cell { background:#e6f0e9; color:#102a1b; font-weight:800; }
   :root[data-theme='light'] #chord-cheatsheet-description { color:#355b45; }
@@ -200,6 +202,15 @@ const chordColor = (name: string): string => {
 
 <script is:inline>
   (() => {
+    const chordList = document.querySelector('#chord-cheatsheet-list');
+    chordList?.addEventListener('click', (event) => {
+      if (!matchMedia('(hover: none)').matches) return;
+      const card = event.target.closest('.chord-cheatsheet-card');
+      if (!card) return;
+      const wasSelected = card.classList.contains('is-selected');
+      chordList.querySelectorAll('.chord-cheatsheet-card').forEach((item) => item.classList.remove('is-selected'));
+      if (!wasSelected) card.classList.add('is-selected');
+    });
     const toggle = document.querySelector('#chord-extension-toggle');
     const list = document.querySelector('#chord-cheatsheet-list');
     if (!toggle || !list) return;

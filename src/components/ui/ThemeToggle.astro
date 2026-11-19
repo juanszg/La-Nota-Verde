@@ -12,6 +12,6 @@ import Icon from '../../icons/Icon.astro';
     root.dataset.theme = nextTheme;
     try { localStorage.setItem('lnv-theme', nextTheme); } catch {}
     document.cookie = `lnv-theme=${nextTheme}; Max-Age=31536000; Path=/; SameSite=Lax`;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', nextTheme === 'light' ? '#f6fff8' : '#020202');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', nextTheme === 'light' ? '#f0efe9' : '#020202');
   });
 </script>
