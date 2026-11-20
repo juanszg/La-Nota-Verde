@@ -2,7 +2,7 @@
 import Icon from '../icons/Icon.astro';
 import { navigationItems } from '../data/navigation';
 ---
-<aside id="app-sidebar" class="site-chrome fixed top-[72px] bottom-0 left-0 z-30 hidden w-56 flex-col border-r border-white/15 p-3 text-white backdrop-blur-xl transition-[width] duration-300 lg:flex" aria-label="Panel de navegación">
+<aside id="app-sidebar" class="site-chrome fixed top-[72px] bottom-0 left-0 z-30 hidden w-48 flex-col border-r border-white/15 p-3 text-white backdrop-blur-xl transition-[width] duration-300 lg:flex" aria-label="Panel de navegación">
   <nav class="grid gap-1" aria-label="Secciones de la plataforma">
     {navigationItems.map(({ label, href, icon }) => <a href={href} class="sidebar-link glow-hover flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-white/85 transition hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-white"><Icon name={icon} /><span>{label}</span></a>)}
   </nav>
@@ -16,13 +16,13 @@ import { navigationItems } from '../data/navigation';
   const sidebar = document.querySelector('#app-sidebar');
   const sidebarToggle = document.querySelector('#sidebar-toggle');
   sidebarToggle?.addEventListener('click', () => {
-    const compact = sidebar?.classList.toggle('w-56') === false;
+    const compact = sidebar?.classList.toggle('w-48') === false;
     sidebar?.classList.toggle('w-18', compact);
     document.querySelector('#sidebar-socials')?.classList.toggle('sidebar-socials-compact', compact);
     sidebar?.querySelectorAll('.sidebar-link').forEach((item) => item.classList.toggle('justify-center', compact));
     sidebar?.querySelectorAll('.sidebar-link span, .sidebar-label, .sidebar-copy').forEach((item) => item.classList.toggle('hidden', compact));
     const main = document.querySelector('#contenido');
-    main?.classList.toggle('lg:pl-56', !compact);
+    main?.classList.toggle('lg:pl-48', !compact);
     main?.classList.toggle('lg:pl-18', compact);
     sidebarToggle.setAttribute('aria-expanded', String(!compact));
     sidebarToggle.setAttribute('aria-label', compact ? 'Expandir barra lateral' : 'Contraer barra lateral');

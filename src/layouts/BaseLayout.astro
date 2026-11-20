@@ -34,10 +34,42 @@ const { title = 'LA NOTA VERDE', description = 'Aprende, practica y escribe mús
     <title>{title}</title>
   </head>
   <body>
+    <div id="page-transition" class="page-transition" aria-hidden="true">
+      <img src="/page-transition.jpg" alt="" />
+    </div>
     <a href="#contenido" class="sr-only fixed left-4 top-4 z-50 rounded-lg bg-neon px-4 py-2 text-sm font-semibold text-ink focus:not-sr-only">Saltar al contenido</a>
     <Navbar />
     <Sidebar />
-    <main id="contenido" class="min-h-[calc(100vh-72px)] lg:pl-56"><slot /></main>
+    <main id="contenido" class="min-h-[calc(100vh-72px)] lg:pl-48"><slot /></main>
     <Footer />
+    <script is:inline>
+      (() => {
+        const overlay = document.querySelector('#page-transition');
+        if (!overlay) return;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduceMotion) requestAnimationFrame(() => document.documentElement.classList.add('page-transition-ready'));
+        document.addEventListener('click', (event) => {
+          if (reduceMotion || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          const target = event.target instanceof Element ? event.target : event.target.parentElement;
+          const link = target?.closest('a[href]');
+          if (!link || link.target === '_blank' || link.hasAttribute('download') || link.dataset.noPageTransition !== undefined || link.closest('dialog,[role="dialog"]')) return;
+          const url = new URL(link.href, location.href);
+          if (url.origin !== location.origin) return;
+          const samePage = url.pathname === location.pathname && url.search === location.search;
+          const sectionTarget = samePage && url.hash && url.hash !== '#contenido' ? document.getElementById(decodeURIComponent(url.hash.slice(1))) : null;
+          if (samePage && !sectionTarget) return;
+          event.preventDefault();
+          document.documentElement.classList.add('page-transition-out');
+          window.setTimeout(() => {
+            if (!sectionTarget) { location.assign(url.href); return; }
+            history.pushState(null, '', url.hash);
+            sectionTarget.scrollIntoView({ behavior: 'auto', block: 'start' });
+            document.documentElement.classList.remove('page-transition-out', 'page-transition-ready');
+            void overlay.offsetHeight;
+            document.documentElement.classList.add('page-transition-ready');
+          }, 250);
+        }, true);
+      })();
+    </script>
   </body>
 </html>
