@@ -19,9 +19,9 @@ const tuningButtons = [
       <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-neon/10 text-xl text-[var(--accent)]">♫</span><div><p class="text-[9px] uppercase tracking-widest text-[var(--text-muted)]">Nota seleccionada</p><p id="played-note" class="mt-1 text-sm font-bold">Toca cualquier traste</p></div><label for="note-tone" class="guitar-select-label">Timbre<select id="note-tone" class="guitar-select"><option value="default">Default</option><option value="electric">Eléctrica suave</option><option value="acoustic">Acústica</option></select></label></div>
     </header>
 
-    <section class="mt-7 grid gap-5 xl:grid-cols-[minmax(0,1fr)_19rem]">
-      <div class="min-w-0 space-y-5">
-        <article class="surface rounded-2xl p-4 sm:p-6">
+    <section class="guitar-layout-grid mt-7">
+      <div class="guitar-primary-content">
+        <article class="guitar-highlight-card surface rounded-2xl p-4 sm:p-6">
           <div class="flex flex-wrap items-center justify-between gap-3"><div><div class="flex flex-wrap items-center gap-3"><p class="guitar-section-title">Resalta notas</p><span id="active-scale-label" class="scale-context">Escala activa: ninguna</span><span id="relative-minor-label" class="relative-minor-context" hidden></span></div><p class="guitar-section-copy mt-1">Elige tonalidad y escala aquí; las etiquetas muestran el intervalo desde la tónica.</p></div><div class="flex flex-wrap gap-2"><button type="button" id="toggle-other-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold transition hover:border-neon" aria-pressed="false" disabled>Mostrar las demás notas</button><button type="button" id="show-all-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Todas</button><button type="button" id="clear-notes" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[9px] font-bold hover:border-neon">Ninguna</button></div></div>
           <div class="scale-select-grid mt-4 grid max-w-[22rem] grid-cols-[8rem_13rem] gap-4">
             <label class="guitar-select-label">Tonalidad<select id="scale-root" class="guitar-select compact-scale-select"><option value="0">C</option><option value="1">C♯</option><option value="2">D</option><option value="3">D♯</option><option value="4">E</option><option value="5">F</option><option value="6">F♯</option><option value="7">G</option><option value="8">G♯</option><option value="9">A</option><option value="10">A♯</option><option value="11">B</option></select></label>
@@ -34,7 +34,7 @@ const tuningButtons = [
 
         
 
-        <article class="surface min-w-0 rounded-2xl p-4 sm:p-6">
+        <article class="guitar-board-card surface min-w-0 rounded-2xl p-4 sm:p-6">
           <div class="mb-4 flex flex-wrap items-end justify-between gap-3"><div><p class="guitar-section-title">Notas en el diapasón</p><p class="guitar-section-copy mt-1">Trastes 0–15 · pulsa una nota para escucharla · el traste 12 marca la octava.</p></div><p class="guitar-section-copy">Afinación: <strong id="tuning-caption" class="text-[var(--text-primary)]">E · B · G · D · A · E</strong></p></div>
           <div class="fretboard-panel rounded-xl p-2 sm:p-3"><button id="fretboard-fullscreen" type="button" class="fullscreen-button" aria-label="Expandir diapasón a pantalla completa" title="Pantalla completa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m13-5h3a2 2 0 0 1 2 2v3M3 16v3a2 2 0 0 0 2 2h3m13-5v3a2 2 0 0 1-2 2h-3"/></svg></button>
             <section id="zen-header" class="zen-header" aria-hidden="true">
@@ -52,22 +52,22 @@ const tuningButtons = [
         </article>
 
         
-              <article class="surface rounded-2xl p-4 sm:p-6">
+              <article class="guitar-tuning-card surface rounded-2xl p-4 sm:p-6">
           <div class="flex flex-wrap items-center justify-between gap-3"><div><p class="guitar-section-title">Afinación</p><p class="guitar-section-copy mt-1">El diapasón se actualiza con cada afinación.</p></div><div class="flex flex-wrap gap-2" aria-label="Orientación y notación"><button type="button" id="handedness-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">Mano derecha</button><button type="button" id="accidental-toggle" class="rounded-lg border border-[var(--border)] px-3 py-2 text-[10px] font-bold transition hover:border-neon hover:text-[var(--accent)]" aria-pressed="false">♯ Sostenidos</button></div></div>
           <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">{tuningButtons.map((item) => <button type="button" data-tuning={item.id} aria-pressed={item.id === 'standard' ? 'true' : 'false'} class:list={["tuning-option rounded-xl border px-3 py-3 text-left transition hover:-translate-y-0.5", item.id === 'standard' ? 'is-active border-neon' : 'border-[var(--border)]']}><span class="block text-xs font-bold">{item.label}</span><span class="mt-1 block text-[8px] text-[var(--text-muted)]">{item.tuning}</span></button>)}</div>
         </article>
 
       </div>
 
-      <aside class="space-y-5">
+      <aside class="guitar-secondary-content">
 
-        <article class="rounded-2xl border border-neon/15 bg-neon/5 p-4 sm:p-5"><p class="guitar-section-title">Cómo leerlo</p><ul class="guitar-section-copy mt-3 space-y-2 leading-5"><li><strong class="text-[var(--text-primary)]">Cada traste</strong> sube un semitono.</li><li><strong class="text-[var(--text-primary)]">Traste 12</strong> repite la nota al aire una octava arriba.</li><li><strong class="text-[var(--text-primary)]">♯ / ♭</strong> cambia la escritura, no el sonido del traste.</li><li><strong class="text-[var(--text-primary)]">Afinaciones</strong> cambian la nota de cada cuerda al aire.</li></ul></article>
-        <article class="chord-harmony-card rounded-2xl border border-neon/20 bg-neon/5 p-4 sm:p-5">
+        <details class="guitar-read-card rounded-2xl border border-neon/25 bg-neon/5 p-3 sm:p-4"><summary class="cursor-pointer rounded-xl border border-neon/30 px-4 py-3 text-center text-sm font-bold text-[var(--accent)] transition hover:bg-neon/10">Cómo leerlo</summary><ul class="guitar-section-copy mt-3 space-y-2 px-2 leading-5"><li><strong class="text-[var(--text-primary)]">Cada traste</strong> sube un semitono.</li><li><strong class="text-[var(--text-primary)]">Traste 12</strong> repite la nota al aire una octava arriba.</li><li><strong class="text-[var(--text-primary)]">♯ / ♭</strong> cambia la escritura, no el sonido del traste.</li><li><strong class="text-[var(--text-primary)]">Afinaciones</strong> cambian la nota de cada cuerda al aire.</li></ul></details>
+        <article class="guitar-chords-card chord-harmony-card rounded-2xl border border-neon/20 bg-neon/5 p-4 sm:p-5">
           <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="guitar-section-title">Acordes de la escala</p><h2 id="chord-scale-title" class="guitar-section-heading mt-1">Aplica una escala</h2><p class="guitar-section-copy mt-1 leading-5">Selecciona un grado; en Formas 6ª–4ª, pasa o pulsa la tónica para aislar su digitación.</p></div><div class="flex flex-wrap items-end gap-2"><label class="guitar-select-label">Armonía<select id="chord-mode" class="guitar-select"><option value="triad">Tríadas naturales</option><option value="seventh">Con 7ma</option></select></label><button id="chord-voicing-toggle" type="button" class="voicing-toggle" aria-pressed="false" aria-label="Mostrar formas con tónica en las cuerdas sexta, quinta y cuarta" title="Mostrar las formas del acorde desde las cuerdas 6ª, 5ª y 4ª">Formas 6ª–4ª</button></div></div>
-          <div id="chord-scale-list" class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3" aria-live="polite"><p class="col-span-full py-3 text-center text-[9px] text-[var(--text-muted)]">Elige una tonalidad y aplica la escala para ver sus acordes.</p></div>
+          <div id="chord-scale-list" class="mt-4 grid grid-cols-2 gap-3 md:grid-cols-4" aria-live="polite"><p class="col-span-full py-3 text-center text-[9px] text-[var(--text-muted)]">Elige una tonalidad y aplica la escala para ver sus acordes.</p></div>
           <p id="chord-selection-hint" class="mt-3 min-h-4 text-center text-[9px] text-[var(--text-muted)]">El diapasón mostrará las notas del acorde elegido.</p>
         </article>
-        <article class="rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4 sm:p-5">
+        <article class="guitar-settings-card rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4 sm:p-5">
           <p class="guitar-section-title">Ajustes del diapasón</p>
           <label for="fret-note-size" class="guitar-select-label mt-3">Tamaño de las notas<select id="fret-note-size" class="guitar-select"><option value="1">Normal · 100%</option><option value="1.15">Grande · 115%</option><option value="1.25" selected>Estándar · 125%</option><option value="1.45">Máximo · 145%</option></select></label>
           <div class="mt-3"><span class="guitar-select-label">Estilo de las notas</span><div class="note-display-toggle" role="group" aria-label="Estilo de las notas del diapasón"><button type="button" data-note-display="cells" aria-pressed="false">Celdas</button><button type="button" data-note-display="circles" aria-pressed="true">Círculos</button></div></div>
@@ -153,7 +153,7 @@ const tuningButtons = [
   .voicing-toggle { min-height:2.1rem; border:1px solid rgb(114 255 155 / .3); border-radius:.65rem; padding:.4rem .55rem; color:#c8f6d3; font-size:.58rem; font-weight:800; white-space:nowrap; transition:background .18s,color .18s,border-color .18s,box-shadow .18s; }
   .voicing-toggle:hover, .voicing-toggle.is-active { border-color:#72ff9b; color:#07100b; background:#72ff9b; box-shadow:0 0 14px rgb(114 255 155 / .32); }
   .fret-note.is-chord-root { cursor:pointer; z-index:4; outline:2px solid var(--degree-color); outline-offset:-4px; box-shadow:0 0 20px color-mix(in srgb,var(--degree-color) 75%,transparent); }
-  :global(.chord-card) { aspect-ratio:1; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.15rem; border:1px solid rgb(114 255 155 / .2); border-radius:.9rem; padding:.4rem .2rem; background:rgb(8 25 15 / .8); text-align:center; transition:transform .18s,border-color .18s,background .18s,box-shadow .18s; }
+  :global(.chord-card) { aspect-ratio:auto; width:100%; min-width:0; min-height:9rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.3rem; border:1px solid rgb(114 255 155 / .2); border-radius:.9rem; padding:10px; background:rgb(8 25 15 / .8); text-align:center; transition:transform .18s,border-color .18s,background .18s,box-shadow .18s; }
   :global(.chord-card:hover) { transform:translateY(-2px); border-color:#72ff9b; box-shadow:0 0 16px rgb(114 255 155 / .18); }
   :global(.chord-card:focus-visible) { outline:2px solid #72ff9b; outline-offset:2px; }
   :global(.chord-card.is-active) { border-color:var(--degree-color,#72ff9b); background:color-mix(in srgb,var(--degree-color,#72ff9b) 12%,#08190f); box-shadow:0 0 0 1px var(--degree-color,#72ff9b),0 0 24px color-mix(in srgb,var(--degree-color,#72ff9b) 62%,transparent); }
@@ -165,11 +165,11 @@ const tuningButtons = [
   :global(.chord-card.tone-6) { --degree-color:#fff07a; border-color:color-mix(in srgb,#fff07a 24%,transparent); }
   :global(.chord-card.tone-7) { --degree-color:#7ee7ff; border-color:color-mix(in srgb,#7ee7ff 24%,transparent); }
   .fret-note.is-root { filter:drop-shadow(0 0 8px #72ff9b); }
-  :global(.chord-degree) { color:var(--degree-color,#72ff9b); font-size:.55rem; font-weight:800; }
-  :global(.chord-american) { color:#f4fff7; font-family:'Kode Mono',monospace; font-size:1.05rem; line-height:1.1; }
-  :global(.chord-spanish) { color:#c8f6d3; font-size:.65rem; font-weight:700; }
-  :global(.chord-quality) { color:rgb(235 255 241 / .58); font-size:.48rem; line-height:1.2; }
-  :global(.chord-formula) { color:#a6efff; font-size:.45rem; font-weight:700; line-height:1.1; white-space:nowrap; }
+  :global(.chord-degree) { color:var(--degree-color,#72ff9b); font-size:10px; font-weight:800; }
+  :global(.chord-american) { color:#f4fff7; font-family:'Kode Mono',monospace; font-size:16px; line-height:1.2; }
+  :global(.chord-spanish) { color:#c8f6d3; font-size:12px; font-weight:700; }
+  :global(.chord-quality) { color:rgb(235 255 241 / .76); font-size:10px; line-height:1.3; }
+  :global(.chord-formula) { color:#a6efff; font-size:10px; font-weight:700; line-height:1.25; white-space:nowrap; }
 .greek-controls{display:flex;flex-wrap:wrap;align-items:center;gap:.65rem}.greek-mode-tabs,.greek-view-toggle{display:flex;flex-wrap:wrap;gap:.35rem}.greek-mode-tabs button,.greek-view-toggle button,.greek-root-control select{border:1px solid rgb(114 255 155 / .2);border-radius:.55rem;padding:.5rem .7rem;background:#08190f;color:#d9ecdf;font-size:.62rem;font-weight:700}.greek-mode-tabs button[aria-pressed="true"],.greek-view-toggle button[aria-pressed="true"]{border-color:#72ff9b;background:#72ff9b;color:#07100b}.greek-root-control{display:flex;align-items:center;gap:.5rem;color:#a8c4b1;font-size:.62rem}.greek-mode-info{margin:1rem 0;border:1px solid rgb(114 255 155 / .15);border-radius:.8rem;padding:1rem;background:#0b1c12}.greek-mode-info h3{font-size:1rem;font-weight:800}.greek-mode-info>p{margin-top:.4rem;color:#91a99a;font-size:.65rem;line-height:1.7}.greek-degree-list{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.5rem;margin-top:.8rem}.greek-degree{border-top:3px solid var(--mode-color);padding-top:.35rem}.greek-degree b{display:block;font-size:.9rem}.greek-degree small{color:#8ea695;font-size:.55rem}.greek-board-scroll{overflow-x:auto;border:1px solid rgb(114 255 155 / .15);border-radius:.8rem;background:#0b1c12;padding:.5rem}.greek-board{display:grid;grid-template-columns:repeat(16,minmax(42px,1fr));min-width:690px}.greek-board-cell{height:2.7rem;position:relative;display:grid;place-items:center;border-right:2px solid rgb(114 255 155 / .12)}.greek-board-cell::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgb(213 220 207 / .38)}.greek-board-cell.fret-zero{border-right:5px solid #d9ecdf}.greek-board-cell.fret-zero::before{left:50%}.greek-board-string-label{position:absolute;left:.25rem;z-index:2;color:#72ff9b;font-size:.55rem;font-weight:800}.greek-board-note{position:relative;z-index:1;display:grid;width:1.8rem;height:1.8rem;place-items:center;border-radius:50%;color:#07100b;background:var(--mode-color);font-size:.58rem;font-weight:900}.greek-board-note.is-root{outline:2px solid #07100b;box-shadow:0 0 0 4px var(--mode-color),0 0 14px var(--mode-color)}.greek-board-note.is-open{width:1.65rem;height:1.65rem}.greek-fret-number{height:1.5rem;display:grid;place-items:center;color:#90a997;font-size:.58rem}@media(max-width:700px){.greek-degree-list{grid-template-columns:repeat(4,1fr)}}  .legend-dot { display:inline-block; width:.55rem; height:.55rem; border-radius:50%; background:var(--degree-color, #16db65); }
   @media (max-width: 640px) { .fret-note-name { font-size:calc(.62rem * var(--fret-note-scale,1)); } .fret-row { grid-template-columns: 3.5rem repeat(16, minmax(2.55rem, 2.8rem)); } .guitar-string::after { left: 3.5rem; } .fretboard.is-left-handed .guitar-string::after { left: 0; right: 3.5rem; } .fret-note { height: 3rem; font-size: .62rem; } }
   @media (prefers-reduced-motion: reduce) { .fret-note, .tuning-option { transition: none; } }
@@ -212,7 +212,37 @@ const tuningButtons = [
   #toggle-other-notes,#show-all-notes,#clear-notes { min-height:2.5rem; padding:.55rem .85rem; font:700 .8rem 'Space Mono',monospace; }
   .compact-scale-select,.scale-context,.relative-minor-context { font-family:'Space Mono',monospace; }
   .relative-minor-context { border:1px solid rgb(255 179 107 / .55); border-radius:999px; padding:.3rem .55rem; color:#ffb36b; background:rgb(255 179 107 / .08); font-size:.58rem; font-weight:800; white-space:nowrap; }
+  .guitar-layout-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:1.25rem; }
+  .guitar-primary-content,.guitar-secondary-content { display:contents; }
+  .guitar-highlight-card { grid-area:highlight; }
+  .guitar-settings-card { grid-area:settings; }
+  .guitar-board-card { grid-area:board; }
+  .guitar-tuning-card { grid-area:tuning; }
+  .guitar-read-card { grid-area:read; }
+  .guitar-chords-card { grid-area:chords; }
+  .guitar-secondary-content > a { grid-area:tools; }
+  .guitar-layout-grid { grid-template-areas:'highlight' 'settings' 'board' 'tuning' 'chords' 'read' 'tools'; }
+  @media(min-width:640px){.guitar-layout-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:'highlight settings' 'board board' 'tuning tuning' 'chords chords' 'read read' 'tools tools'}}
+  @media(min-width:900px){.guitar-chords-card .chord-harmony-card{max-width:100%}}
+  :global(.chord-card) { aspect-ratio:auto; min-height:8.5rem; padding:10px; }
+  :global(.chord-degree) { font-size:10px; }
+  :global(.chord-quality),:global(.chord-formula) { font-size:10px; }
+  :global(.chord-spanish) { font-size:12px; }
+  :global(.chord-american) { font-size:16px; }
   @media(max-width:520px){.scale-select-grid{grid-template-columns:minmax(0,1fr);max-width:100%;gap:.85rem}#scale-root.compact-scale-select,#scale-type.compact-scale-select{width:100%}}
+</style>
+
+<style is:global>
+  .chord-card { aspect-ratio:auto!important; min-height:9rem; padding:10px!important; gap:.3rem; }
+  .chord-degree,.chord-quality,.chord-formula { font-size:10px!important; }
+  .chord-spanish { font-size:12px!important; }
+  .chord-american { font-size:16px!important; }
+  .fretboard-panel.is-circle-display .fret-note.has-interval .fret-note-name { display:none!important; }
+  .fretboard-panel.is-circle-display .fret-note.has-interval .fret-note-interval { position:absolute; z-index:2; top:50%; left:50%; right:auto; bottom:auto; display:grid!important; box-sizing:border-box; width:2.35rem!important; min-width:2.35rem; max-width:2.35rem; height:2.35rem!important; min-height:2.35rem; max-height:2.35rem; flex:none; aspect-ratio:1/1; padding:0; place-items:center; transform:translate(-50%,-50%); border:1px solid rgb(114 255 155 / .3); border-radius:50%!important; background:rgb(114 255 155 / .08); color:#07100b; font-size:clamp(.48rem,1.4vw,.62rem); font-weight:900; line-height:1; white-space:nowrap; opacity:1; }
+  .fretboard-panel.is-circle-display .fret-note.has-interval.is-scale .fret-note-interval { border-color:var(--degree-color); background:var(--degree-color); color:#07100b; }
+  .fretboard-panel.is-circle-display .fret-note.has-interval.is-root .fret-note-interval { border-color:#72ff9b; background:#72ff9b; color:#07100b; box-shadow:0 0 14px rgb(114 255 155 / .55); }
+  .fretboard-panel.is-circle-display .fret-note.has-interval.is-chromatic-scale .fret-note-interval { border-color:var(--degree-color); background:color-mix(in srgb,var(--degree-color) 18%,#07100b); color:var(--degree-color); }
+  .fretboard-panel.is-circle-display .fret-note.dim-note .fret-note-interval { opacity:.22; }
 </style>
 
 <script is:inline>
