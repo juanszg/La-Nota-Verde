@@ -16,7 +16,7 @@ const tuningButtons = [
     <a href="/aprender" class="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-xs font-bold text-[var(--text-muted)] transition hover:text-[var(--accent)] focus-visible:outline-2 focus-visible:outline-neon">← Volver a Aprender</a>
     <header class="mt-5 flex flex-col gap-5 border-b border-[var(--border)] pb-7 sm:flex-row sm:items-end sm:justify-between">
       <div><p class="text-xs font-bold uppercase tracking-[.2em] text-[var(--accent)]">Playground de guitarra · La Nota Verde</p><h1 class="page-title mt-3 text-3xl font-bold sm:text-5xl">Diapasón interactivo</h1><p class="guitar-section-copy mt-3 max-w-2xl leading-6">Encuentra notas, explora afinaciones, estudia escalas y escucha cada traste. En cifrado internacional: E = Mi y B = Si.</p></div>
-      <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-neon/10 text-xl text-[var(--accent)]">♫</span><div><p class="text-[9px] uppercase tracking-widest text-[var(--text-muted)]">Nota seleccionada</p><p id="played-note" class="mt-1 text-sm font-bold">Toca cualquier traste</p></div><label for="note-tone" class="guitar-select-label">Timbre<select id="note-tone" class="guitar-select"><option value="default">Default</option><option value="electric">Eléctrica suave</option><option value="acoustic">Acústica</option></select></label></div>
+      <div class="flex flex-wrap items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3"><span class="grid h-10 w-10 place-items-center rounded-xl bg-neon/10 text-xl text-[var(--accent)]">♫</span><div><p class="text-[9px] uppercase tracking-widest text-[var(--text-muted)]">Nota seleccionada</p><p id="played-note" class="mt-1 text-sm font-bold">Toca cualquier traste</p></div><label for="note-tone" class="guitar-select-label">Timbre<select id="note-tone" class="guitar-select"><option value="default">Nylon · cálida</option><option value="electric">Eléctrica limpia</option><option value="acoustic">Acústica de acero</option></select></label><small class="w-full pl-14 text-[9px] text-[var(--text-muted)]">Banco FluidR3 GM · CC BY 3.0</small></div>
     </header>
 
     <section class="guitar-layout-grid mt-7">
@@ -291,6 +291,31 @@ const tuningButtons = [
     let hoveredChordAnchor = null;
     let showOtherNotes = false;
     let audio;
+    let soundfontLibraryPromise;
+    const guitarSamples = new Map();
+
+    const loadSoundfontLibrary = () => {
+      if (window.Soundfont) return Promise.resolve(window.Soundfont);
+      if (!soundfontLibraryPromise) soundfontLibraryPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/soundfont-player@0.12.0/dist/soundfont-player.min.js';
+        script.async = true;
+        script.onload = () => window.Soundfont ? resolve(window.Soundfont) : reject(new Error('No se encontró el reproductor de muestras.'));
+        script.onerror = () => reject(new Error('No se pudo cargar el reproductor de muestras.'));
+        document.head.appendChild(script);
+      });
+      return soundfontLibraryPromise;
+    };
+
+    const getGuitarSample = async (preset) => {
+      if (!guitarSamples.has(preset)) {
+        const loading = loadSoundfontLibrary().then((soundfont) => soundfont.instrument(audio, preset, {
+          soundfont:'FluidR3_GM', format:'mp3', gain:.85,
+        }));
+        guitarSamples.set(preset, loading);
+      }
+      return guitarSamples.get(preset);
+    };
 
     const currentNames = () => useFlats ? flatNotes : sharpNotes;
     const chromaticDegreeFor = (pitch) => {
@@ -684,36 +709,17 @@ const tuningButtons = [
       audio ??= new AudioContext();
       await audio.resume();
       const midi = Number(button.dataset.midi);
-      const frequency = 440 * 2 ** ((midi - 69) / 12);
-      const start = audio.currentTime + 0.015;
-      const oscillator = audio.createOscillator();
-      const overtone = audio.createOscillator();
-      const filter = audio.createBiquadFilter();
-      const gain = audio.createGain();
-      const tonePreset = document.querySelector('#note-tone').value;
-      const isElectric = tonePreset === 'electric';
-      const isAcoustic = tonePreset === 'acoustic';
-      const duration = isAcoustic ? 0.78 : isElectric ? 0.92 : 1.05;
-      oscillator.type = isElectric ? 'sawtooth' : 'triangle';
-      overtone.type = isElectric ? 'triangle' : 'sine';
-      oscillator.frequency.setValueAtTime(frequency, start);
-      overtone.frequency.setValueAtTime(frequency * (isAcoustic ? 2.76 : 2.01), start);
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(isAcoustic ? 5400 : isElectric ? 3900 : 2600, start);
-      gain.gain.setValueAtTime(0.0001, start);
-      gain.gain.exponentialRampToValueAtTime(isElectric ? 0.105 : isAcoustic ? 0.17 : 0.16, start + (isAcoustic ? 0.008 : 0.012));
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-      oscillator.connect(filter); overtone.connect(filter);
-      if (isElectric) {
-        const softDrive = audio.createWaveShaper();
-        const curve = new Float32Array(256);
-        for (let index = 0; index < curve.length; index++) { const x = index * 2 / (curve.length - 1) - 1; curve[index] = Math.tanh(2.6 * x) / Math.tanh(2.6); }
-        softDrive.curve = curve; softDrive.oversample = '2x';
-        filter.connect(softDrive).connect(gain);
-      } else filter.connect(gain);
-      gain.connect(audio.destination);
-      oscillator.start(start); overtone.start(start); oscillator.stop(start + duration + 0.03); overtone.stop(start + duration + 0.03);
-      playedNote.textContent = `${button.querySelector('.fret-note-name').textContent} · ${frequency.toFixed(1)} Hz`;
+      const pitchName = button.querySelector('.fret-note-name').textContent;
+      const preset = { default:'acoustic_guitar_nylon', acoustic:'acoustic_guitar_steel', electric:'electric_guitar_clean' }[document.querySelector('#note-tone').value] || 'acoustic_guitar_nylon';
+      playedNote.textContent = `${pitchName} · cargando muestra…`;
+      try {
+        const instrument = await getGuitarSample(preset);
+        instrument.play(midi, audio.currentTime, { gain:.9, duration:1.5 });
+        playedNote.textContent = `${pitchName} · ${preset.replaceAll('_',' ')}`;
+      } catch (error) {
+        console.error('No se pudo cargar el banco de guitarra:', error);
+        playedNote.textContent = 'Muestra no disponible · revisa tu conexión';
+      }
       });
     });
     initGreekReference();

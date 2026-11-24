@@ -1,0 +1,410 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const parts = [
+  { id: 'body', name: 'Cuerpo', subtitle: 'La base sólida de la guitarra', description: 'El cuerpo sostiene el puente, las pastillas y los controles. En este modelo SG, sus recortes dobles dejan más espacio para llegar a los trastes agudos.', tip: 'La forma del cuerpo influye en el equilibrio y la comodidad al tocar de pie o sentado.', image: '/images/sg-catalog/body.webp', anchor: [0, 0.03, 0.045] },
+  { id: 'horns', name: 'Doble cutaway', subtitle: 'Cuernos y acceso superior', description: 'Los recortes superior e inferior liberan la mano para alcanzar notas agudas. El cuerno superior también sirve como punto de apoyo para la correa.', tip: 'Prueba una escala en los trastes altos: notarás el acceso libre que da el cuerno inferior.', image: '/images/sg-catalog/cutaways.webp', anchor: [0, 0.18, 0.04] },
+  { id: 'neck', name: 'Mástil', subtitle: 'Une el cuerpo con el clavijero', description: 'El mástil conecta el cuerpo con el clavijero. La mano que pisa las notas se desplaza por su parte posterior mientras los dedos trabajan sobre el diapasón.', tip: 'Mantén el pulgar relajado detrás del mástil para que los dedos puedan moverse con libertad.', image: '/images/sg-catalog/neck.webp', anchor: [0, 0.44, 0.035] },
+  { id: 'fretboard', name: 'Diapasón', subtitle: 'Superficie donde se pisan las notas', description: 'Es la cara frontal del mástil. Al presionar una cuerda contra un traste, acortas su longitud vibrante y produces una nota más aguda.', tip: 'En este catálogo se ve el diapasón oscuro con marcadores claros que ayudan a orientarse.', image: '/images/sg-catalog/fretboard.webp', anchor: [0, 0.46, 0.04] },
+  { id: 'frets', name: 'Trastes', subtitle: 'Divisiones metálicas del diapasón', description: 'Las barras de metal dividen el diapasón en semitonos. Para una nota limpia, apoya el dedo justo detrás de la barra correspondiente.', tip: 'Cada traste que avanzas hacia el cuerpo sube la nota un semitono.', image: '/images/sg-catalog/frets.webp', anchor: [0, 0.36, 0.043] },
+  { id: 'pickups', name: 'Pastillas humbucker', subtitle: 'Captan la vibración de las cuerdas', description: 'Las bobinas magnéticas convierten la vibración de las cuerdas en una señal eléctrica. La pastilla del mástil suele dar un timbre más redondo; la del puente, uno más brillante.', tip: 'La selección de pastilla y el control de tono permiten cambiar el color antes de llegar al amplificador.', image: '/images/sg-catalog/pickups.webp', anchor: [0, 0.12, 0.045] },
+  { id: 'bridge', name: 'Puente Tune-o-Matic', subtitle: 'Apoyo y ajuste de las cuerdas', description: 'El puente sostiene las cuerdas y permite ajustar su altura y entonación. Sus selletas corrigen la afinación de las notas a lo largo del mástil.', tip: 'Si una cuerda al aire afina pero en el traste 12 no, la entonación puede necesitar ajuste.', image: '/images/sg-catalog/bridge-tailpiece.webp', anchor: [0, 0.2, 0.045] },
+  { id: 'tailpiece', name: 'Cordal Stopbar', subtitle: 'Anclaje de las cuerdas', description: 'El cordal sujeta las cuerdas detrás del puente y mantiene la tensión del conjunto. En esta configuración se combina con un puente Tune-o-Matic.', tip: 'Al cambiar cuerdas, el cordal ayuda a mantener cada una anclada mientras la llevas hasta su clavija.', image: '/images/sg-catalog/bridge-tailpiece.webp', anchor: [0, 0.235, 0.04] },
+  { id: 'controls', name: 'Volumen y tono', subtitle: 'Mandos para moldear el sonido', description: 'Los potenciómetros de volumen regulan la señal de salida. Los controles de tono atenúan agudos; el catálogo muestra cuatro mandos para ajustar las dos pastillas.', tip: 'Gira un control cada vez y escucha cómo cambia el sonido antes de combinar ajustes.', image: '/images/sg-catalog/controls.webp', anchor: [0.085, 0.08, 0.04] },
+  { id: 'selector', name: 'Selector de pastillas', subtitle: 'Elige una de las tres posiciones', description: 'Permite elegir la pastilla del mástil, la del puente o combinar ambas. Cada posición cambia el balance de frecuencias que recibe el amplificador.', tip: 'Recorre las tres posiciones con el mismo acorde y compara el timbre.', image: '/images/sg-catalog/selector.webp', anchor: [-0.04, 0.025, 0.04] },
+  { id: 'headstock', name: 'Clavijero y clavijas', subtitle: 'Guía y afinación de las cuerdas', description: 'El clavijero aloja las clavijas que enrollan o liberan cuerda para afinar. La cejuela, entre el clavijero y el diapasón, guía las cuerdas y determina su apoyo inicial.', tip: 'Gira cada clavija poco a poco y vuelve a comprobar la nota con un afinador.', image: '/images/sg-catalog/headstock.webp', anchor: [0, 0.75, 0.03] },
+  { id: 'strings', name: 'Cuerdas', subtitle: 'La fuente de la vibración', description: 'Las seis cuerdas recorren el instrumento desde el cordal hasta las clavijas. Al pulsarlas vibran y las pastillas transforman ese movimiento en señal eléctrica.', tip: 'Una cuerda más gruesa suele sentirse más tensa; la afinación y el calibre cambian la sensación al tocar.', image: '/images/sg-catalog/strings.webp', anchor: [0, 0.55, 0.052] },
+];
+---
+
+<BaseLayout title="Conoce tu guitarra SG — LA NOTA VERDE" description="Explora en 3D las partes de una guitarra eléctrica tipo Gibson SG y aprende para qué sirve cada una.">
+  <main class="sg-page">
+    <a href="/aprender" class="sg-back-link">← Volver a Aprender</a>
+    <header class="sg-page-heading">
+      <p class="sg-kicker">Aprender · Conoce tu instrumento</p>
+      <h1 class="page-title">Las partes de una guitarra SG</h1>
+      <p>Gira el modelo y selecciona una parte para ver su función, una imagen del catálogo y una idea para practicar.</p>
+    </header>
+
+    <section class="sg-workspace" aria-label="Explorador 3D de guitarra">
+      <article class="sg-viewer-card">
+        <header class="sg-panel-heading">
+          <div><p class="sg-panel-kicker">Modelo interactivo</p><h2>Gibson SG · negra</h2></div>
+          <button id="sg-reset-view" class="sg-reset-button" type="button" aria-label="Restablecer vista del modelo">⟳ <span>Vista inicial</span></button>
+        </header>
+        <div id="sg-stage" class="sg-stage" aria-label="Modelo 3D que puedes girar y acercar">
+          <div class="sg-stage-grid" aria-hidden="true"></div>
+          <div id="sg-canvas-host" class="sg-canvas-host"></div>
+          <div id="sg-hotspots" class="sg-hotspots" aria-label="Selecciona una parte en el modelo">
+            {parts.map((part, index) => <button type="button" class="sg-hotspot" data-hotspot={part.id} aria-label={`Ver ${part.name}`} title={part.name}><span>{String(index + 1).padStart(2, '0')}</span></button>)}
+          </div>
+          <div id="sg-loading" class="sg-loading" role="status"><span class="sg-loader-note">♫</span><span>Cargando modelo 3D…</span></div>
+          <div id="sg-error" class="sg-error" role="alert" hidden>No se pudo cargar el modelo 3D. Recarga la página para intentarlo de nuevo.</div>
+          <div class="sg-stage-controls" aria-hidden="true"><span>Arrastra para girar</span><i></i><span>Rueda para acercar</span></div>
+        </div>
+        <p class="sg-model-caption"><span class="sg-live-dot"></span><span id="sg-model-status" aria-live="polite">Preparando modelo…</span></p>
+      </article>
+
+      <aside class="sg-parts-card" aria-labelledby="sg-parts-title">
+        <header class="sg-panel-heading sg-parts-heading">
+          <div><p class="sg-panel-kicker">Guía de anatomía</p><h2 id="sg-parts-title">Conoce sus partes</h2></div>
+          <span class="sg-part-count">{parts.length} puntos</span>
+        </header>
+        <div id="sg-parts-list" class="sg-parts-list" role="group" aria-label="Partes de la guitarra">
+          {parts.map((part, index) => <button type="button" class="sg-part-button" data-part={part.id} data-name={part.name} data-subtitle={part.subtitle} data-description={part.description} data-tip={part.tip} data-image={part.image} data-anchor={JSON.stringify(part.anchor)} aria-pressed={index === 0 ? 'true' : 'false'}>
+            <span class="sg-part-number">{String(index + 1).padStart(2, '0')}</span><span class="sg-part-label"><strong>{part.name}</strong><small>{part.subtitle}</small></span><span class="sg-part-arrow" aria-hidden="true">↗</span>
+          </button>)}
+        </div>
+        <section id="sg-part-detail" class="sg-part-detail" aria-live="polite">
+          <p id="sg-detail-kicker" class="sg-panel-kicker">Parte seleccionada · 01</p>
+          <figure class="sg-detail-figure">
+            <img id="sg-detail-image" src={parts[0].image} alt={`Referencia visual de ${parts[0].name} en una guitarra SG`} />
+            <figcaption id="sg-detail-image-label">Detalle del catálogo · {parts[0].name}</figcaption>
+          </figure>
+          <h3 id="sg-detail-title">{parts[0].name}</h3>
+          <p id="sg-detail-copy">{parts[0].description}</p>
+          <p class="sg-detail-tip"><strong>Para tus clases</strong><span id="sg-detail-tip">{parts[0].tip}</span></p>
+        </section>
+      </aside>
+    </section>
+    <section class="sg-full-reference" aria-labelledby="sg-reference-title">
+      <header><div><p class="sg-kicker">Referencia visual</p><h2 id="sg-reference-title">La SG completa y sus partes</h2></div><span>CATÁLOGO · SG</span></header>
+      <figure><img src="/images/sg-catalog/full-sg.webp" alt="Vista completa de una guitarra Gibson SG negra con etiquetas de sus partes" loading="lazy" /><figcaption>Vista general para ubicar cada componente en el instrumento.</figcaption></figure>
+    </section>
+    <p class="sg-disclaimer">Puedes seleccionar los puntos del modelo o los nombres de la lista. La ficha mostrará la imagen y una explicación de cada parte.</p>
+  </main>
+</BaseLayout>
+
+<script>
+  import * as THREE from 'three';
+  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  const host = document.querySelector<HTMLElement>('#sg-canvas-host');
+  const stage = document.querySelector<HTMLElement>('#sg-stage');
+  const loading = document.querySelector<HTMLElement>('#sg-loading');
+  const errorMessage = document.querySelector<HTMLElement>('#sg-error');
+  const status = document.querySelector<HTMLElement>('#sg-model-status');
+  const selectedTitle = document.querySelector<HTMLElement>('#sg-detail-title');
+  const selectedKicker = document.querySelector<HTMLElement>('#sg-detail-kicker');
+  const selectedCopy = document.querySelector<HTMLElement>('#sg-detail-copy');
+  const selectedTip = document.querySelector<HTMLElement>('#sg-detail-tip');
+  const selectedImage = document.querySelector<HTMLImageElement>('#sg-detail-image');
+  const selectedImageLabel = document.querySelector<HTMLElement>('#sg-detail-image-label');
+  const detailPanel = document.querySelector<HTMLElement>('#sg-part-detail');
+  const partButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-part]')];
+  const hotspotButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-hotspot]')];
+
+  const parts = partButtons.map((button) => ({
+    id: button.dataset.part ?? '',
+    name: button.dataset.name ?? '',
+    subtitle: button.dataset.subtitle ?? '',
+    description: button.dataset.description ?? '',
+    tip: button.dataset.tip ?? '',
+    image: button.dataset.image ?? '',
+    anchor: JSON.parse(button.dataset.anchor ?? '[0,0,0]') as [number, number, number],
+  }));
+
+  if (host && stage && loading && errorMessage && status && selectedTitle && selectedKicker && selectedCopy && selectedTip && selectedImage && selectedImageLabel && detailPanel) {
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#07090b');
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 20);
+    const initialCamera = new THREE.Vector3(0, 0.06, 1.55);
+    camera.position.copy(initialCamera);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    renderer.setClearColor('#07090b', 1);
+    renderer.domElement.setAttribute('aria-hidden', 'true');
+    host.append(renderer.domElement);
+
+    scene.add(new THREE.HemisphereLight('#eef4ff', '#17101f', 1.35));
+    const keyLight = new THREE.DirectionalLight('#fff2dc', 3.5);
+    keyLight.position.set(-0.8, 0.9, 1.4);
+    keyLight.intensity = 2.1;
+    scene.add(keyLight);
+    const rimLight = new THREE.DirectionalLight('#a576ff', 1.9);
+    rimLight.position.set(1, 0.35, -0.45);
+    scene.add(rimLight);
+    const fillLight = new THREE.DirectionalLight('#8fd7ff', 0.7);
+    fillLight.position.set(-1, -0.4, 0.7);
+    scene.add(fillLight);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0, 0);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.07;
+    controls.enablePan = false;
+    controls.minDistance = 0.95;
+    controls.maxDistance = 2.8;
+    controls.update();
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2();
+    const textureLoader = new THREE.TextureLoader();
+    const objLoader = new OBJLoader();
+    let guitar: THREE.Group | null = null;
+    let allMeshes: THREE.Mesh[] = [];
+    const hotspotElements = new Map(hotspotButtons.map((button) => [button.dataset.hotspot ?? '', button]));
+    const modelCenter = new THREE.Vector3();
+    let activePart = 'body';
+    let disposed = false;
+
+    const features: Record<string, (mesh: THREE.Mesh, bounds: THREE.Box3, center: THREE.Vector3) => boolean> = {
+      body: (mesh) => mesh.name.startsWith('body]'),
+      horns: (mesh) => mesh.name.startsWith('body]'),
+      neck: (mesh) => mesh.name.startsWith('Cube.022_') || mesh.name.startsWith('fret.001_'),
+      fretboard: (mesh) => mesh.name.startsWith('fret.001_'),
+      frets: (_mesh, bounds, center) => center.y > 0.22 && center.y < 0.64 && bounds.max.x - bounds.min.x < 0.018 && bounds.max.y - bounds.min.y < 0.035,
+      pickups: (mesh) => mesh.name.startsWith('pickup_back'),
+      bridge: (mesh, _bounds, center) => mesh.name.startsWith('Plane.003_') || (center.y > 0.185 && center.y < 0.215 && Math.abs(center.x) < 0.04),
+      tailpiece: (_mesh, bounds, center) => center.y > 0.215 && center.y < 0.255 && bounds.max.x - bounds.min.x > 0.06 && bounds.max.x - bounds.min.x < 0.13,
+      controls: (_mesh, bounds, center) => center.y > -0.015 && center.y < 0.12 && center.x > 0.065 && center.x < 0.14 && bounds.max.x - bounds.min.x < 0.04,
+      selector: (_mesh, bounds, center) => center.y > 0 && center.y < 0.07 && center.x < -0.025 && center.x > -0.065 && bounds.max.x - bounds.min.x < 0.04,
+      headstock: (_mesh, bounds, center) => center.y > 0.665 && bounds.max.x - bounds.min.x < 0.1,
+      strings: (mesh) => mesh.name.startsWith('string.'),
+    };
+    const resize = () => {
+      if (disposed) return;
+      const width = Math.max(1, host.clientWidth);
+      const height = Math.max(1, host.clientHeight);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height, false);
+      positionHotspots();
+    };
+    const positionHotspots = () => {
+      const width = stage.clientWidth;
+      const height = stage.clientHeight;
+      for (const part of parts) {
+        const button = hotspotElements.get(part.id);
+        if (!button) continue;
+        const point = new THREE.Vector3(part.anchor[0] - modelCenter.x, part.anchor[1] - modelCenter.y, part.anchor[2] - modelCenter.z).project(camera);
+        const x = (point.x * 0.5 + 0.5) * width;
+        const y = (-point.y * 0.5 + 0.5) * height;
+        const visible = point.z > -1 && point.z < 1 && x > 8 && x < width - 8 && y > 8 && y < height - 8;
+        button.hidden = !visible;
+        if (visible) {
+          button.style.left = `${x}px`;
+          button.style.top = `${y}px`;
+          button.classList.toggle('is-active', activePart === part.id);
+        }
+      }
+    };
+    const selectPart = (id: string, revealDetails = false) => {
+      const part = parts.find((item) => item.id === id);
+      if (!part) return;
+      activePart = id;
+      selectedTitle.textContent = part.name;
+      selectedKicker.textContent = `Parte seleccionada · ${String(parts.indexOf(part) + 1).padStart(2, '0')}`;
+      selectedCopy.textContent = part.description;
+      selectedTip.textContent = part.tip;
+      selectedImage.alt = `Referencia visual de ${part.name} en una guitarra SG`;
+      selectedImageLabel.textContent = `Detalle del catálogo · ${part.name}`;
+      selectedImage.classList.add('is-loading');
+      selectedImage.onload = () => selectedImage.classList.remove('is-loading');
+      selectedImage.onerror = () => selectedImage.classList.remove('is-loading');
+      selectedImage.src = part.image;
+      partButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.part === id)));
+      const matcher = features[id];
+      allMeshes.forEach((mesh) => {
+        const isMatch = matcher ? matcher(mesh, mesh.geometry.boundingBox ?? new THREE.Box3(), mesh.userData.sgCenter as THREE.Vector3) : false;
+        const material = mesh.material as THREE.MeshStandardMaterial;
+        material.emissive.set(isMatch ? '#532b72' : '#000000');
+        material.emissiveIntensity = isMatch ? 0.1 : 0;
+      });
+      positionHotspots();
+      if (revealDetails && window.matchMedia('(max-width: 1050px)').matches) {
+        const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+        window.setTimeout(() => detailPanel.scrollIntoView({ behavior, block: 'nearest' }), 80);
+      }
+    };
+    partButtons.forEach((button) => button.addEventListener('click', () => selectPart(button.dataset.part ?? 'body', true)));
+    hotspotButtons.forEach((button) => button.addEventListener('click', () => selectPart(button.dataset.hotspot ?? 'body', true)));
+
+    renderer.domElement.addEventListener('pointerdown', (event) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointer, camera);
+      const hit = raycaster.intersectObjects(allMeshes, false)[0]?.object as THREE.Mesh | undefined;
+      if (!hit) return;
+      const bounds = hit.geometry.boundingBox;
+      const center = hit.userData.sgCenter as THREE.Vector3;
+      const hitPart = hit.name.startsWith('body]') ? 'body'
+        : hit.name.startsWith('pickup_back') ? 'pickups'
+        : hit.name.startsWith('string.') ? 'strings'
+        : hit.name.startsWith('Cube.022_') ? 'neck'
+        : hit.name.startsWith('fret.001_') ? 'fretboard'
+        : center.y > 0.665 ? 'headstock'
+        : center.y > 0.18 && center.y < 0.22 ? 'bridge'
+        : bounds && bounds.max.x - bounds.min.x > 0.06 && center.y > 0.21 && center.y < 0.26 ? 'tailpiece'
+        : activePart;
+      selectPart(hitPart, true);
+    });
+
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(host);
+    document.querySelector<HTMLButtonElement>('#sg-reset-view')?.addEventListener('click', () => {
+      camera.position.copy(initialCamera);
+      controls.target.set(0, 0, 0);
+      controls.update();
+      selectPart('body');
+    });
+
+    const texturePromise = new Promise<THREE.Texture>((resolve, reject) => {
+      textureLoader.load('/models/gibson-sg/SG_BaseColor.webp', (texture) => resolve(texture), undefined, reject);
+    });
+    Promise.all([
+      fetch('/models/gibson-sg/SG.obj').then((response) => {
+        if (!response.ok) throw new Error('No se encontró el modelo OBJ');
+        return response.text();
+      }),
+      texturePromise,
+    ]).then(([objText, texture]) => {
+      if (disposed) return;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy(), 8);
+      guitar = objLoader.parse(objText);
+      const bounds = new THREE.Box3().setFromObject(guitar);
+      bounds.getCenter(modelCenter);
+      // The source OBJ renders right of center, so trim its placement inside the viewer.
+      guitar.position.set(-modelCenter.x - 0.15, -modelCenter.y, -modelCenter.z);
+      guitar.traverse((object) => {
+        if (!(object instanceof THREE.Mesh)) return;
+        object.geometry.computeBoundingBox();
+        const box = object.geometry.boundingBox?.clone() ?? new THREE.Box3();
+        const center = box.getCenter(new THREE.Vector3());
+        object.userData.sgCenter = center;
+        object.material = new THREE.MeshStandardMaterial({
+          map: texture,
+          color: object.name.startsWith('body]') ? '#24212a' : '#ffffff',
+          roughness: 0.42,
+          metalness: 0.18,
+        });
+        object.castShadow = true;
+        object.receiveShadow = true;
+        allMeshes.push(object);
+      });
+      scene.add(guitar);
+      controls.target.set(0, 0, 0);
+      controls.update();
+      resize();
+      selectPart('body');
+      loading.hidden = true;
+      status.textContent = 'Modelo cargado · selecciona una parte para explorarla';
+    }).catch((error) => {
+      console.error('No se pudo iniciar el modelo SG:', error);
+      loading.hidden = true;
+      errorMessage.hidden = false;
+      status.textContent = 'El modelo no pudo cargarse';
+    });
+
+    const animate = () => {
+      if (disposed) return;
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+      positionHotspots();
+    };
+    resize();
+    animate();
+    window.addEventListener('pagehide', () => {
+      disposed = true;
+      resizeObserver.disconnect();
+      controls.dispose();
+      renderer.dispose();
+    }, { once: true });
+  }
+</script>
+
+<style>
+  .sg-page { width: min(100%, 1500px); margin: 0 auto; padding: clamp(1.25rem, 4vw, 3.25rem) clamp(1rem, 3.5vw, 3rem) 3rem; }
+  .sg-back-link { display: inline-flex; padding: .55rem .7rem; border-radius: .65rem; color: var(--text-muted); font-size: .78rem; text-decoration: none; transition: color .2s, background .2s; }
+  .sg-back-link:hover { color: #d1b4ff; background: rgb(185 138 255 / .08); }
+  .sg-page-heading { max-width: 56rem; margin: 1.3rem 0 1.8rem; }
+  .sg-kicker, .sg-panel-kicker { margin: 0; color: #bf91ff; font-size: .7rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+  .sg-page-heading h1 { margin: .6rem 0; color: var(--text-primary); font-size: clamp(1.65rem, 4vw, 3.25rem); }
+  .sg-page-heading > p:last-child { margin: .6rem 0 0; color: var(--text-muted); font-size: .88rem; line-height: 1.7; }
+  .sg-workspace { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(19rem, .82fr); gap: 1rem; align-items: stretch; }
+  .sg-viewer-card, .sg-parts-card { min-width: 0; overflow: hidden; border: 1px solid rgb(185 138 255 / .27); border-radius: 1.25rem; background: linear-gradient(145deg, rgb(18 12 28 / .96), rgb(6 8 9 / .98)); box-shadow: 0 20px 65px rgb(0 0 0 / .24); }
+  .sg-panel-heading { display: flex; min-height: 5rem; align-items: center; justify-content: space-between; gap: .75rem; padding: 1rem 1.15rem; border-bottom: 1px solid rgb(185 138 255 / .14); }
+  .sg-panel-heading h2 { margin: .25rem 0 0; color: var(--text-primary); font-family: 'Space Mono', monospace; font-size: 1rem; font-weight: 700; }
+  .sg-panel-kicker { font-size: .58rem; }
+  .sg-reset-button { display: inline-flex; min-height: 2.4rem; align-items: center; gap: .4rem; border: 1px solid rgb(185 138 255 / .32); border-radius: .7rem; background: rgb(185 138 255 / .07); padding: .5rem .7rem; color: #dfc8ff; font: 700 .7rem 'Space Mono', monospace; cursor: pointer; transition: background .2s, border-color .2s, transform .2s; }
+  .sg-reset-button:hover { transform: translateY(-1px); border-color: #c9a4ff; background: rgb(185 138 255 / .15); }
+  .sg-stage { position: relative; height: min(69vh, 690px); min-height: 430px; overflow: hidden; background: radial-gradient(ellipse at 50% 45%, rgb(67 38 99 / .22), transparent 56%), #07090b; }
+  .sg-stage-grid { position: absolute; inset: 0; pointer-events: none; opacity: .34; background-image: linear-gradient(rgb(185 138 255 / .045) 1px, transparent 1px), linear-gradient(90deg, rgb(185 138 255 / .045) 1px, transparent 1px); background-size: 44px 44px; mask-image: radial-gradient(ellipse at center, #000, transparent 80%); }
+  .sg-canvas-host { position: absolute; inset: 0; }
+  .sg-canvas-host canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .sg-hotspots { position: absolute; inset: 0; pointer-events: none; }
+  .sg-hotspot { position: absolute; display: grid; width: 1.8rem; height: 1.8rem; place-items: center; padding: 0; border: 1px solid rgb(230 211 255 / .9); border-radius: 50%; background: rgb(123 68 200 / .82); color: #fff; box-shadow: 0 0 0 4px rgb(185 138 255 / .13), 0 0 18px rgb(185 138 255 / .72); font: 700 .55rem 'Space Mono', monospace; cursor: pointer; pointer-events: auto; transform: translate(-50%, -50%); transition: background .2s, box-shadow .2s, scale .2s; }
+  .sg-hotspot:hover, .sg-hotspot.is-active { z-index: 2; scale: 1.18; background: #c08fff; box-shadow: 0 0 0 6px rgb(185 138 255 / .2), 0 0 26px rgb(204 160 255 / .95); }
+  .sg-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .7rem; background: rgb(7 9 11 / .72); color: #e7d8ff; font: .78rem 'Space Mono', monospace; }
+  .sg-loading[hidden], .sg-error[hidden] { display: none; }
+  .sg-loader-note { color: #c9a4ff; font-size: 2.4rem; animation: sg-pulse 1.25s ease-in-out infinite alternate; }
+  .sg-error { position: absolute; inset: auto 1rem 1rem; border: 1px solid #ff7386; border-radius: .7rem; background: #200d13; padding: .8rem; color: #ffe4e8; font-size: .75rem; }
+  .sg-stage-controls { position: absolute; right: .85rem; bottom: .75rem; display: flex; align-items: center; gap: .55rem; border: 1px solid rgb(255 255 255 / .1); border-radius: 999px; background: rgb(5 7 9 / .75); padding: .4rem .65rem; color: rgb(234 224 246 / .68); font-size: .56rem; pointer-events: none; backdrop-filter: blur(8px); }
+  .sg-stage-controls i { width: 3px; height: 3px; border-radius: 50%; background: #c9a4ff; }
+  .sg-model-caption { display: flex; min-height: 2.7rem; align-items: center; gap: .5rem; margin: 0; border-top: 1px solid rgb(185 138 255 / .12); padding: .55rem 1rem; color: var(--text-muted); font-size: .65rem; }
+  .sg-live-dot { width: .4rem; height: .4rem; flex: 0 0 auto; border-radius: 50%; background: #b98aff; box-shadow: 0 0 10px rgb(185 138 255 / .8); }
+  .sg-parts-card { display: flex; max-height: 900px; flex-direction: column; }
+  .sg-parts-heading { flex: 0 0 auto; }
+  .sg-part-count { border: 1px solid rgb(185 138 255 / .25); border-radius: 999px; padding: .35rem .55rem; color: #cfb1fa; font-size: .58rem; white-space: nowrap; }
+  .sg-parts-list { min-height: 0; overflow: auto; padding: .5rem .7rem; scrollbar-color: rgb(185 138 255 / .42) transparent; }
+  .sg-part-button { display: grid; width: 100%; grid-template-columns: 2.1rem minmax(0, 1fr) 1rem; align-items: center; gap: .55rem; border: 1px solid transparent; border-radius: .8rem; background: transparent; padding: .62rem .6rem; color: var(--text-primary); text-align: left; cursor: pointer; transition: border-color .2s, background .2s, transform .2s; }
+  .sg-part-button:hover { transform: translateX(2px); border-color: rgb(185 138 255 / .22); background: rgb(185 138 255 / .07); }
+  .sg-part-button[aria-pressed='true'] { border-color: rgb(185 138 255 / .58); background: linear-gradient(90deg, rgb(123 68 200 / .2), rgb(185 138 255 / .055)); }
+  .sg-part-number { display: grid; width: 1.85rem; height: 1.85rem; place-items: center; border: 1px solid rgb(185 138 255 / .22); border-radius: .55rem; color: #c9a4ff; font: 700 .58rem 'Space Mono', monospace; }
+  .sg-part-label { display: grid; gap: .16rem; }
+  .sg-part-label strong { font-size: .77rem; }
+  .sg-part-label small { color: var(--text-muted); font-size: .58rem; line-height: 1.35; }
+  .sg-part-arrow { color: #c9a4ff; font-size: .85rem; opacity: .4; transition: opacity .2s, transform .2s; }
+  .sg-part-button:hover .sg-part-arrow, .sg-part-button[aria-pressed='true'] .sg-part-arrow { transform: translate(1px,-1px); opacity: 1; }
+  .sg-part-detail { flex: 0 0 auto; margin: .3rem .85rem .85rem; border: 1px solid rgb(185 138 255 / .23); border-radius: .9rem; background: linear-gradient(135deg, rgb(73 41 111 / .25), rgb(11 11 15 / .76)); padding: .95rem; }
+  .sg-detail-figure { position: relative; aspect-ratio: 1.9 / 1; overflow: hidden; margin: .7rem 0 .8rem; border: 1px solid rgb(255 255 255 / .12); border-radius: .7rem; background: #e8e2d6; }
+  .sg-detail-figure img { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity .22s ease, transform .35s ease; }
+  .sg-detail-figure img.is-loading { opacity: .45; }
+  .sg-detail-figure:hover img { transform: scale(1.035); }
+  .sg-detail-figure figcaption { position: absolute; inset: auto 0 0; padding: .7rem .75rem .55rem; background: linear-gradient(transparent, rgb(0 0 0 / .82)); color: #fff; font-size: .62rem; line-height: 1.4; }
+  .sg-part-detail h3 { margin: .4rem 0; color: #f4ebff; font: 700 1.05rem 'Space Mono', monospace; }
+  .sg-part-detail > p#sg-detail-copy { margin: 0; color: rgb(237 230 245 / .82); font-size: .72rem; line-height: 1.65; }
+  .sg-detail-tip { display: grid; gap: .28rem; margin: .75rem 0 0; border-left: 2px solid #c9a4ff; border-radius: 0 .55rem .55rem 0; background: rgb(185 138 255 / .08); padding: .65rem .75rem; color: rgb(237 230 245 / .8); font-size: .66rem; line-height: 1.55; }
+  .sg-detail-tip strong { color: #d9bdff; font-size: .57rem; letter-spacing: .12em; text-transform: uppercase; }
+  .sg-full-reference { margin-top: 1.35rem; overflow: hidden; border: 1px solid rgb(185 138 255 / .25); border-radius: 1.25rem; background: linear-gradient(145deg, rgb(18 12 28 / .94), rgb(6 8 9 / .98)); box-shadow: 0 18px 55px rgb(0 0 0 / .2); }
+  .sg-full-reference > header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.1rem 1.25rem; border-bottom: 1px solid rgb(185 138 255 / .14); }
+  .sg-full-reference h2 { margin: .4rem 0 0; color: var(--text-primary); font: 700 clamp(1rem, 2.2vw, 1.35rem) 'Space Mono', monospace; }
+  .sg-full-reference > header > span { border: 1px solid rgb(185 138 255 / .28); border-radius: 999px; padding: .4rem .65rem; color: #d1b4ff; font: 700 .58rem 'Space Mono', monospace; letter-spacing: .08em; white-space: nowrap; }
+  .sg-full-reference figure { overflow: hidden; margin: 1rem; border: 1px solid rgb(255 255 255 / .1); border-radius: .9rem; background: #e8e2d6; }
+  .sg-full-reference img { display: block; width: 100%; height: auto; }
+  .sg-full-reference figcaption { padding: .7rem .85rem; background: #101211; color: rgb(255 255 255 / .78); font-size: .68rem; line-height: 1.5; }
+  .sg-disclaimer { max-width: 65rem; margin: .9rem auto 0; color: var(--text-muted); font-size: .65rem; line-height: 1.6; }
+  @keyframes sg-pulse { to { transform: translateY(-4px); opacity: .6; } }
+  @media (max-width: 1050px) {
+    .sg-workspace { grid-template-columns: minmax(0, 1fr); }
+    .sg-stage { height: min(70vw, 650px); min-height: 420px; }
+    .sg-parts-card { max-height: none; }
+    .sg-parts-list { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: .15rem .35rem; }
+    .sg-part-detail { margin-top: .2rem; }
+    .sg-full-reference { margin-top: 1rem; }
+  }
+  @media (max-width: 560px) {
+    .sg-page { padding-inline: .8rem; }
+    .sg-page-heading { margin-top: 1rem; }
+    .sg-page-heading > p:last-child { font-size: .78rem; }
+    .sg-panel-heading { padding: .85rem; }
+    .sg-stage { height: 112vw; min-height: 350px; max-height: 500px; }
+    .sg-stage-controls { right: .5rem; bottom: .5rem; font-size: .48rem; }
+    .sg-part-button { grid-template-columns: 1.8rem minmax(0,1fr); gap: .4rem; padding: .55rem .35rem; }
+    .sg-part-number { width: 1.6rem; height: 1.6rem; font-size: .5rem; }
+    .sg-part-label strong { font-size: .65rem; }
+    .sg-part-label small { font-size: .51rem; }
+    .sg-part-arrow { display: none; }
+    .sg-detail-figure { aspect-ratio: 1.55 / 1; }
+    .sg-full-reference > header { align-items: flex-start; padding: .9rem; }
+    .sg-full-reference > header > span { font-size: .48rem; }
+    .sg-full-reference figure { margin: .65rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .sg-loader-note { animation: none; } }
+</style>
