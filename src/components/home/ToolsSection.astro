@@ -24,6 +24,9 @@ const chordColor = (name: string): string => {
   const root = name.match(/^[A-G](?:♯|♭)?/)?.[0] || 'C';
   const enharmonic: Record<string,string> = {'D♭':'C♯','E♭':'D♯','G♭':'F♯','A♭':'G♯','B♭':'A♯'};
   const normalized = enharmonic[root] || root;
+  if (normalized === 'A') return '#ff7800';
+  if (normalized === 'B') return '#f04458';
+  if (normalized === 'C') return '#16db65';
   return chordPalette[pitchNames.indexOf(normalized)] || chordPalette[0];
 };
 ---
@@ -41,12 +44,14 @@ const chordColor = (name: string): string => {
 
       <article class="tool-card glow-hover surface rounded-3xl p-6 sm:p-7 lg:col-start-2 lg:row-start-1">
         <div class="flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-widest text-[var(--accent)]">03 / Solfeo</span><span class="text-2xl">♫</span></div><h3 class="mt-5 text-2xl font-bold">Aprende la escala.</h3><p class="mt-2 text-xs leading-6 text-[var(--text-muted)]">Toca cada nota y canta la escala. Do mayor, sin sostenidos ni bemoles.</p>
-        <div class="mt-8 grid grid-cols-4 gap-2">{['Do','Re','Mi','Fa','Sol','La','Si','Do’'].map((note, i) => <button type="button" data-note={i} class="solfege-note glow-hover aspect-square rounded-xl border border-[var(--border)] control-surface text-sm font-bold transition hover:-translate-y-1 hover:border-neon hover:bg-neon/15 focus-visible:outline-2 focus-visible:outline-neon">{note}</button>)}</div>
+        <div class="mt-8 grid grid-cols-4 gap-2">{['Do','Re','Mi','Fa','Sol','La','Si','Do’'].map((note, i) => <button type="button" data-note={i} class="solfege-note glow-hover aspect-square rounded-xl border border-[var(--border)] control-surface text-lg font-bold transition hover:-translate-y-1 hover:border-neon hover:bg-neon/15 focus-visible:outline-2 focus-visible:outline-neon">{note}</button>)}</div>
+        <div class="mt-5 flex flex-wrap gap-2"><button type="button" id="solfege-chromatic-toggle" class="music-control" aria-pressed="false">＋ Ver teclas con alteraciones</button><button type="button" id="solfege-notation-toggle" class="music-control" aria-pressed="false" hidden>Mostrar bemoles ♭</button></div>
+        <div id="solfege-piano" class="solfege-piano mt-3 hidden" role="group" aria-label="Teclas cromáticas del piano"></div>
         <button id="solfege-play" class="mt-4 w-full rounded-xl border border-neon/30 px-4 py-3 text-xs font-bold text-[var(--accent)] transition hover:bg-neon/10">▶ Escuchar escala</button><p id="solfege-hint" class="mt-3 min-h-8 text-center text-[9px] leading-4 text-[var(--text-muted)]">Elige una nota o escucha la escala completa.</p>
       </article>
       <article class="tool-card chord-cheatsheet-panel glow-hover surface rounded-3xl p-6 sm:p-7 lg:col-span-2 lg:row-start-2">
-        <div class="flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-widest text-[var(--accent)]">02 / Acordes</span><span class="text-2xl">⌁</span></div><div class="mt-5 flex flex-wrap items-center justify-between gap-3"><h3 id="chord-cheatsheet-title" class="text-2xl font-bold">Cheatsheet 7.ª.</h3><button id="chord-extension-toggle" type="button" class="rounded-xl border border-neon/40 px-4 py-2 text-xs font-bold text-[var(--accent)] transition hover:bg-neon/10 hover:shadow-[0_0_18px_rgb(99_245_140_/_0.2)]" aria-pressed="false">Ver acordes con 9.ª</button></div><p id="chord-cheatsheet-description" class="mt-2 text-xs leading-6 text-[var(--text-muted)]">Acordes esenciales con raíz en 4.ª, 5.ª y 6.ª cuerda. Cuerdas de 6.ª a 1.ª.</p>
-        <div id="chord-cheatsheet-list" class="chord-cheatsheet-list mt-5 grid gap-3">{chords.map((chord) => <div class="chord-cheatsheet-card rounded-xl border border-[var(--border)] bg-black/15 p-3" style={`--chord-color:${chordColor(chord.name)}`}><div class="flex items-center justify-between"><b class="text-lg">{chord.name}</b><span class="chord-root-label">{chord.root}</span></div><div class="mt-2 flex gap-1">{chord.frets.map((fret) => <span class="chord-fret-cell grid place-items-center rounded control-surface font-mono">{fret}</span>)}</div><p class="mt-1 font-mono text-[8px] text-[var(--text-muted)]">{chord.shape}</p></div>)}</div>
+        <div class="flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-widest text-[var(--accent)]">02 / Acordes</span><span class="text-2xl">⌁</span></div><div class="mt-5 flex flex-wrap items-center justify-between gap-3"><h3 id="chord-cheatsheet-title" class="text-2xl font-bold">Cheatsheet 7.ª.</h3><div class="chord-cheatsheet-controls"><label class="chord-note-filter-label" for="chord-note-filter">Nota a visualizar<select id="chord-note-filter" class="chord-note-filter"><option value="all">Todas</option><option value="C">C · Do</option><option value="D">D · Re</option><option value="E">E · Mi</option><option value="F">F · Fa</option><option value="G">G · Sol</option><option value="A">A · La</option><option value="B">B · Si</option></select></label><button id="chord-extension-toggle" type="button" class="rounded-xl border border-neon/40 px-4 py-2 text-xs font-bold text-[var(--accent)] transition hover:bg-neon/10 hover:shadow-[0_0_18px_rgb(99_245_140_/_0.2)]" aria-pressed="false">Ver acordes con 9.ª</button></div></div><p id="chord-cheatsheet-description" class="mt-2 text-xs leading-6 text-[var(--text-muted)]">Acordes esenciales con raíz en 4.ª, 5.ª y 6.ª cuerda. Cuerdas de 6.ª a 1.ª.</p>
+        <div id="chord-cheatsheet-list" class="chord-cheatsheet-list mt-5 grid gap-3">{chords.map((chord) => <div role="button" tabindex="0" aria-label={`Ver detalles de ${chord.name}`} class="chord-cheatsheet-card rounded-xl border border-[var(--border)] bg-black/15 p-3" style={`--chord-color:${chordColor(chord.name)}`}><div class="flex items-center justify-between"><b class="text-lg">{chord.name}</b><span class="chord-root-label">{chord.root}</span></div><div class="mt-2 flex gap-1">{chord.frets.map((fret) => <span class="chord-fret-cell grid place-items-center rounded control-surface font-mono">{fret}</span>)}</div><p class="mt-1 font-mono text-[8px] text-[var(--text-muted)]">{chord.shape}</p></div>)}</div>
         <p class="mt-4 text-[9px] leading-4 text-[var(--text-muted)]">Números = traste · 0 = cuerda al aire · x = no tocar. Diagramas en orden 6.ª → 1.ª.</p>
       </article>
 
@@ -117,6 +122,24 @@ const chordColor = (name: string): string => {
     </div>
   </div>
 </section>
+<dialog id="chord-detail-dialog" class="chord-detail-dialog"><button id="chord-dialog-prev" class="chord-dialog-nav chord-dialog-prev" type="button" aria-label="Acorde anterior">‹</button><button id="chord-dialog-next" class="chord-dialog-nav chord-dialog-next" type="button" aria-label="Acorde siguiente">›</button><button id="chord-dialog-theme" class="chord-dialog-theme" type="button" aria-label="Cambiar tema">☀</button><button id="chord-dialog-close" class="chord-dialog-close" type="button" aria-label="Cerrar">×</button><p class="text-xs uppercase tracking-[.18em] text-[var(--accent)]">Acorde · diagrama · análisis</p><h2 id="chord-dialog-title"></h2><p class="chord-dialog-key-hint">Usa ← y → para cambiar de acorde</p><div class="chord-dialog-grid"><div><h3>Tablatura · 6.ª a 1.ª cuerda</h3><div id="chord-dialog-tab" class="chord-dialog-tab"></div><div id="chord-dialog-board" class="chord-dialog-board" aria-label="Diagrama de guitarra"></div></div><div><h3>Notas e intervalos</h3><ul id="chord-dialog-notes"></ul></div></div><div class="chord-dialog-audio"><button id="chord-dialog-play" class="chord-dialog-play" type="button">▶ Escuchar acorde</button><button id="chord-dialog-arpeggio" class="chord-dialog-play chord-dialog-play-alt" type="button">♫ Escuchar arpegiado</button></div></dialog>
+<script is:inline>
+  (() => {
+    const sharpNames=['Do','Do♯','Re','Re♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
+    const flatNames=['Do','Re♭','Re','Mi♭','Mi','Fa','Sol♭','Sol','La♭','La','Si♭','Si'];
+    window.playPianoNote=(frequency)=>{const ctx=new AudioContext();if(ctx.state==='suspended')ctx.resume();const master=ctx.createGain();master.gain.setValueAtTime(.0001,ctx.currentTime);master.gain.exponentialRampToValueAtTime(.2,ctx.currentTime+.008);master.gain.setValueAtTime(.16,ctx.currentTime+1);master.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+2);master.connect(ctx.destination);[1,2,3,4,5].forEach((partial,i)=>{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=frequency*partial;gain.gain.value=[1,.34,.16,.08,.035][i];osc.connect(gain).connect(master);osc.start();osc.stop(ctx.currentTime+2.05);});setTimeout(()=>ctx.close(),2300);};
+    window.playPianoChord=(frequencies,arpeggio=false,onNote=()=>{})=>{const ctx=new AudioContext(),start=ctx.currentTime,gap=arpeggio ? .24 : .035,duration=arpeggio ? 1.8 : 2.2;frequencies.forEach((frequency,index)=>{const onset=start+index*gap;setTimeout(()=>onNote(index),index*gap*1000);[1,2,3,4,5].forEach((partial,i)=>{const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=frequency*partial;gain.gain.setValueAtTime(.0001,onset);gain.gain.exponentialRampToValueAtTime([.22,.075,.04,.022,.012][i],onset+.01);gain.gain.exponentialRampToValueAtTime(.0001,onset+duration);osc.connect(gain).connect(ctx.destination);osc.start(onset);osc.stop(onset+duration+.05);});});setTimeout(()=>ctx.close(),(duration+frequencies.length*gap+.2)*1000);};
+    const panel=document.querySelector('#solfege-piano'), reveal=document.querySelector('#solfege-chromatic-toggle'), spelling=document.querySelector('#solfege-notation-toggle');
+    let flats=false;
+    const drawPiano=()=>{ if(!panel)return; const names=flats?flatNames:sharpNames; panel.innerHTML=names.map((name,i)=>`<button type="button" class="piano-key ${[1,3,6,8,10].includes(i)?'is-black':''} ${[0,2,4,5,7,9,11].includes(i)?'is-scale-note':''}" data-pitch="${i}" aria-label="${name}">${name}</button>`).join(''); panel.querySelectorAll('.piano-key').forEach(key=>key.addEventListener('click',()=>{window.playPianoNote(261.63*Math.pow(2,Number(key.dataset.pitch)/12));document.querySelector('#solfege-hint').textContent=`${names[Number(key.dataset.pitch)]} · piano`;})); };
+    reveal?.addEventListener('click',()=>{const active=reveal.getAttribute('aria-pressed')!=='true';reveal.setAttribute('aria-pressed',String(active));panel?.classList.toggle('hidden',!active);spelling.hidden=!active;reveal.textContent=active?'− Ocultar teclas con alteraciones':'＋ Ver teclas con alteraciones';});
+    spelling?.addEventListener('click',()=>{flats=!flats;spelling.setAttribute('aria-pressed',String(flats));spelling.textContent=flats?'Mostrar sostenidos ♯':'Mostrar bemoles ♭';drawPiano();});
+    const colors=['#63b8ff','#ffad66','#c995ff'];
+    document.querySelectorAll('.tool-card h3').forEach((title,index)=>{const words=title.textContent.trim().split(/\s+/);if(words.length<2)return;title.textContent='';title.classList.add('tool-typewriter');words.forEach((word,i)=>{const part=document.createElement('span');part.textContent=word;part.className=i===1?'tool-title-accent':'';if(i===1)part.style.setProperty('--title-accent',colors[index%colors.length]);title.append(part);if(i<words.length-1)title.append(' ');});});
+    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-typing');observer.unobserve(entry.target);}}),{threshold:.45});
+    document.querySelectorAll('.tool-typewriter').forEach(title=>observer.observe(title));
+  })();
+</script>
 <script is:inline>
   (() => {
     const bpm = document.querySelector('#metro-bpm');
@@ -159,30 +182,116 @@ const chordColor = (name: string): string => {
   });
   function detectPitch(){ if(!stream)return; analyser.getFloatTimeDomainData(micBuffer); let rms=Math.sqrt(micBuffer.reduce((sum,v)=>sum+v*v,0)/micBuffer.length); if(rms>.012){let best=-1,score=0; for(let lag=35;lag<micBuffer.length/2;lag++){let s=0;for(let i=0;i<micBuffer.length/2;i++)s+=micBuffer[i]*micBuffer[i+lag];if(s>score){score=s;best=lag;}} if(best>0){let hz=audioContext.sampleRate/best;let midi=Math.round(69+12*Math.log2(hz/440));let target=440*Math.pow(2,(midi-69)/12);let cents=Math.round(1200*Math.log2(hz/target));let name=noteNames[(midi%12+12)%12];document.querySelector('#tuner-note').textContent=name;document.querySelector('#tuner-cents').textContent=`${cents>0?'+':''}${cents} cents`;document.querySelector('#tuner-status').textContent=cents===0?'Afinada':cents<0?'Sube la afinación':'Baja la afinación';document.querySelector('#tuner-needle').style.transform=`translateX(${Math.max(-45,Math.min(45,cents*1.5))}px)`;}} requestAnimationFrame(detectPitch); }
   const solfegeFreq=[261.63,293.66,329.63,349.23,392,440,493.88,523.25];
-  function playSolfege(index){if(!window.AudioContext)return;const ctx=new AudioContext();const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type='sine';osc.frequency.value=solfegeFreq[index];gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.22,ctx.currentTime+.02);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.5);osc.connect(gain).connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.52);document.querySelector('#solfege-hint').textContent=`${['Do','Re','Mi','Fa','Sol','La','Si','Do’'][index]} · ${solfegeFreq[index]} Hz`;setTimeout(()=>ctx.close(),700);}
+  function playSolfege(index){if(!window.AudioContext)return;window.playPianoNote?.(solfegeFreq[index]);document.querySelector('#solfege-hint').textContent=`${['Do','Re','Mi','Fa','Sol','La','Si','Do’'][index]} · piano`;}
   document.querySelectorAll('.solfege-note').forEach(button=>button.addEventListener('click',()=>playSolfege(Number(button.dataset.note))));
   document.querySelector('#solfege-play')?.addEventListener('click',()=>{[0,1,2,3,4,5,6,7].forEach((n,i)=>setTimeout(()=>playSolfege(n),i*570));});
 </script>
 
 <style is:global>
+  .chord-detail-dialog { position:fixed; inset:0; margin:auto; width:min(96vw,1010px); max-height:min(96dvh,900px); overflow:auto; border:1.5px solid var(--line,#1f4a31); border-radius:2rem; background:radial-gradient(ellipse at 90% 0%,color-mix(in srgb,var(--chord-accent,#27e07b) 17%,transparent),transparent 55%),linear-gradient(145deg,#09120d,#040a07); padding:clamp(.85rem,3.2vw,2rem); color:#eafff1; box-shadow:0 30px 90px rgb(0 0 0 / .86),0 0 45px color-mix(in srgb,var(--chord-accent,#27e07b) 15%,transparent); }
+  .chord-detail-dialog[open] { animation:chord-modal-enter .38s cubic-bezier(.2,.9,.3,1) both; }
+  @keyframes chord-modal-enter { from { opacity:0; transform:translateY(18px) scale(.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+  .chord-detail-dialog.is-light { border-color:#cfe5d7; background:radial-gradient(ellipse at 90% 0%,color-mix(in srgb,var(--chord-accent,#12a357) 14%,transparent),transparent 55%),linear-gradient(145deg,#fff,#f3fbf5); color:#0b1f14; box-shadow:0 30px 80px -25px rgb(20 90 50 / .35); }
+  .chord-detail-dialog.is-light .chord-dialog-grid h3,.chord-detail-dialog.is-light .chord-dialog-key-hint { color:#4b6356; }
+  .chord-detail-dialog.is-light .chord-dialog-tab div { background:#fff; border-color:#cfe5d7; color:#0b1f14; }
+  .chord-detail-dialog.is-light #chord-dialog-notes li { border-color:#cfe5d7; }
+  .chord-detail-dialog.is-light #chord-dialog-notes span { color:#4b6356; }
+  .chord-detail-dialog.is-light .chord-dialog-theme,.chord-detail-dialog.is-light .chord-dialog-nav { background:#f4faf6; color:#116a3b; }
+  .chord-detail-dialog::backdrop { background:rgb(0 0 0 / .78); backdrop-filter:blur(8px); }
+  .chord-dialog-close { position:absolute; top:.8rem; right:.9rem; width:2.4rem; height:2.4rem; border:1px solid rgb(255 255 255 / .18); border-radius:50%; background:#121713; color:white; font-size:1.5rem; }
+  .chord-dialog-nav { position:absolute; top:.8rem; width:2.4rem; height:2.4rem; border:1px solid rgb(99 245 140 / .42); border-radius:50%; background:#0b1a10; color:#9affb3; font:700 1.6rem 'Anonymous Pro',monospace; transition:background .2s,transform .2s,box-shadow .2s; }
+  .chord-dialog-theme { position:absolute; top:.8rem; right:9.4rem; width:2.4rem; height:2.4rem; border:1px solid rgb(99 245 140 / .42); border-radius:50%; background:#0b1a10; color:#9affb3; }
+  .chord-dialog-nav:hover { transform:scale(1.08); background:#174a29; box-shadow:0 0 18px rgb(99 245 140 / .3); }
+  .chord-dialog-prev { right:6.5rem; }
+  .chord-dialog-next { right:3.6rem; }
+  .chord-detail-dialog h2 { width:max-content; max-width:100%; margin:.35rem 2.6rem .65rem 0; background:linear-gradient(105deg,color-mix(in srgb,var(--chord-card-color,#27d98a) 58%,#fff),var(--chord-card-color,#27d98a)); background-clip:text; color:transparent; font:700 clamp(3.4rem,9vw,6.8rem)/.95 'Space Grotesk',sans-serif; letter-spacing:-.06em; }
+  .chord-detail-dialog h2.swap { animation:chord-title-pop .45s cubic-bezier(.2,1.4,.4,1) both; }
+  .chord-detail-dialog h2.is-playing { animation:chord-title-play .34s ease-out; }
+  @keyframes chord-title-pop { from { opacity:0; transform:translateY(16px) scale(.86); } }
+  @keyframes chord-title-play { 45% { transform:translateY(-4px) scale(1.025); filter:drop-shadow(0 0 14px rgb(39 217 138 / .45)); } }
+  .chord-dialog-key-hint { margin:-.8rem 0 1rem; color:#82978a; font-size:.62rem; }
+  .chord-dialog-grid { display:grid; grid-template-columns:minmax(0,.95fr) minmax(0,1.15fr); gap:clamp(1rem,3vw,2.5rem); }
+  .chord-dialog-grid h3 { margin:0 0 .8rem; color:#aab9af; font:700 .72rem 'Space Mono',monospace; text-transform:uppercase; }
+  .chord-dialog-tab { display:flex; gap:.45rem; }
+  .chord-dialog-tab div { display:grid; min-width:2.7rem; min-height:4.2rem; place-items:center; border:1.5px solid var(--cell-color,#1f4a31); border-radius:.7rem; background:#030504; padding:.45rem; transition:transform .2s,box-shadow .2s,border-color .2s; }
+  .chord-dialog-tab small { color:#82978a; font-size:.6rem; }
+  .chord-dialog-tab b { color:var(--cell-color,#dfffea); font:700 1.1rem 'Anonymous Pro',monospace; }
+  .chord-dialog-board { width:100%; max-width:390px; margin-top:1.1rem; border:1px solid rgb(39 224 123 / .25); border-radius:1.1rem; background:#0d1a13; padding:.8rem; box-shadow:inset 0 0 24px rgb(0 0 0 / .18); }
+  .chord-dialog-board svg { display:block;width:100%;height:auto;overflow:visible; }
+  .chord-board-line { stroke:#9bb8a8;stroke-width:1.7;opacity:.52; }
+  .chord-board-nut { stroke:#eafff1;stroke-width:5;opacity:.95;stroke-linecap:round; }
+  .chord-board-open,.chord-board-muted { fill:none;stroke:#9bb8a8;stroke-width:2; }
+  .chord-board-open { stroke-width:2.5; }
+  .chord-board-muted { stroke:none;fill:#9bb8a8;font:700 15px 'Space Mono',monospace;text-anchor:middle; }
+  .chord-board-fret { fill:#9bb8a8;font:11px 'Space Mono',monospace; }
+  .chord-board-string { fill:#91aa9a;font:11px 'Space Mono',monospace; }
+  .chord-fret-dot { transform-box:fill-box;transform-origin:center;transition:filter .2s,transform .2s; }
+  .chord-fret-dot.is-playing { animation:chord-dot-pulse .46s ease-out; filter:drop-shadow(0 0 12px #fff); }
+  @keyframes chord-dot-pulse { 50% { transform:scale(1.36); } }
+  .chord-dialog-tab div.is-playing { transform:translateY(-4px) scale(1.08);box-shadow:0 0 24px var(--interval-color,#27e07b); }
+  .chord-dialog-tab div:has(b:not(:empty)) { border-color:var(--cell-color,#1f4a31); }
+  #chord-dialog-notes li.is-playing { transform:translateX(-4px);box-shadow:0 0 24px color-mix(in srgb,var(--interval-color) 45%,transparent);border-radius:.7rem; }
+  #chord-dialog-notes li { transition:transform .2s,box-shadow .2s; }
+  #chord-dialog-notes { display:grid; gap:.45rem; margin:0; padding:0; list-style:none; }
+  #chord-dialog-notes li { display:flex; align-items:center; justify-content:space-between; gap:.6rem; border-bottom:1px solid rgb(255 255 255 / .09); padding:.55rem .35rem; animation:chord-note-rise .35s both; }
+  @keyframes chord-note-rise { from { opacity:0; transform:translateX(12px); } }
+  #chord-dialog-notes strong { display:grid; min-width:3.5rem; min-height:3.5rem; place-items:center; border-radius:1rem; background:var(--interval-color); color:var(--interval-ink); font:700 1.15rem 'Space Mono',monospace;box-shadow:0 5px 18px color-mix(in srgb,var(--interval-color) 42%,transparent); }
+  #chord-dialog-notes span { flex:1; color:#b6c4bb; font-size:.66rem; }
+  #chord-dialog-notes li>b { min-width:2rem; height:2rem; display:grid; place-items:center; border:1.5px solid var(--interval-color); border-radius:50%; color:var(--interval-color); }
+  .chord-dialog-play { width:100%; min-height:3.6rem; margin-top:1.3rem; border:1px solid #36db70; border-radius:1.1rem; background:linear-gradient(110deg,#12b45f,#2ee58a); color:#032012; font:700 1rem 'Space Grotesk',sans-serif; box-shadow:0 10px 30px -8px rgb(39 224 123 / .35); transition:transform .25s,box-shadow .25s; }
+  .chord-dialog-audio { display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+  .chord-dialog-play-alt { border-color:#9b7afa; background:linear-gradient(110deg,#6d3fe0,#b08bff); color:white; box-shadow:0 10px 30px -8px rgb(155 114 255 / .4); }
+  .chord-dialog-play:hover { transform:translateY(-2px); box-shadow:0 0 32px rgb(54 219 112 / .4); }
+  .chord-detail-dialog.is-light .chord-dialog-board { background:#f4faf6;border-color:#cfe5d7; }
+  .chord-detail-dialog.is-light .chord-board-line { stroke:#4b6356;opacity:.56; }
+  .chord-detail-dialog.is-light .chord-board-nut { stroke:#0b1f14; }
+  .chord-detail-dialog.is-light .chord-board-open { stroke:#4b6356; }
+  .chord-detail-dialog.is-light .chord-board-muted,.chord-detail-dialog.is-light .chord-board-fret { fill:#4b6356; }
+  .chord-detail-dialog.is-light .chord-board-string { fill:#4b6356; }
+  .chord-detail-dialog.is-light .chord-dialog-tab div { color:#0b1f14; }
+  .tool-card h3 { font-family:'Anonymous Pro',monospace; }
+  .tool-title-accent { color:var(--title-accent,#63b8ff); text-shadow:0 0 16px color-mix(in srgb,var(--title-accent,#63b8ff) 32%,transparent); }
+  .tool-typewriter { clip-path:inset(0 100% 0 0); width:max-content; max-width:100%; }
+  .tool-typewriter.is-typing { animation:tool-type .9s steps(24,end) both; }
+  @keyframes tool-type { to { clip-path:inset(0 0 0 0); } }
+  .music-control { min-height:2.6rem; border:1px solid color-mix(in srgb,var(--accent) 55%,transparent); border-radius:.85rem; background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--surface)),var(--surface)); padding:.6rem .9rem; color:var(--text-primary); font:700 .72rem 'Space Mono',monospace; box-shadow:0 4px 16px rgb(0 0 0 / .12); transition:transform .2s,border-color .2s,box-shadow .2s,background .2s; }
+  .music-control:hover,.music-control[aria-pressed='true'] { transform:translateY(-2px); border-color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 20%,transparent),0 8px 22px color-mix(in srgb,var(--accent) 22%,transparent); }
+  .solfege-piano { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:3px; padding:.55rem; border:1px solid var(--border); border-radius:.8rem; background:var(--surface); }
+  .piano-key { min-width:0; min-height:5.8rem; display:flex; align-items:flex-end; justify-content:center; border:1px solid #cbd5d0; border-radius:0 0 .35rem .35rem; background:linear-gradient(#fff,#e8ece9); padding:.3rem .08rem; color:#14221a; font:700 clamp(.5rem,1.5vw,.7rem) 'Anonymous Pro',monospace; transition:filter .18s,transform .18s; }
+  .piano-key:hover { filter:brightness(1.1); transform:translateY(-2px); }
+  .piano-key.is-black { align-items:center; border-color:#59645d; background:linear-gradient(#303a34,#111713); color:#fff; }
+  .piano-key.is-scale-note { box-shadow:inset 0 -4px var(--accent); }
+  @media(prefers-reduced-motion:reduce){.tool-typewriter.is-typing{animation:none;clip-path:none}}
+  .chord-cheatsheet-controls { display:flex; align-items:end; justify-content:flex-end; flex-wrap:wrap; gap:.65rem; }
+  .chord-note-filter-label { display:grid; gap:.3rem; color:var(--text-muted); font:700 .58rem 'Space Mono',monospace; letter-spacing:.08em; text-transform:uppercase; }
+  .chord-note-filter { min-height:2.6rem; min-width:8.2rem; border:1px solid color-mix(in srgb,var(--accent) 52%,transparent); border-radius:.75rem; background:var(--control-surface,#0d1f16); padding:.55rem .72rem; color:var(--text-primary,#eaffef); font:700 .72rem 'Space Mono',monospace; letter-spacing:normal; text-transform:none; }
+  .chord-note-filter:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .chord-note-filter option { background:#0d1f16; color:#eaffef; }
+  .chord-cheatsheet-card.is-note-muted { opacity:.2; filter:saturate(.25); }
+  .chord-cheatsheet-card.is-note-focus { border-color:var(--chord-color); box-shadow:0 0 0 1px var(--chord-color),0 0 24px color-mix(in srgb,var(--chord-color) 48%,transparent); }
+  :root[data-theme='light'] .chord-note-filter { background:#f7fff9; color:#102a1b; border-color:#80bc93; }
+  :root[data-theme='light'] .chord-note-filter option { background:#f7fff9; color:#102a1b; }
+  @media(max-height:760px) and (min-width:561px){.chord-detail-dialog{padding:.9rem 1.35rem}.chord-detail-dialog h2{font-size:clamp(3.2rem,8vh,4.8rem);margin:.15rem 2.6rem .45rem 0}.chord-dialog-key-hint{margin:-.35rem 0 .65rem}.chord-dialog-tab div{min-height:3.35rem}.chord-dialog-board{margin-top:.6rem;padding:.55rem}.chord-dialog-grid{gap:1.25rem}#chord-dialog-notes li{padding:.34rem .25rem}#chord-dialog-notes strong{min-width:2.8rem;min-height:2.8rem}.chord-dialog-play{min-height:3rem;margin-top:.7rem}}
+  @media(max-width:560px){.chord-detail-dialog{width:96vw;max-height:96dvh;border-radius:1.15rem;padding:.8rem}.chord-detail-dialog h2{font-size:clamp(2.8rem,13vw,4.4rem);margin:.25rem 2.5rem .45rem 0}.chord-dialog-grid{grid-template-columns:1fr;gap:.9rem}.chord-dialog-grid h3{margin-bottom:.45rem}.chord-dialog-tab{gap:.25rem}.chord-dialog-tab div{min-width:0;min-height:3.2rem;flex:1;padding:.3rem}.chord-dialog-board{max-width:100%;margin-top:.55rem;padding:.5rem}.chord-dialog-audio{grid-template-columns:1fr 1fr;gap:.5rem}.chord-dialog-play{min-height:3rem;margin-top:.7rem;padding:.5rem;font-size:.78rem}.chord-dialog-prev{right:6.2rem}.chord-dialog-next{right:3.3rem}.chord-cheatsheet-controls{width:100%;justify-content:flex-start}.chord-note-filter-label{flex:1;min-width:8rem}.chord-note-filter{width:100%;min-width:0}#chord-dialog-notes{grid-template-columns:1fr 1fr;gap:.2rem .5rem}#chord-dialog-notes li{gap:.35rem;padding:.34rem .15rem}#chord-dialog-notes strong{min-width:2.3rem;min-height:2.3rem;border-radius:.72rem;font-size:.9rem}#chord-dialog-notes span{font-size:.55rem;line-height:1.25}#chord-dialog-notes li>b{min-width:1.5rem;height:1.5rem;font-size:.6rem}}
+  @media(max-width:370px){.chord-dialog-audio{grid-template-columns:1fr}#chord-dialog-notes{grid-template-columns:1fr}}
   .chord-cheatsheet-panel { overflow:visible; }
   .chord-cheatsheet-panel::before { display:none; }
   .chord-cheatsheet-list { grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr)); }
   #chord-cheatsheet-list { overflow: visible; }
-  .chord-cheatsheet-card { position:relative; z-index:0; border-color:color-mix(in srgb,var(--chord-color,#72ff9b) 38%,transparent); transition:transform .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s,border-color .32s; transform-origin:center; }
+  .chord-cheatsheet-card { position:relative; z-index:0; border-color:color-mix(in srgb,var(--chord-color,#72ff9b) 48%,transparent); background:#030504!important; box-shadow:inset 0 1px rgb(255 255 255 / .025),0 8px 20px rgb(0 0 0 / .28); transition:transform .32s cubic-bezier(.2,.8,.2,1),box-shadow .32s,border-color .32s,opacity .24s,filter .24s; transform-origin:center; }
   .chord-cheatsheet-card b { color:var(--chord-color,#72ff9b); }
   .chord-cheatsheet-card:hover { z-index:5; transform:scale(1.2); border-color:var(--chord-color,#72ff9b); box-shadow:0 0 0 1px var(--chord-color,#72ff9b),0 0 28px color-mix(in srgb,var(--chord-color,#72ff9b) 55%,transparent); background:#050906; }
   .chord-root-label { color:var(--text-muted); font-size:.8rem; }
-  .chord-fret-cell { width:1.875rem; height:2.2rem; flex:0 0 1.875rem; font-size:.78rem; }
+  .chord-fret-cell { width:1.875rem; height:2.2rem; flex:0 0 1.875rem; background:#101311!important; color:#eaffef; font-size:.78rem; }
   @media(max-width:640px){.chord-cheatsheet-card:hover{transform:scale(1.04)}}
   .chord-cheatsheet-card.is-selected { z-index:5; transform:scale(1.12); border-color:var(--chord-color,#2a9134); box-shadow:0 0 0 1px var(--chord-color,#2a9134),0 10px 28px color-mix(in srgb,var(--chord-color,#2a9134) 34%,transparent); background:#10251a; }
   @media(hover:none){.chord-cheatsheet-card:hover{transform:none;box-shadow:none}.chord-cheatsheet-card.is-selected{transform:scale(1.04);border-color:var(--chord-color,#2a9134);box-shadow:0 0 0 1px var(--chord-color,#2a9134),0 8px 20px color-mix(in srgb,var(--chord-color,#2a9134) 34%,transparent)}}
-  :root[data-theme='light'] .chord-cheatsheet-card { background:#fafffb; border-color:color-mix(in srgb,var(--chord-color,#087a3b) 38%,#fff); box-shadow:0 5px 18px rgb(10 62 31 / .08); }
+  :root[data-theme='light'] .chord-cheatsheet-card { background:#fafffb!important; border-color:color-mix(in srgb,var(--chord-color,#087a3b) 38%,#fff); box-shadow:0 5px 18px rgb(10 62 31 / .08); }
   :root[data-theme='light'] .chord-cheatsheet-card b { color:color-mix(in srgb,var(--chord-color,#087a3b) 72%,#092c18); }
   :root[data-theme='light'] .chord-cheatsheet-card:hover { background:#fff; border-color:color-mix(in srgb,var(--chord-color,#087a3b) 72%,#092c18); box-shadow:0 0 0 1px color-mix(in srgb,var(--chord-color,#087a3b) 55%,#092c18),0 12px 30px rgb(10 62 31 / .18); }
   :root[data-theme='light'] .chord-cheatsheet-card.is-selected { background:#fff; border-color:color-mix(in srgb,var(--chord-color,#2a9134) 72%,#092c18); box-shadow:0 0 0 1px color-mix(in srgb,var(--chord-color,#2a9134) 55%,#092c18),0 12px 30px rgb(10 62 31 / .18); }
   :root[data-theme='light'] .chord-root-label { color:#355b45; }
-  :root[data-theme='light'] .chord-fret-cell { background:#e6f0e9; color:#102a1b; font-weight:800; }
+  :root[data-theme='light'] .chord-fret-cell { background:#e6f0e9!important; color:#102a1b; font-weight:800; }
   :root[data-theme='light'] #chord-cheatsheet-description { color:#355b45; }
   :root[data-theme='light'] #chord-extension-toggle { color:#075b31; border-color:#168849; background:#f7fff9; }
   :root[data-theme='light'] #chord-extension-toggle:hover { color:#043c20; background:#e2f7e9; border-color:#087a3b; }
@@ -203,7 +312,14 @@ const chordColor = (name: string): string => {
 <script is:inline>
   (() => {
     const chordList = document.querySelector('#chord-cheatsheet-list');
+    const dialog=document.querySelector('#chord-detail-dialog'), title=document.querySelector('#chord-dialog-title'), tab=document.querySelector('#chord-dialog-tab'), notes=document.querySelector('#chord-dialog-notes');
+    const pitchNames=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'], pitchMap={C:0,'C♯':1,D:2,'D♯':3,E:4,F:5,'F♯':6,G:7,'G♯':8,A:9,'A♯':10,B:11}; let activeChordIndex=0;
+    const openChord=card=>{const name=card.querySelector('b')?.textContent?.trim()||'Acorde', frets=[...card.querySelectorAll('.chord-fret-cell')].map(el=>el.textContent.trim()), rootMatch=name.match(/^[A-G](?:♯|♭)?/), rootName=rootMatch?.[0]||'C', root=pitchMap[rootName]??pitchMap[({ 'D♭':'C♯','E♭':'D♯','G♭':'F♯','A♭':'G♯','B♭':'A♯'})[rootName]]??0, suffix=name.slice(rootName.length), formulas=suffix.includes('maj')?[['1','1'],['3','3'],['5','5'],['7','7'],['9','9']]:suffix.includes('m')?[['1','1'],['♭3','3'],['5','5'],['♭7','7'],['9','9']]:[['1','1'],['3','3'],['5','5'],['♭7','7'],['9','9']], semis={'1':0,'3':4,'♭3':3,'5':7,'7':11,'♭7':10,'9':14}, midi=[40,45,50,55,59,64];
+      const cardAccent=getComputedStyle(card).getPropertyValue('--chord-color').trim()||'#16db65';dialog.style.setProperty('--chord-card-color',cardAccent);dialog.style.setProperty('--chord-accent',cardAccent);
+      const active=frets.map((f,i)=>({string:6-i,fret:Number(f),midi:midi[i]+Number(f)})).filter(n=>Number.isFinite(n.fret)); title.textContent=name; tab.innerHTML=frets.map((f,i)=>`<div><small>${6-i}ª</small><b>${f}</b></div>`).join(''); notes.innerHTML=active.map(n=>{const pc=((n.midi%12)+12)%12, interval=(pc-root+12)%12, labels={0:'Tónica · 1',1:'2ª menor',2:'2ª mayor',3:'3ª menor',4:'3ª mayor',5:'4ª justa',6:'4ª aumentada / 5ª disminuida',7:'5ª justa',8:'6ª menor',9:'6ª mayor',10:'7ª menor',11:'7ª mayor'};return `<li><strong>${pitchNames[pc]}</strong><span>Cuerda ${n.string} · traste ${n.fret} · ${labels[interval]}</span></li>`}).join(''); dialog.showModal(); dialog.dataset.frequencies=active.map(n=>440*Math.pow(2,(n.midi-69)/12)).join(','); };
+    const activateCard=event=>{const card=event.target.closest('.chord-cheatsheet-card');if(!card)return;activeChordIndex=[...chordList.querySelectorAll('.chord-cheatsheet-card')].indexOf(card);dialog.classList.toggle('is-light',document.documentElement.dataset.theme==='light');dialogThemeButton.textContent=dialog.classList.contains('is-light')?'☾':'☀';openChord(card);};
     chordList?.addEventListener('click', (event) => {
+      activateCard(event);
       if (!matchMedia('(hover: none)').matches) return;
       const card = event.target.closest('.chord-cheatsheet-card');
       if (!card) return;
@@ -211,8 +327,34 @@ const chordColor = (name: string): string => {
       chordList.querySelectorAll('.chord-cheatsheet-card').forEach((item) => item.classList.remove('is-selected'));
       if (!wasSelected) card.classList.add('is-selected');
     });
+    chordList?.addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.matches('.chord-cheatsheet-card')){event.preventDefault();activeChordIndex=[...chordList.querySelectorAll('.chord-cheatsheet-card')].indexOf(event.target);dialog.classList.toggle('is-light',document.documentElement.dataset.theme==='light');dialogThemeButton.textContent=dialog.classList.contains('is-light')?'☾':'☀';openChord(event.target);}});
+    document.querySelector('#chord-dialog-close')?.addEventListener('click',()=>dialog.close());
+    const dialogThemeButton=document.querySelector('#chord-dialog-theme');
+    dialogThemeButton?.addEventListener('click',()=>{const light=dialog.classList.toggle('is-light');dialogThemeButton.textContent=light?'☾':'☀';});
+    dialog?.addEventListener('click',event=>{if(event.target===dialog)dialog.close();});
+    const currentFrequencies=()=> (dialog.dataset.frequencies||'').split(',').map(Number).filter(Boolean);
+    const flashChordNote=index=>{const rows=[...notes.querySelectorAll('li')],row=rows[index];if(!row)return;const string=Number(row.dataset.string),cell=tab.children[6-string],dot=dialog.querySelector(`.chord-fret-dot[data-string="${string}"]`);[row,cell,dot,title].forEach(el=>{if(!el)return;el.classList.remove('is-playing');void el.offsetWidth;el.classList.add('is-playing');setTimeout(()=>el.classList.remove('is-playing'),480);});};
+    document.querySelector('#chord-dialog-play')?.addEventListener('click',()=>window.playPianoChord?.(currentFrequencies(),false,flashChordNote));
+    document.querySelector('#chord-dialog-arpeggio')?.addEventListener('click',()=>window.playPianoChord?.(currentFrequencies(),true,flashChordNote));
+    const moveChord=direction=>{const cards=[...chordList.querySelectorAll('.chord-cheatsheet-card')];if(cards.length){activeChordIndex=(activeChordIndex+direction+cards.length)%cards.length;dialog.close();openChord(cards[activeChordIndex]);}};
+    document.querySelector('#chord-dialog-prev')?.addEventListener('click',()=>moveChord(-1));
+    document.querySelector('#chord-dialog-next')?.addEventListener('click',()=>moveChord(1));
+    dialog?.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();moveChord(event.key==='ArrowLeft'?-1:1);}});
+    const intervalColors=['#16c26a','#12b8d6','#12b8d6','#ff4f9a','#ff4f9a','#ff8a3d','#ff8a3d','#7c4dff','#ff4f9a','#ff4f9a','#ffc21a','#ffc21a'];
+    const intervalInk=['#04170c','#031a20','#031a20','#2a0314','#2a0314','#2a1200','#2a1200','#fff','#2a0314','#2a0314','#2a1c00','#2a1c00'];
+    const drawFretboard=()=>{const rows=[...notes.querySelectorAll('li')],frets=[...tab.children].map(c=>c.querySelector('b')?.textContent||'x'),degreeLabels=['1','♭9','9','♭3','3','11','#11','5','♭13','13','♭7','7'];rows.forEach((row,index)=>{const string=Number(row.textContent.match(/Cuerda\s+(\d+)/)?.[1]),pc=pitchMap[row.querySelector('strong')?.textContent]??0,root=pitchMap[title.textContent.match(/^[A-G](?:♯|♭)?/)?.[0]]??0,iv=(pc-root+12)%12;row.dataset.string=string;row.style.setProperty('--interval-color',intervalColors[iv]);row.style.setProperty('--interval-ink',intervalInk[iv]);row.style.animationDelay=`${index*55}ms`;let degree=row.querySelector('b');if(!degree){degree=document.createElement('b');row.append(degree);}degree.textContent=degreeLabels[iv];});[...tab.children].forEach((cell,i)=>{const row=rows.find(r=>Number(r.dataset.string)===6-i);if(row){cell.style.setProperty('--cell-color',row.style.getPropertyValue('--interval-color'));cell.style.setProperty('--interval-color',row.style.getPropertyValue('--interval-color'));}});
+      const positive=frets.map(Number).filter(n=>Number.isFinite(n)&&n>0),start=positive.length&&Math.max(...positive)>4?Math.min(...positive):1,rowsCount=Math.max(4,Math.max(...positive,4)-start+1),x0=32,dx=62,top=42,dy=52,width=380,height=top+rowsCount*dy+38;let svg=`<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Forma del acorde ${title.textContent} en el diapasón">`;
+      for(let s=0;s<6;s++){const x=x0+s*dx;svg+=`<text class="chord-board-string" x="${x}" y="18" text-anchor="middle">${6-s}ª</text>`;}for(let f=0;f<=rowsCount;f++)svg+=`<line class="chord-board-line ${f===0&&start===1?'chord-board-nut':''}" x1="${x0}" x2="${x0+5*dx}" y1="${top+f*dy}" y2="${top+f*dy}"/>`;for(let s=0;s<6;s++)svg+=`<line class="chord-board-line" x1="${x0+s*dx}" x2="${x0+s*dx}" y1="${top}" y2="${top+rowsCount*dy}"/>`;
+      if(start>1)svg+=`<text class="chord-board-fret" x="8" y="${top+dy*.65}">${start}</text>`;
+      frets.forEach((f,i)=>{const string=6-i,x=x0+i*dx,row=rows.find(r=>Number(r.dataset.string)===string);if(f==='x')svg+=`<text class="chord-board-muted" x="${x}" y="${top-12}">×</text>`;else if(Number(f)===0)svg+=`<circle class="chord-board-open" cx="${x}" cy="${top-15}" r="6"/>`;else if(row){const y=top+(Number(f)-start+.5)*dy;svg+=`<g class="chord-fret-dot" data-string="${string}"><circle cx="${x}" cy="${y}" r="17" fill="${row.style.getPropertyValue('--interval-color')}"/><text x="${x}" y="${y+5}" text-anchor="middle" fill="${row.style.getPropertyValue('--interval-ink')}" font-size="13" font-weight="700">${row.querySelector('strong').textContent}</text></g>`;}});svg+='</svg>';document.querySelector('#chord-dialog-board').innerHTML=svg;};
+    new MutationObserver(drawFretboard).observe(notes,{childList:true});
+    new MutationObserver(()=>{title.classList.remove('swap');void title.offsetWidth;title.classList.add('swap');}).observe(title,{childList:true,characterData:true,subtree:true});
     const toggle = document.querySelector('#chord-extension-toggle');
     const list = document.querySelector('#chord-cheatsheet-list');
+    const noteFilter=document.querySelector('#chord-note-filter');
+    const applyChordNoteFilter=()=>{const selected=noteFilter?.value||'all',rootColors={A:'#ff7800',B:'#f04458',C:'#16db65'};[...list.querySelectorAll('.chord-cheatsheet-card')].forEach(card=>{const root=card.querySelector('b')?.textContent?.trim().match(/^[A-G](?:♯|♭)?/)?.[0]||'C',matches=selected==='all'||root===selected;if(rootColors[root])card.style.setProperty('--chord-color',rootColors[root]);card.classList.toggle('is-note-muted',selected!=='all'&&!matches);card.classList.toggle('is-note-focus',selected!=='all'&&matches);});};
+    noteFilter?.addEventListener('change',applyChordNoteFilter);
+    applyChordNoteFilter();
     if (!toggle || !list) return;
     const originalCards = list.innerHTML;
     const naturalRoots = [{note:'C',fret:3},{note:'D',fret:5},{note:'E',fret:7},{note:'F',fret:8},{note:'G',fret:10},{note:'A',fret:12},{note:'B',fret:2}];
@@ -231,6 +373,7 @@ const chordColor = (name: string): string => {
       toggle.textContent = showNinths ? 'Volver a acordes con 7.ª' : 'Ver acordes con 9.ª';
       if (showNinths) renderNinths();
       else list.innerHTML = originalCards;
+      applyChordNoteFilter();
     });
   })();
 </script>

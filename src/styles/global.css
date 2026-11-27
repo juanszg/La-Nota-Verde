@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=MuseoModerno:opsz,wght@6..72,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Gabarito:wght@400;500;600;700;800&display=swap');
@@ -53,6 +54,9 @@ body {
   margin: 0;
   min-width: 320px;
   background: var(--surface);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 48px 48px;
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
   transition: background-color 250ms ease, color 250ms ease;
@@ -100,10 +104,10 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 .tool-card { position: relative; isolation: isolate; overflow: hidden; transition: transform 500ms cubic-bezier(.2,.8,.2,1), border-color 500ms, box-shadow 500ms, filter 500ms; }
 .glow-hover { transition: color 450ms, background-color 450ms, transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 500ms cubic-bezier(.2,.8,.2,1), filter 500ms, border-color 500ms; }
 .glow-hover:hover { box-shadow: 0 0 0 1px rgb(22 219 101 / .24), 0 0 24px rgb(22 219 101 / .24), 0 0 52px rgb(22 219 101 / .12); filter: saturate(1.12); }
-.tool-card::before { position: absolute; z-index: -1; inset: -60%; content: ''; background: conic-gradient(from 0deg, transparent 0 72%, rgb(22 219 101 / .3) 82%, transparent 92%); opacity: 0; transition: opacity 300ms; animation: orbit 7s linear infinite; }
-.tool-card::after { position: absolute; z-index: -2; inset: 1px; content: ''; border-radius: inherit; background: var(--surface); }
+.tool-card::before { display:none; }
+.tool-card::after { position: absolute; z-index: -2; inset: 1px; content: ''; border-radius: inherit; background-image:linear-gradient(rgb(0 0 0 / .84),rgb(0 0 0 / .9)),url('/images/brick-dark.webp'); background-size:cover; background-position:center; opacity:.96; }
 .tool-card:hover { transform: translateY(-8px) scale(1.01); border-color: rgb(22 219 101 / .55); box-shadow: 0 0 0 1px rgb(22 219 101 / .3), 0 0 28px rgb(22 219 101 / .25), 0 24px 70px rgb(22 219 101 / .18); }
-.tool-card:hover::before { opacity: 1; }
+  .tool-card:hover::before { opacity: 0; }
 @media (hover: none) {
   .tool-card:hover, .poster:hover, .practice-load:hover { transform: none; }
   .tool-card:hover::before { opacity: 0; }
@@ -123,7 +127,7 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
   box-shadow: 0 0 0 1px rgb(54 95 67 / .18), 0 16px 38px rgb(43 57 46 / .14);
 }
 
-:root[data-theme='light'] .tool-card::before { background: conic-gradient(from 0deg, transparent 0 72%, rgb(82 118 92 / .2) 82%, transparent 92%); }
+  :root[data-theme='light'] .tool-card::after { background-image:linear-gradient(rgb(246 249 245 / .82),rgb(246 249 245 / .88)),url('/images/brick-light.webp'); }
 
 :root[data-theme='light'] .poster:hover { box-shadow: 0 8px 26px rgb(43 57 46 / .2); }
 
@@ -132,9 +136,9 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 
 /* Simple image-only page transition. */
 .page-transition { position:fixed; z-index:10000; inset:0; display:grid; place-items:center; visibility:hidden; opacity:0; overflow:hidden; background:#000; pointer-events:none; }
-.page-transition img { display:block; width:100%; height:100%; object-fit:contain; }
-.page-transition-ready .page-transition { visibility:visible; animation:lnv-image-fade-out .65s ease-in-out both; }
-.page-transition-out .page-transition { visibility:visible; animation:lnv-image-fade-in .24s ease-out both; }
+.page-transition img { display:block; width:min(300px,72vw); height:min(300px,72vw); object-fit:contain; border-radius:50%; }
+.page-transition-ready .page-transition { visibility:visible; animation:lnv-image-fade-out .42s ease-in-out both; }
+.page-transition-out .page-transition { visibility:visible; animation:lnv-image-fade-in .42s ease-in-out both; }
 @keyframes lnv-image-fade-out { from { opacity:1; } to { opacity:0; visibility:hidden; } }
 @keyframes lnv-image-fade-in { from { opacity:0; } to { opacity:1; } }
 @media (prefers-reduced-motion:reduce) { .page-transition-ready .page-transition,.page-transition-out .page-transition { animation:none!important; } .page-transition { display:none!important; } }
